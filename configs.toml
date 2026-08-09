@@ -1,0 +1,122 @@
+# Measurement configurations for the usb_ethernet size / panic-site study.
+#
+# Adding a new configuration must require editing ONLY this file: the workflow
+# and ci/*.py are fully driven by what is defined here.
+#
+# Each [configs.<name>] entry specifies embassy repo+ref, xarxa repo+ref, cargo
+# flags, build-std flags, rustflags, and profile overrides. Nothing here is a
+# measured value -- measured numbers only ever come from a CI run.
+
+# ---------------------------------------------------------------------------
+# The example under measurement. The target triple is intentionally NOT set
+# here: it is read from the example's own .cargo/config.toml at build time and
+# never guessed or overridden.
+# ---------------------------------------------------------------------------
+[example]
+path = "examples/nrf52840"
+bin  = "usb_ethernet"
+
+# ---------------------------------------------------------------------------
+# Pinned toolchain. The workflow installs exactly this; nothing preinstalled on
+# the runner is relied upon. nightly-2026-07-25 is the nightly the embassy fork
+# itself targets (rust-toolchain-nightly.toml) and is required for -Z build-std.
+# ---------------------------------------------------------------------------
+[toolchain]
+channel    = "nightly-2026-07-25"
+components = ["rust-src", "llvm-tools"]
+# `rust-src` is required for -Z build-std; `llvm-tools` provides llvm-size /
+# llvm-objdump / llvm-nm pinned to this exact toolchain (LLVM version follows
+# the nightly), so the measurement tools are pinned too.
+
+# ---------------------------------------------------------------------------
+# Upstream repos, used to compute the merge-base of each fork ref. The xarxa
+# fork is actively pushed to, so every result records both where the fork ref
+# resolves and where it diverged from upstream.
+# ---------------------------------------------------------------------------
+[upstreams]
+"ninehusky/embassy" = { repo = "https://github.com/embassy-rs/embassy", ref = "main" }
+"ninehusky/xarxa"   = { repo = "https://github.com/embassy-rs/xarxa",   ref = "main" }
+"ninehusky/flux"    = { repo = "https://github.com/flux-rs/flux",       ref = "main" }
+
+# ===========================================================================
+# Configurations
+# ===========================================================================
+
+# 1. baseline -- the example exactly as the embassy fork ships it. xarxa_ref
+#    "@submodule" means: do not override the xarxa the embassy fork pins as a
+#    submodule; build that commit unmodified. This is the reference point the
+#    other configs are read against.
+[configs.baseline]
+enabled            = true
+description        = "Default Cargo.toml settings, unmodified upstream deps"
+embassy_repo       = "https://github.com/ninehusky/embassy"
+embassy_ref        = "main"
+xarxa_repo         = "https://github.com/ninehusky/xarxa"
+xarxa_ref          = "@submodule"
+cargo_flags        = []
+build_std          = []
+build_std_features = []
+rustflags          = []
+profile_overrides  = {}
+
+# 2. immediate-abort -- baseline plus panic=immediate-abort, the oracle lower
+#    bound (total panic-infrastructure removal by fiat). Configs 3 and 4 cannot
+#    beat it.
+#
+#    NOTE ON MECHANISM: on this pinned nightly, `panic_immediate_abort` is no
+#    longer a `-Z build-std-features` value -- the compiler rejects it with
+#    `compile_error!` and directs you to the real panic strategy
+#    `-C panic=immediate-abort` (which still requires rebuilding core via
+#    -Z build-std). We therefore pass the panic strategy in rustflags and keep
+#    build-std for core+alloc. `verify_panic_symbols_absent` makes CI confirm
+#    the panic formatting symbols are actually gone before any number is kept;
+#    if they are still present the run fails instead of recording a value.
+[configs.immediate-abort]
+enabled                     = true
+description                 = "Baseline plus panic=immediate-abort (core rebuilt on nightly)"
+embassy_repo                = "https://github.com/ninehusky/embassy"
+embassy_ref                 = "main"
+xarxa_repo                  = "https://github.com/ninehusky/xarxa"
+xarxa_ref                   = "@submodule"
+cargo_flags                 = []
+build_std                   = ["core", "alloc"]
+build_std_features          = []
+rustflags                   = ["-Zunstable-options", "-Cpanic=immediate-abort"]
+profile_overrides           = {}
+verify_panic_symbols_absent = true
+
+# 3. xarxa-nopanic -- baseline built against the panic-free xarxa fork branch.
+#    Disabled for now; machinery implemented. Overrides the embassy submodule
+#    pin with xarxa @ remove-explicit-panics.
+[configs.xarxa-nopanic]
+enabled            = false
+description        = "Baseline against the panic-free xarxa fork"
+embassy_repo       = "https://github.com/ninehusky/embassy"
+embassy_ref        = "main"
+xarxa_repo         = "https://github.com/ninehusky/xarxa"
+xarxa_ref          = "remove-explicit-panics"
+cargo_flags        = []
+build_std          = []
+build_std_features = []
+rustflags          = []
+profile_overrides  = {}
+
+# 4. xarxa-embassy-nopanic -- xarxa-nopanic plus the panic-free embassy fork.
+#    Disabled for now; machinery implemented.
+#    NOTE: as of this writing the ninehusky/embassy fork has only a `main`
+#    branch -- there is no separate panic-free embassy branch yet, so
+#    embassy_ref is left at `main` (identical to config 3's embassy). When a
+#    panic-free embassy branch exists, enabling this config is a one-line edit
+#    (change embassy_ref here). See README / PR description.
+[configs.xarxa-embassy-nopanic]
+enabled            = false
+description        = "xarxa-nopanic plus the panic-free embassy fork"
+embassy_repo       = "https://github.com/ninehusky/embassy"
+embassy_ref        = "main"
+xarxa_repo         = "https://github.com/ninehusky/xarxa"
+xarxa_ref          = "remove-explicit-panics"
+cargo_flags        = []
+build_std          = []
+build_std_features = []
+rustflags          = []
+profile_overrides  = {}

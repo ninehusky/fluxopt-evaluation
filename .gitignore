@@ -1,0 +1,8 @@
+# CI/local measurement scratch — numbers only ever come from a CI run,
+# never checked in.
+/artifacts/
+/_work/
+_work/
+artifacts/
+__pycache__/
+*.pyc

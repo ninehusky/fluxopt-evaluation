@@ -1,0 +1,160 @@
+name: measure-usb-ethernet
+
+# Measurement infrastructure for the embassy-net usb_ethernet example.
+# For each ENABLED configuration in configs.toml this workflow builds the
+# example, measures it (section sizes + panic sites), builds it a second time
+# and re-measures to prove determinism, then uploads the results as artifacts.
+# A final job aggregates summary.json and enforces the profile-equality
+# invariant across configurations.
+#
+# Nothing here relies on tooling preinstalled on the runner image beyond the
+# provisioning tools themselves: the Rust toolchain, its components, the target
+# triple, and the LLVM binutils are all installed pinned, below.
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      config:
+        description: "Single configuration to run (blank = all enabled)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: measure-usb-ethernet-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Compute the matrix of configurations to run from configs.toml, honoring the
+  # optional workflow_dispatch single-config input.
+  # ---------------------------------------------------------------------------
+  list-configs:
+    runs-on: ubuntu-24.04
+    outputs:
+      configs: ${{ steps.list.outputs.configs }}
+      channel: ${{ steps.tc.outputs.channel }}
+      components: ${{ steps.tc.outputs.components }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - id: list
+        run: |
+          set -euo pipefail
+          CONFIGS="$(python3 ci/list_configs.py "${{ github.event.inputs.config }}")"
+          echo "configs=$CONFIGS" >> "$GITHUB_OUTPUT"
+          echo "Selected configurations: $CONFIGS"
+
+      - id: tc
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import tomllib
+          with open("configs.toml", "rb") as fh:
+              tc = tomllib.load(fh)["toolchain"]
+          print(f"channel={tc['channel']}")
+          print("components=" + ",".join(tc["components"]))
+          PY
+
+  # ---------------------------------------------------------------------------
+  # Build + measure one configuration (twice, for determinism).
+  # ---------------------------------------------------------------------------
+  measure:
+    needs: list-configs
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        config: ${{ fromJson(needs.list-configs.outputs.configs) }}
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Record runner image label
+        id: img
+        run: echo "label=ubuntu-24.04 (ImageOS=${ImageOS:-unknown}, ImageVersion=${ImageVersion:-unknown})" >> "$GITHUB_OUTPUT"
+
+      - name: Install pinned toolchain (${{ needs.list-configs.outputs.channel }})
+        run: |
+          set -euo pipefail
+          CHANNEL="${{ needs.list-configs.outputs.channel }}"
+          COMPONENTS="${{ needs.list-configs.outputs.components }}"
+          # rustup is the provisioning tool; the toolchain itself is pinned.
+          COMP_ARGS=""
+          IFS=',' read -ra COMPS <<< "$COMPONENTS"
+          for c in "${COMPS[@]}"; do COMP_ARGS="$COMP_ARGS --component $c"; done
+          rustup toolchain install "$CHANNEL" --profile minimal $COMP_ARGS
+          rustup default "$CHANNEL"
+          echo "=== rustc ===" && rustc "+$CHANNEL" --version --verbose
+
+      - name: Build + measure ${{ matrix.config }}
+        env:
+          RUNNER_IMAGE_LABEL: ${{ steps.img.outputs.label }}
+        run: |
+          set -euo pipefail
+          python3 ci/run_config.py "${{ matrix.config }}" \
+            --channel "${{ needs.list-configs.outputs.channel }}" \
+            --out "$GITHUB_WORKSPACE/artifacts" \
+            --work "$RUNNER_TEMP/work"
+
+      - name: Show results summary
+        if: always()
+        run: |
+          f="artifacts/${{ matrix.config }}/results.json"
+          if [ -f "$f" ]; then
+            python3 -c 'import json,sys; d=json.load(open(sys.argv[1])); det=d["determinism"]; print("config:",d["config"]); print(".text pass1/pass2:",det["text_size_pass1"],det["text_size_pass2"],"match" if det["text_size_match"] else "MISMATCH"); print("panic-sites pass1/pass2:",det["panic_sites_pass1"],det["panic_sites_pass2"],"match" if det["panic_sites_match"] else "MISMATCH"); print("panic_fmt absent:",d["verification"].get("panic_fmt_absent")) if d["verification"]["required"] else None' "$f"
+          else
+            echo "no results.json (build failed); see logs"
+          fi
+
+      - name: Upload artifact
+        if: always()
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: measurements-${{ matrix.config }}
+          path: artifacts/${{ matrix.config }}
+          if-no-files-found: error
+
+  # ---------------------------------------------------------------------------
+  # Aggregate summary.json and enforce the profile-equality invariant.
+  # ---------------------------------------------------------------------------
+  summarize:
+    needs: measure
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4.2.2
+
+      - uses: actions/setup-python@v5.3.0
+        with:
+          python-version: "3.12"
+
+      - name: Download all measurement artifacts
+        uses: actions/download-artifact@v4.1.8
+        with:
+          pattern: measurements-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Build summary.json + assert cross-config invariants
+        run: |
+          set -euo pipefail
+          python3 ci/summarize.py artifacts
+
+      - name: Upload combined artifact
+        if: always()
+        uses: actions/upload-artifact@v4.4.3
+        with:
+          name: measurements-all
+          path: artifacts
+          if-no-files-found: error
