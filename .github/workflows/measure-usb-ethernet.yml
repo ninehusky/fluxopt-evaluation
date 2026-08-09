@@ -123,7 +123,11 @@ jobs:
         uses: actions/upload-artifact@v4.4.3
         with:
           name: measurements-${{ matrix.config }}
-          path: artifacts/${{ matrix.config }}
+          # Upload the whole artifacts/ dir (which holds only this job's
+          # <config>/ subdir) so the <config>/ prefix is preserved. The
+          # summarize job downloads with merge-multiple and reconstructs
+          # artifacts/<config>/..., which summarize.py globs on.
+          path: artifacts
           if-no-files-found: error
 
   # ---------------------------------------------------------------------------
