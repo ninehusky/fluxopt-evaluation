@@ -1,0 +1,167 @@
+<core::iter::adapters::map::Map<core::iter::adapters::filter::Filter<core::slice::iter::Iter<xarxa::iface::route::Route>, <xarxa::iface::route::Routes>::lookup::{closure#0}>, core::iter::traits::iterator::Iterator::max_by_key::key<&xarxa::iface::route::Route, u8, <xarxa::iface::route::Routes>::lookup::{closure#1}>::{closure#0}> as core::iter::traits::iterator::Iterator>::fold::<(u8, &xarxa::iface::route::Route), core::iter::traits::iterator::Iterator::max_by::fold<(u8, &xarxa::iface::route::Route), core::iter::traits::iterator::Iterator::max_by_key::compare<&xarxa::iface::route::Route, u8>>::{closure#0}>
+<core::net::ip_addr::Ipv4Addr as core::fmt::Display>::fmt
+<core::net::ip_addr::Ipv6Addr as core::fmt::Display>::fmt
+<core::net::ip_addr::Ipv6Addr as xarxa::wire::ipv6::AddressExt>::solicited_node
+<core::slice::iter::IterMut<core::option::Option<(u32, u32)>> as core::iter::traits::iterator::Iterator>::fold::<(), <core::iter::adapters::enumerate::Enumerate<_> as core::iter::traits::iterator::Iterator>::fold::enumerate<&mut core::option::Option<(u32, u32)>, (), core::iter::traits::iterator::Iterator::for_each::call<(usize, &mut core::option::Option<(u32, u32)>), <xarxa::wire::tcp::TcpOption>::parse::{closure#0}>::{closure#0}>::{closure#0}>
+<defmt_rtt::Logger as defmt::traits::Logger>::release
+<defmt_rtt::Logger as defmt::traits::Logger>::write
+<embassy_executor::platform::thread::Executor>::run::<usb_ethernet::__cortex_m_rt_main::{closure#0}>
+<embassy_executor::raw::TaskStorage<usb_ethernet::____embassy_main_task::____embassy_main_task_inner_function::{closure#0}>>::poll (.llvm.15223834111087058757)
+<embassy_executor::raw::TaskStorage<usb_ethernet::__usb_task_task::__usb_task_task_inner_function::{closure#0}>>::poll (.llvm.15223834111087058757)
+<embassy_futures::select::Select<<embassy_usb::class::cdc_ncm::embassy_net::Runner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>, 1514>>::run::{closure#0}::{closure#0}, <embassy_usb::class::cdc_ncm::embassy_net::Runner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>, 1514>>::run::{closure#0}::{closure#1}> as core::future::future::Future>::poll
+<embassy_futures::select::Select<core::future::poll_fn::PollFn<<embassy_nrf::usb::Bus<embassy_nrf::usb::vbus_detect::HardwareVbusDetect> as embassy_usb_driver::Bus>::poll::{closure#0}>, <embassy_nrf::usb::ControlPipe as embassy_usb_driver::ControlPipe>::setup::{closure#0}> as core::future::future::Future>::poll
+<embassy_net::Inner>::apply_static_config
+<embassy_net::Inner>::set_config_v4
+<embassy_net::Stack>::with_mut::<(), <embassy_net::Runner<embassy_net_driver_channel::Device<1514>>>::run::{closure#0}::{closure#0}::{closure#0}>
+<embassy_net::Stack>::with_mut::<(), <embassy_net::tcp::TcpIo>::with_mut<(), <embassy_net::tcp::TcpSocket>::set_timeout::{closure#0}>::{closure#0}>
+<embassy_net::Stack>::with_mut::<core::task::poll::Poll<core::result::Result<(), embassy_net::tcp::AcceptError>>, <embassy_net::tcp::TcpIo>::with_mut<core::task::poll::Poll<core::result::Result<(), embassy_net::tcp::AcceptError>>, <embassy_net::tcp::TcpSocket>::accept<u16>::{closure#0}::{closure#1}::{closure#0}>::{closure#0}>
+<embassy_net::Stack>::with_mut::<core::task::poll::Poll<core::result::Result<usize, embassy_net::tcp::Error>>, <embassy_net::tcp::TcpIo>::with_mut<core::task::poll::Poll<core::result::Result<usize, embassy_net::tcp::Error>>, <embassy_net::tcp::TcpIo>::read::{closure#0}::{closure#0}>::{closure#0}>
+<embassy_net::Stack>::with_mut::<core::task::poll::Poll<core::result::Result<usize, embassy_net::tcp::Error>>, <embassy_net::tcp::TcpIo>::with_mut<core::task::poll::Poll<core::result::Result<usize, embassy_net::tcp::Error>>, <embassy_net::tcp::TcpIo>::write::{closure#0}::{closure#0}>::{closure#0}>
+<embassy_net::Stack>::with_mut::<xarxa::iface::socket_set::SocketHandle, <embassy_net::tcp::TcpSocket>::new::{closure#0}>
+<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>> as xarxa_driver::Device>::transmit
+<embassy_net::tcp::TcpIo>::with_mut::<core::result::Result<(), xarxa::socket::tcp::ListenError>, <embassy_net::tcp::TcpSocket>::accept<u16>::{closure#0}::{closure#0}>
+<embassy_net::tcp::TcpSocket>::remote_endpoint
+<embassy_net::udp::UdpSocket as core::ops::drop::Drop>::drop
+<embassy_net_driver_channel::Device<1514> as embassy_net_driver::Driver>::receive
+<embassy_net_driver_channel::RxToken<1514> as embassy_net_driver::RxToken>::consume::<xarxa::iface::interface::PollIngressSingleResult, <embassy_net::driver_util::RxTokenAdapter<embassy_net_driver_channel::RxToken<1514>> as xarxa_driver::RxToken>::consume<xarxa::iface::interface::PollIngressSingleResult, <xarxa::iface::interface::Interface>::socket_ingress<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>::{closure#0}>::{closure#0}>
+<embassy_net_driver_channel::StateRunner>::set_link_state
+<embassy_net_driver_channel::TxToken<1514> as embassy_net_driver::TxToken>::consume::<(), <embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>> as xarxa_driver::TxToken>::consume<(), <xarxa::iface::interface::InterfaceInner>::dispatch_ethernet<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>, <xarxa::iface::interface::InterfaceInner>::dispatch<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>::{closure#0}>::{closure#0}>::{closure#0}>
+<embassy_net_driver_channel::TxToken<1514> as embassy_net_driver::TxToken>::consume::<(), <embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>> as xarxa_driver::TxToken>::consume<(), <xarxa::iface::interface::InterfaceInner>::dispatch_ethernet<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>, <xarxa::iface::interface::InterfaceInner>::lookup_hardware_addr<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>::{closure#0}>::{closure#0}>::{closure#0}>
+<embassy_net_driver_channel::TxToken<1514> as embassy_net_driver::TxToken>::consume::<(), <embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>> as xarxa_driver::TxToken>::consume<(), <xarxa::iface::interface::InterfaceInner>::dispatch_ip<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>::{closure#3}>::{closure#0}>
+<embassy_net_driver_channel::TxToken<1514> as embassy_net_driver::TxToken>::consume::<(), <embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>> as xarxa_driver::TxToken>::consume<(), <xarxa::iface::interface::InterfaceInner>::dispatch_sixlowpan<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>::{closure#0}>::{closure#0}>
+<embassy_nrf::rng::State>::borrow_mut
+<embassy_nrf::time_driver::RtcDriver as embassy_time_driver::Driver>::schedule_wake
+<embassy_nrf::usb::Bus<embassy_nrf::usb::vbus_detect::HardwareVbusDetect> as embassy_usb_driver::Bus>::endpoint_set_enabled (.llvm.431353491062889882)
+<embassy_nrf::usb::Endpoint<embassy_nrf::usb::In> as embassy_usb_driver::EndpointIn>::write::{closure#0}
+<embassy_sync::waitqueue::atomic_waker::AtomicWaker>::register
+<embassy_usb::Inner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::handle_bus_event::{closure#0}
+<embassy_usb::Inner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::handle_control_in
+<embassy_usb::Inner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::handle_control_out
+<embassy_usb::builder::Builder<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::build
+<embassy_usb::builder::Builder<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::new
+<embassy_usb::class::cdc_ncm::CdcNcmClass<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::new
+<embassy_usb::class::cdc_ncm::Control as embassy_usb::Handler>::control_in
+<embassy_usb::class::cdc_ncm::Control as embassy_usb::Handler>::set_alternate_setting
+<embassy_usb::descriptor::BosWriter>::capability
+<embassy_usb::descriptor::BosWriter>::end_bos
+<embassy_usb::descriptor::DescriptorWriter>::end_configuration
+<embassy_usb::descriptor::DescriptorWriter>::endpoint
+<embassy_usb::descriptor::DescriptorWriter>::interface_alt
+<embassy_usb::descriptor::DescriptorWriter>::into_buf
+<embassy_usb::descriptor::DescriptorWriter>::write
+<embassy_usb::msos::MsOsDescriptorWriter>::build
+<embassy_usb::msos::MsOsDescriptorWriter>::end_function
+<xarxa::iface::interface::Interface>::new::<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>
+<xarxa::iface::interface::Interface>::poll::<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>
+<xarxa::iface::interface::InterfaceInner>::check_ip_addrs
+<xarxa::iface::interface::InterfaceInner>::compressed_packet_size
+<xarxa::iface::interface::InterfaceInner>::dispatch_ip::<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>
+<xarxa::iface::interface::InterfaceInner>::get_source_address_ipv6
+<xarxa::iface::interface::InterfaceInner>::has_neighbor
+<xarxa::iface::interface::InterfaceInner>::ipv6_to_sixlowpan
+<xarxa::iface::interface::InterfaceInner>::lookup_hardware_addr::<embassy_net::driver_util::TxTokenAdapter<embassy_net_driver_channel::TxToken<1514>>>
+<xarxa::iface::interface::InterfaceInner>::process_ethernet
+<xarxa::iface::interface::InterfaceInner>::process_ieee802154
+<xarxa::iface::interface::InterfaceInner>::process_ipv6
+<xarxa::iface::interface::InterfaceInner>::route
+<xarxa::iface::neighbor::Cache>::fill
+<xarxa::iface::neighbor::Cache>::lookup
+<xarxa::iface::packet::Packet>::emit_payload
+<xarxa::iface::route::Routes>::add_default_ipv4_route
+<xarxa::iface::route::Routes>::add_default_ipv6_route
+<xarxa::iface::route::Routes>::lookup
+<xarxa::iface::route::Routes>::remove_default_ipv4_route
+<xarxa::iface::route::Routes>::remove_default_ipv6_route
+<xarxa::iface::socket_set::SocketSet>::remove
+<xarxa::phy::Medium>::from_driver
+<xarxa::socket::dhcpv4::Socket>::dispatch::<<xarxa::iface::interface::Interface>::socket_egress<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>::{closure#4}, <xarxa::iface::interface::Interface>::socket_egress::EgressError>
+<xarxa::socket::dhcpv4::Socket>::parse_ack
+<xarxa::socket::dhcpv4::Socket>::process
+<xarxa::socket::tcp::Socket>::ack_reply
+<xarxa::socket::tcp::Socket>::ack_to_transmit
+<xarxa::socket::tcp::Socket>::cwnd_remaining
+<xarxa::socket::tcp::Socket>::dispatch::<<xarxa::iface::interface::Interface>::socket_egress<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>::{closure#3}, <xarxa::iface::interface::Interface>::socket_egress::EgressError>
+<xarxa::socket::tcp::Socket>::flight_size
+<xarxa::socket::tcp::Socket>::immediate_ack_to_transmit
+<xarxa::socket::tcp::Socket>::new::<xarxa::storage::ring_buffer::RingBuffer<u8>>
+<xarxa::socket::tcp::Socket>::poll_at
+<xarxa::socket::tcp::Socket>::process
+<xarxa::socket::tcp::Socket>::recv_slice
+<xarxa::socket::tcp::Socket>::rst_reply
+<xarxa::socket::tcp::Socket>::seq_to_transmit
+<xarxa::socket::tcp::Socket>::window_to_update
+<xarxa::socket::udp::Socket>::dispatch::<<xarxa::iface::interface::Interface>::socket_egress<embassy_net::driver_util::DriverAdapter<embassy_net_driver_channel::Device<1514>>>::{closure#2}, <xarxa::iface::interface::Interface>::socket_egress::EgressError>
+<xarxa::socket::udp::Socket>::process
+<xarxa::storage::assembler::Assembler>::add
+<xarxa::storage::packet_buffer::PacketBuffer<xarxa::socket::udp::UdpMetadata>>::enqueue
+<xarxa::storage::ring_buffer::RingBuffer<u8>>::enqueue_many_with::<&mut [u8], <xarxa::storage::ring_buffer::RingBuffer<u8>>::enqueue_many::{closure#0}>
+<xarxa::storage::ring_buffer::RingBuffer<u8>>::enqueue_slice
+<xarxa::storage::ring_buffer::RingBuffer<u8>>::write_unallocated
+<xarxa::wire::HardwareAddress>::ethernet_or_panic
+<xarxa::wire::HardwareAddress>::ieee802154_or_panic
+<xarxa::wire::arp::Repr>::emit::<&mut [u8]>
+<xarxa::wire::dhcpv4::Repr>::emit::<[u8]>
+<xarxa::wire::ethernet::Address>::from_bytes
+<xarxa::wire::icmpv4::Repr>::emit::<[u8]>
+<xarxa::wire::icmpv6::Packet<&[u8]>>::msg_type (.llvm.16933391659952166446)
+<xarxa::wire::icmpv6::Packet<&[u8]>>::msg_type (.llvm.7311168660846933151)
+<xarxa::wire::icmpv6::Packet<&mut [u8]>>::clear_reserved
+<xarxa::wire::icmpv6::Repr>::emit::<[u8]>
+<xarxa::wire::icmpv6::Repr>::emit::emit_contained_packet::<[u8]>
+<xarxa::wire::icmpv6::Repr>::parse::<[u8]>
+<xarxa::wire::icmpv6::Repr>::parse::create_packet_from_payload::<[u8]>
+<xarxa::wire::ieee802154::Frame<&[u8]>>::addr_present_flags (.llvm.5830667960479645453)
+<xarxa::wire::ieee802154::Frame<&[u8]>>::addressing_fields (.llvm.5830667960479645453)
+<xarxa::wire::ieee802154::Frame<&[u8]>>::security_header_len (.llvm.5830667960479645453)
+<xarxa::wire::ieee802154::Frame<&[u8]>>::src_addressing_mode (.llvm.5830667960479645453)
+<xarxa::wire::ieee802154::Repr>::emit::<&mut [u8]>
+<xarxa::wire::ieee802154::Repr>::parse::<[u8]>
+<xarxa::wire::ip::Repr>::emit::<&mut [u8]>
+<xarxa::wire::ipv4::Repr>::emit::<&mut [u8]>
+<xarxa::wire::ipv4::Repr>::parse::<[u8]>
+<xarxa::wire::ipv6::Repr>::emit::<&mut &mut [u8]>
+<xarxa::wire::ipv6::Repr>::emit::<&mut [u8]>
+<xarxa::wire::ipv6ext_header::Repr>::emit::<[u8]>
+<xarxa::wire::ipv6hbh::Repr>::emit::<[u8]>
+<xarxa::wire::ipv6option::Repr>::emit::<[u8]>
+<xarxa::wire::mld::Repr>::emit::<[u8]>
+<xarxa::wire::mld::Repr>::parse::<[u8]>
+<xarxa::wire::ndisc::Repr>::emit::<[u8]>
+<xarxa::wire::ndisc::Repr>::parse::<[u8]>
+<xarxa::wire::ndiscoption::Repr>::emit::<[u8]>
+<xarxa::wire::ndiscoption::Repr>::parse::<[u8]>
+<xarxa::wire::sixlowpan::UnresolvedAddress>::resolve
+<xarxa::wire::sixlowpan::iphc::Packet<&[u8]>>::payload
+<xarxa::wire::sixlowpan::iphc::Repr>::buffer_len
+<xarxa::wire::sixlowpan::iphc::Repr>::emit::<&mut [u8]>
+<xarxa::wire::sixlowpan::iphc::Repr>::parse::<[u8]>
+<xarxa::wire::sixlowpan::nhc::ExtHeaderPacket<&[u8]>>::extension_header_id
+<xarxa::wire::sixlowpan::nhc::ExtHeaderPacket<&[u8]>>::payload
+<xarxa::wire::sixlowpan::nhc::ExtHeaderRepr>::parse::<[u8]>
+<xarxa::wire::sixlowpan::nhc::UdpNhcPacket<&[u8]>>::payload
+<xarxa::wire::sixlowpan::nhc::UdpNhcRepr>::emit::<&mut [u8], <xarxa::iface::interface::InterfaceInner>::ipv6_to_sixlowpan::{closure#0}>
+<xarxa::wire::sixlowpan::nhc::UdpNhcRepr>::parse::<[u8]>
+<xarxa::wire::tcp::Repr>::emit::<[u8]>
+<xarxa::wire::tcp::Repr>::parse::<[u8]>
+<xarxa::wire::tcp::SeqNumber as core::ops::arith::Add<usize>>::add
+<xarxa::wire::tcp::SeqNumber as core::ops::arith::Sub<usize>>::sub
+<xarxa::wire::tcp::SeqNumber as core::ops::arith::Sub>::sub
+<xarxa::wire::tcp::TcpOption>::emit
+<xarxa::wire::tcp::TcpOption>::parse
+<xarxa::wire::udp::Packet<&[u8]>>::payload
+<xarxa::wire::udp::Packet<&[u8]>>::verify_checksum
+<xarxa::wire::udp::Packet<&mut [u8]>>::fill_checksum (.llvm.10980106027427164167)
+<xarxa::wire::udp::Repr>::emit::<[u8], <xarxa::iface::packet::Packet>::emit_payload::{closure#0}>
+<xarxa::wire::udp::Repr>::emit::<[u8], <xarxa::iface::packet::Packet>::emit_payload::{closure#1}>
+<xarxa::wire::udp::Repr>::emit_header::<[u8]>
+GPIOTE
+RTC1
+__embassy_time_queue_item_from_waker
+_defmt_acquire
+embassy_net::new::<embassy_net_driver_channel::Device<1514>, 3>
+embassy_net::to_xarxa_hardware_address
+embassy_nrf::init
+embassy_nrf::usb::read_dma
+embassy_nrf::usb::write_dma
+embassy_usb::descriptor::rewrite_config_descriptor_for_high_speed
+embassy_usb::descriptor_reader::foreach_endpoint::<<embassy_usb::Inner<embassy_nrf::usb::Driver<embassy_nrf::usb::vbus_detect::HardwareVbusDetect>>>::handle_control_out::{closure#0}>
