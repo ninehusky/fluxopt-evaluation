@@ -71,8 +71,6 @@ caller → callee, findable at that address in `llvm-objdump -d --demangle`.
 ## Caveats
 
 * The `.text` delta is small (−504 B) largely because 307 of the ~660 sites are
-  `slice_index_fail` and byte-identical on both sides — mostly slice indexing
-  this work did not target.
 * The fork also ported embassy-net to xarxa's refined `EthernetAddress` API, so
   the delta covers that port, not xarxa alone.
 * The modified example additionally depends on `flux-rs` and sets
