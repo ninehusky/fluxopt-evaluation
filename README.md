@@ -71,8 +71,6 @@ caller → callee, findable at that address in `llvm-objdump -d --demangle`.
 ## Caveats
 
 * The `.text` delta is small (−504 B) largely because 307 of the ~660 sites are
-* The fork also ported embassy-net to xarxa's refined `EthernetAddress` API, so
-  the delta covers that port, not xarxa alone.
 * The modified example additionally depends on `flux-rs` and sets
   `[package.metadata.flux]`. Plain `cargo build` does not run Flux and the
   attributes expand to nothing, but it is a real difference between the two
