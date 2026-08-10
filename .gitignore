@@ -2,5 +2,3 @@ work/
 __pycache__/
 
 results/*
-!results/RESULTS.md
-!results/PER-FILE-WINS*.md

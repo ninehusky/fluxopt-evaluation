@@ -34,10 +34,10 @@ modified  xarxa   https://github.com/ninehusky/xarxa @ f42ae2866a63f32b3230a8dc2
 | embassy_nrf | 15 | 15 | +0 |
 | core | 8 | 9 | +1 |
 | defmt_rtt | 3 | 3 | +0 |
-| RTC1 | 2 | 2 | +0 |
 | _defmt_acquire | 2 | 2 | +0 |
-| __embassy_time_queue_item_from_waker | 1 | 1 | +0 |
+| RTC1 | 2 | 2 | +0 |
 | GPIOTE | 1 | 1 | +0 |
+| __embassy_time_queue_item_from_waker | 1 | 1 | +0 |
 | embassy_sync | 1 | 1 | +0 |
 
 ### Which symbols hold the panics
