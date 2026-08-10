@@ -1,125 +1,85 @@
 # fluxopt-evaluation
 
-Does the Flux-refined `xarxa` make the `usb_ethernet` firmware smaller, and
-does it remove panics?  This repo builds that one example twice and diffs the
-two ELFs.  Issue: ninehusky/fluxopt-evaluation#2.
+Builds the nRF52840 `usb_ethernet` example twice — against upstream
+embassy + xarxa, and against the `ninehusky` forks — and diffs section sizes and
+panic counts. Issue: ninehusky/fluxopt-evaluation#2.
 
-## Run it
-
-```sh
-./run.sh
-```
-
-Needs `rustup` toolchain `1.97` with the `thumbv7em-none-eabi` target and the
-`llvm-tools` component, plus network access (both builds fetch crates).
-Clones and cargo target dirs go in `./work` (gitignored, ~2 GB); results go in
-`./results`.  Re-running reuses the clones.
-
-## What is compared
-
-| | embassy | xarxa |
-| --- | --- | --- |
-| baseline | `embassy-rs/embassy` @ `7c2eac8a1450dbfbcc138a03c79aef4b880aff7b` | `embassy-rs/xarxa` @ `1f332ac32cc33d86aefc8e1c1a9749b93234a6de` |
-| modified | `ninehusky/embassy` @ `460e274e50c0d799eceedd8e6192f31f6ded5c35` (main) | `ninehusky/xarxa` @ `f42ae2866a63f32b3230a8dc24c95f209ccc22ad` |
-
-Why those refs:
-
-* Baseline embassy is the commit `ninehusky/embassy` forked from, not upstream
-  `main`.  Upstream main moves; the fork point holds everything else fixed so
-  the delta is attributable to the fork.
-* Baseline xarxa is not chosen by this repo at all.  Upstream embassy's
-  `embassy-net/Cargo.toml` pins it as a git dependency at that rev, and cargo
-  fetches it.
-* Modified xarxa is likewise not chosen here: `ninehusky/embassy` main records
-  it as the `third_party/xarxa` submodule pin, and `git submodule update
-  --init` checks it out.  That commit is the head of the fork's
-  `remove-explicit-panics` branch (the current no-panic work), which has also
-  been merged to that fork's `main`.
-
-Both repos already ask for toolchain `1.97` and both set
-`[profile.release] debug = 2`, so the build is byte-for-byte the same recipe on
-both sides:
+## Run
 
 ```sh
-cd examples/nrf52840 && CARGO_INCREMENTAL=0 cargo +1.97 build --release \
-    --bin usb_ethernet --target thumbv7em-none-eabi
+./run.py                            # upstream vs ninehusky/embassy main
+./run.py --xarxa ~/research/xarxa   # against a local xarxa, uncommitted edits included
+./run.py --modified-rev <sha>       # pinned to one embassy commit
 ```
 
-## How the numbers are produced
+Needs rustup toolchain `1.97` with the `thumbv7em-none-eabi` target and
+`llvm-tools`, plus network access. Clones and cargo target dirs go in `./work`
+(~2 GB); measurements go in `./results`. Both are gitignored — rerun to
+regenerate. Re-running reuses the clones.
 
-`measure.py <elf> <prefix>` shells out to exactly two commands, both from the
-1.97 toolchain's `llvm-tools`:
+## What it compares
+
+**Baseline** is upstream embassy pinned at `7c2eac8a`, the commit
+`ninehusky/embassy` branched from; that commit pins its own xarxa as a git
+dependency. **Modified** is `ninehusky/embassy` `main`, resolved fresh on every
+run, which pins `ninehusky/xarxa` as the `third_party/xarxa` submodule.
+
+Baseline is pinned and modified floats on purpose: holding the fork point fixed
+is what makes the delta attributable to the fork, and nothing here has to be
+edited when the fork moves. Both resolved SHAs are written to
+`results/refs.txt`. `--xarxa` is the one way to override the submodule; it flags
+the checkout dirty in `refs.txt` if you have uncommitted edits.
+
+Both repos ask for toolchain `1.97` and set `[profile.release] debug = 2`, so
+the two builds run the same command with the same profile.
+
+## Reading the results
+
+`results/RESULTS.md` is the table; `results/*.json` has everything behind it.
+
+**Sizes.** `total_flash` is what gets programmed onto the device. `total_ram` is
+`.data + .bss + .uninit`. `total_elf` is the whole file including DWARF, which
+`debug = 2` makes ~45× the firmware — it is reported only so the `Total` row in
+`llvm-size -A` is not mistaken for the firmware size.
+
+**Panics.** A *panic call site* is a branch into one of core's panic entry
+points from code that is not itself panic machinery; that is the number to
+compare across builds. A *panicking function* is a function containing at least
+one such branch — call-graph depth 1, not everything that can reach a panic.
+
+Compare builds using `panic_sites_by_crate`. The panicking-function *lists* move
+around between builds because inlining decides which symbol holds a given
+branch, so a function appearing on one side only is usually the same panic
+attributed elsewhere, not one added or removed.
+
+`unmatched_panic_refs` is a coverage check and should be `[]`. If it is not,
+some instruction reaches a panic in a way the site count missed — an indirect
+call, a linker veneer — and the count is an undercount. The JSON and the
+comparison table both say so rather than being quietly wrong.
+
+To check a classification by hand:
 
 ```sh
-llvm-size -A <elf>
-llvm-objdump -d --demangle <elf>
+column -t -s $'\t' results/modified.panic-call-sites.txt   # address, caller, panic symbol
+jq '.panic_targets' results/modified.json                  # which panic symbols matched
+llvm-nm --demangle <elf> | grep -iE 'panic|unwind|_fail'   # is PANIC_RE still complete?
 ```
 
-Definitions, all implemented in ~30 lines of `measure.py`:
-
-* **panic symbol** — a function symbol on the explicit list in `PANIC_RE`:
-  `core::panicking::*`, `core::cell::panic_already_*`,
-  `core::{option,result}::{unwrap_failed,expect_failed}`,
-  `core::slice::index::slice_index_fail`,
-  `core::slice::copy_from_slice_impl::len_mismatch_fail`, the
-  `#[panic_handler]` `rust_begin_unwind`, `_defmt_panic`, `panic_probe::*`.
-  It is a list and not a match on the substring "panic" because several entry
-  points do not contain the word (`unwrap_failed`, `slice_index_fail`) while
-  ordinary library code does — xarxa's `HardwareAddress::ethernet_or_panic` is
-  a normal function that happens to panic, not part of the machinery.  To
-  check the list is still complete for an ELF:
-  `llvm-nm --demangle <elf> | grep -iE 'panic|unwind|_fail'`.
-* **panic call site** — one branch instruction whose target is a panic symbol,
-  where the function containing the branch is *not* itself a panic symbol.
-  The exclusion is what makes the number mean "places ordinary code can enter a
-  panic" rather than "size of the panic machinery" — otherwise
-  `core::panicking::panic` → `panic_fmt` → `rust_begin_unwind` would count.
-  `bl`, plain `b`, and conditional branches all count, because `-O` turns most
-  panic calls into tail branches.
-* **panicking function** — a function containing at least one panic call site,
-  counted once regardless of how many.  A wrapper like `ethernet_or_panic`
-  lands here, via the branch to `core::panicking::panic` inside it.
-
-To audit the classification, read the dumps:
-
-```sh
-column -t -s $'\t' results/modified.panic-call-sites.txt   # caller -> panic symbol, one per line
-cat results/modified.panicking-functions.txt
-cat results/modified.sections.txt                          # raw llvm-size -A
-jq '.panic_targets' results/modified.json                  # which panic symbols got matched
-```
-
-Every line in `panic-call-sites.txt` corresponds to one instruction you can
-find in `llvm-objdump -d --demangle` output.
-
-## Results
-
-See [results/RESULTS.md](results/RESULTS.md) for the table and
-[results/refs.txt](results/refs.txt) for the exact SHAs of the run that
-produced it.
+Each row of `panic-call-sites.txt` is one instruction, in the direction
+caller → callee, findable at that address in `llvm-objdump -d --demangle`.
 
 ## Caveats
 
-* Only allocated sections are in the table.  Both builds carry `debug = 2`, so
-  `.debug_*` dominates the raw `llvm-size -A` output and is noise for this
-  question; it is still in `results/*.sections.txt` and the JSON.
-* The modified example additionally depends on `flux-rs` (the attribute crate)
-  and sets `[package.metadata.flux]`.  Plain `cargo build` does not run Flux
-  and the attributes expand to nothing, so this should not move the numbers —
-  but it is a real difference between the two `Cargo.toml`s.
-* The fork's embassy-net was ported to xarxa's refined `EthernetAddress` API,
-  so the delta covers both the xarxa changes and that port, not xarxa alone.
-* Panic classification is name-based.  A panicking path reached through a
-  function pointer or an indirect branch is not counted; a symbol that merely
-  has "panic" in its name would be.  The dumps exist so both cases are visible.
-* The panicking-function *counts* are over raw symbols, but the added/removed
-  *lists* strip LLVM's ` (.llvm.<hash>)` suffix, which differs between the two
-  builds for the same function.  Without that, a dozen unchanged functions look
-  simultaneously added and removed.
-* `core::slice::index::slice_index_fail` accounts for 307 of the ~660 call
-  sites and is identical on both sides, so most of what is left is slice
-  indexing that this work did not target.  `jq '.panic_targets'` on either JSON
-  breaks the total down by panic entry point.
-* One build each, no rebuild-for-determinism check.  Rust builds of the same
-  sources with the same toolchain are stable enough for section sizes, but
-  nothing here proves it.
+* The `.text` delta is small (−504 B) largely because 307 of the ~660 sites are
+  `slice_index_fail` and byte-identical on both sides — mostly slice indexing
+  this work did not target.
+* The fork also ported embassy-net to xarxa's refined `EthernetAddress` API, so
+  the delta covers that port, not xarxa alone.
+* The modified example additionally depends on `flux-rs` and sets
+  `[package.metadata.flux]`. Plain `cargo build` does not run Flux and the
+  attributes expand to nothing, but it is a real difference between the two
+  `Cargo.toml`s.
+* `PANIC_RE` is an explicit list of panic entry points, not a match on the
+  substring "panic" — several entry points lack the word (`unwrap_failed`,
+  `slice_index_fail`) and ordinary code has it (`ethernet_or_panic`).
+* One build per side, no determinism check here. `sweep.py` does one.

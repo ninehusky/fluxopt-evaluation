@@ -1,5 +1,0 @@
-toolchain      1.97   target thumbv7em-none-eabi   profile release   bin usb_ethernet
-baseline  embassy https://github.com/embassy-rs/embassy @ 7c2eac8a1450dbfbcc138a03c79aef4b880aff7b
-baseline  xarxa   https://github.com/embassy-rs/xarxa @ 1f332ac32cc33d86aefc8e1c1a9749b93234a6de
-modified  embassy https://github.com/ninehusky/embassy @ 460e274e50c0d799eceedd8e6192f31f6ded5c35
-modified  xarxa   https://github.com/ninehusky/xarxa @ f42ae2866a63f32b3230a8dc24c95f209ccc22ad
