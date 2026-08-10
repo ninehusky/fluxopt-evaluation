@@ -75,7 +75,4 @@ caller → callee, findable at that address in `llvm-objdump -d --demangle`.
   `[package.metadata.flux]`. Plain `cargo build` does not run Flux and the
   attributes expand to nothing, but it is a real difference between the two
   `Cargo.toml`s.
-* `PANIC_RE` is an explicit list of panic entry points, not a match on the
-  substring "panic" — several entry points lack the word (`unwrap_failed`,
-  `slice_index_fail`) and ordinary code has it (`ethernet_or_panic`).
 * One build per side, no determinism check here. `sweep.py` does one.
