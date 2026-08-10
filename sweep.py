@@ -108,6 +108,8 @@ def main():
     if not os.path.isdir(XARXA):
         sys.exit(f"{XARXA} missing -- run ./run.py first")
 
+    ablated = False  # whether the ELF on disk is from an ablated build
+
     try:
         restore()
 
@@ -139,6 +141,7 @@ def main():
             tag = f.replace("/", "_")
             restore()
             allow_unsafe()
+            ablated = True
             r = subprocess.run(
                 [sys.executable, os.path.join(HERE, "ablate.py"), os.path.join(XARXA, f)],
                 text=True, capture_output=True)
@@ -161,6 +164,15 @@ def main():
                   f"dsites={n_sites - ref_sites} {status}", flush=True)
     finally:
         restore()
+        # Restoring the sources is not enough: the binary sitting in the target
+        # dir is still whatever compiled last, which is some ablated build.  Left
+        # that way, running llvm-size on it by hand -- or anything else reading
+        # that path -- silently reports a number that does not match
+        # results/modified.json.  Rebuild so the tree matches its sources again.
+        if ablated:
+            print("== rebuilding reference so the on-disk binary matches the sources",
+                  flush=True)
+            build(os.path.join(OUT, "reference.log"))
 
     with open(TSV, "w") as fh:
         fh.write("file\tsites\tdelta_text\tdelta_sites\tstatus\n")

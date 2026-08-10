@@ -115,7 +115,8 @@ file's sites, so the delta does not mean what the row says — usually `const fn
 bodies, which are skipped because `get_unchecked` is not const-stable.
 `build-failed` means the mutable-vs-shared guess was wrong. Neither is reported
 as a small win. The sweep also confirms determinism before ablating anything,
-and restores the checkout between files, including on Ctrl-C.
+restores the checkout between files including on Ctrl-C, and rebuilds at the
+end so the binary left in `work/` matches its sources again.
 
 ### The feature flag, which is bigger than all of them
 
