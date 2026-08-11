@@ -2,3 +2,9 @@ work/
 __pycache__/
 
 results/*
+!results/RESULTS.md
+!results/PER-FILE-WINS*.md
+!results/TRIAGE.md
+!results/BLOCKING-MAP.md
+!results/PLAN-TOMORROW.md
+!results/PANIC-INVENTORY.md
