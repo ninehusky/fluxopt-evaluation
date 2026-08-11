@@ -1,0 +1,55 @@
+{
+  "_comment": [
+    "Measured ablation budgets for the nRF52840 usb_ethernet firmware.",
+    "Produced by sweep.py / combined.py / ceiling.py against work/modified with",
+    "xarxa at the flux-specs-slice-index base. The reference .text reproduced",
+    "exactly on the determinism check (136620 twice), so these deltas are not",
+    "build noise.",
+    "",
+    "Ablation is get_unchecked with NO proof: it is the CEILING for a piece of",
+    "work, not a forecast. A site only leaves the real binary once its obligation",
+    "is actually discharged and check_proof.py passes."
+  ],
+  "measured": "2026-08-11",
+  "reference": {
+    "text": 136620, "rodata": 18448, "flash": 155404,
+    "sites": 650, "xarxa_sites": 439
+  },
+  "ceiling_all_xarxa": {
+    "_what": "every ablatable xarxa panic removed at once; 33 of 35 files",
+    "_excluded": ["src/wire/mod.rs", "src/storage/assembler.rs"],
+    "_excluded_why": "ablator cannot rewrite them: [u8; N] has no __ai impl, and assembler.rs hits borrowck",
+    "text": 121468, "rodata": 9384, "flash": 131188,
+    "sites": 244, "xarxa_sites": 53
+  },
+  "churn_batch_8_files": {
+    "_what": "only the CHURN lines in the 8 candidate files, ablated together",
+    "_files": ["src/wire/ipv4.rs", "src/wire/udp.rs", "src/wire/ndiscoption.rs",
+               "src/wire/sixlowpan/nhc.rs", "src/wire/icmpv6.rs", "src/wire/ipv6.rs",
+               "src/wire/ndisc.rs", "src/wire/arp.rs"],
+    "text": 134120, "rodata": 17324, "flash": 151780,
+    "sites": 556, "xarxa_sites": 363
+  },
+  "per_file_churn_only": {
+    "_what": "each file's CHURN lines ablated ALONE. These DO NOT SUM: they total",
+    "_what2": "-1904 B while the same eight together give -2500 B. Superadditive,",
+    "_what3": "because shared panic machinery only dies when its last user does.",
+    "_columns": ["delta_text", "delta_sites", "targeted_lines", "sites_removed"],
+    "src/wire/udp.rs":              [-628, -18, 10, 18],
+    "src/wire/ipv6.rs":             [-416, -22, 10, 22],
+    "src/wire/sixlowpan/nhc.rs":    [-220,  -4,  7,  5],
+    "src/wire/ipv4.rs":             [-212, -13, 11, 14],
+    "src/wire/ndisc.rs":            [-204,  -9, 11, 12],
+    "src/wire/icmpv6.rs":           [-180, -16,  9, 18],
+    "src/wire/ndiscoption.rs":      [-128,  -3,  7,  4],
+    "src/wire/arp.rs":              [  84,  -5,  9,  5]
+  },
+  "noise_floor": {
+    "_what": "a rebuild of identical sources reproduced .text exactly, so there is",
+    "_what2": "no link noise. But a real source change shifts inlining: the largest",
+    "_what3": "INCREASE observed was +84 B here, +332 B in the historical whole-file",
+    "_what4": "sweep. Treat a single-file delta under ~300 B as unresolved.",
+    "identical_rebuild_delta": 0,
+    "largest_increase_seen": 332
+  }
+}

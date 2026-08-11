@@ -1,0 +1,354 @@
+file	fn	site_line	messages
+src/iface/interface/ipv6.rs	get_source_address_ipv6	31	call to core[a8c6]::iter::adapters::filter::{impl#3}::count may panic: ;; call to core[a8c6]::iter::adapters::filter_map::{impl#2}::next may pan ;; call to core[a8c6]::iter::traits::iterator::Iterator::zip may panic: M ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_loopback may panic: Mi ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_unspecified may panic: ;; call to core[a8c6]::num::{impl#6}::leading_zeros may panic: MightPanic ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#166}::find_map may panic: Might ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No
+src/iface/interface/ipv6.rs	get_source_address_ipv6	98	call to core[a8c6]::iter::adapters::filter::{impl#3}::count may panic: ;; call to core[a8c6]::iter::adapters::filter_map::{impl#2}::next may pan ;; call to core[a8c6]::iter::traits::iterator::Iterator::zip may panic: M ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_loopback may panic: Mi ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_unspecified may panic: ;; call to core[a8c6]::num::{impl#6}::leading_zeros may panic: MightPanic ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#166}::find_map may panic: Might ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No
+src/iface/interface/ipv6.rs	process_hopbyhop	317	call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::slice::iter::{impl#166}::next may panic: MightPani ;; call to heapless[ea1e]::vec::{impl#11}::into_iter may panic: MightPani ;; refinement type error
+src/iface/interface/mod.rs	new	212	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	socket_egress	814	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	check_ip_addrs	920	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	lookup_hardware_addr	1122	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	dispatch_ip	1245	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	dispatch_ip	1281	rustc aborted; quarantine candidate
+src/iface/interface/mod.rs	dispatch_ip	1308	rustc aborted; quarantine candidate
+src/iface/interface/sixlowpan.rs	process_sixlowpan	81	call to core[a8c6]::array::{impl#15}::index may panic: MightPanic(Tran ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No
+src/iface/interface/sixlowpan.rs	dispatch_sixlowpan	303	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to xarxa_driver[1613]::TxToken::consume may panic: MightPanic(Not ;; call to xarxa_driver[1613]::TxToken::set_meta may panic: MightPanic(No ;; refinement type error
+src/iface/interface/sixlowpan.rs	dispatch_sixlowpan	413	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to xarxa_driver[1613]::TxToken::consume may panic: MightPanic(Not ;; call to xarxa_driver[1613]::TxToken::set_meta may panic: MightPanic(No ;; refinement type error
+src/iface/interface/sixlowpan.rs	ipv6_to_sixlowpan	458	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/iface/interface/sixlowpan.rs	ipv6_to_sixlowpan	460	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/iface/interface/sixlowpan.rs	ipv6_to_sixlowpan	527	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/iface/interface/sixlowpan.rs	ipv6_to_sixlowpan	532	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/iface/interface/sixlowpan.rs	ipv6_to_sixlowpan	549	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/iface/interface/sixlowpan.rs	decompress_ext_hdr	720	refinement type error
+src/iface/interface/sixlowpan.rs	decompress_ext_hdr	732	refinement type error
+src/iface/interface/sixlowpan.rs	decompress_ext_hdr	734	refinement type error
+src/iface/interface/sixlowpan.rs	decompress_udp	771	arithmetic operation may underflow ;; call to xarxa_driver[1613]::{impl#2}::ignored may panic: MightPanic(No ;; refinement type error
+src/iface/interface/sixlowpan.rs	decompress_udp	773	arithmetic operation may underflow ;; call to xarxa_driver[1613]::{impl#2}::ignored may panic: MightPanic(No ;; refinement type error
+src/iface/interface/sixlowpan.rs	decompress_udp	773	arithmetic operation may underflow ;; call to xarxa_driver[1613]::{impl#2}::ignored may panic: MightPanic(No ;; refinement type error
+src/iface/neighbor.rs	fill_with_expiration	131	call to core[a8c6]::cmp::PartialEq::ne may panic: MightPanic(Transitiv ;; call to core[a8c6]::iter::traits::iterator::Iterator::min_by_key may p ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::linear_map::{impl#1}::insert may panic: MightP ;; call to heapless[ea1e]::linear_map::{impl#1}::iter may panic: MightPan ;; call to heapless[ea1e]::linear_map::{impl#1}::remove may panic: MightP
+src/iface/neighbor.rs	fill_with_expiration	143	call to core[a8c6]::cmp::PartialEq::ne may panic: MightPanic(Transitiv ;; call to core[a8c6]::iter::traits::iterator::Iterator::min_by_key may p ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::linear_map::{impl#1}::insert may panic: MightP ;; call to heapless[ea1e]::linear_map::{impl#1}::iter may panic: MightPan ;; call to heapless[ea1e]::linear_map::{impl#1}::remove may panic: MightP
+src/iface/neighbor.rs	lookup	150	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::linear_map::{impl#1}::get may panic: MightPani
+src/iface/neighbor.rs	lookup	150	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::linear_map::{impl#1}::get may panic: MightPani
+src/iface/packet.rs	emit_payload	90	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	emit_payload	105	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	emit_payload	115	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	emit_payload	121	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	emit_payload	143	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	emit_payload	179	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/iface/packet.rs	as_sixlowpan_next_header	234	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/packet.rs	as_sixlowpan_next_header	234	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/packet.rs	as_sixlowpan_next_header	236	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/packet.rs	as_sixlowpan_next_header	236	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/packet.rs	as_sixlowpan_next_header	240	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/packet.rs	as_sixlowpan_next_header	240	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/iface/route.rs	lookup	173	call to core[a8c6]::iter::traits::iterator::Iterator::max_by_key may p ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No
+src/iface/route.rs	lookup	187	call to core[a8c6]::iter::traits::iterator::Iterator::max_by_key may p ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No
+src/iface/socket_set.rs	add	83	call to core[a8c6]::iter::adapters::enumerate::{impl#1}::next may pani ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	add	83	call to core[a8c6]::iter::adapters::enumerate::{impl#1}::next may pani ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get	99	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#2}::deref may panic: MightPanic(No
+src/iface/socket_set.rs	get	101	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#2}::deref may panic: MightPanic(No
+src/iface/socket_set.rs	get	103	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#2}::deref may panic: MightPanic(No
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	113	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	115	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	get_mut	116	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::option::{impl#0}::expect may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	remove	126	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/iface/socket_set.rs	remove	128	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani
+src/phy/mod.rs	from_driver	67	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/socket/dhcpv4.rs	process	315	call to core[a8c6]::cmp::PartialEq::ne may panic: MightPanic(Transitiv ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; refinement type error
+src/socket/dhcpv4.rs	process	333	call to core[a8c6]::cmp::PartialEq::ne may panic: MightPanic(Transitiv ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; refinement type error
+src/socket/dhcpv4.rs	dispatch	570	arithmetic operation may underflow ;; call to core[a8c6]::ops::function::FnOnce::call_once may panic: MightP ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv ;; call to core[a8c6]::result::{impl#28}::from_residual may panic: MightP
+src/socket/tcp.rs	new	592	arithmetic operation may underflow ;; call to core[a8c6]::convert::Into::into may panic: MightPanic(NotInCal ;; call to core[a8c6]::num::{impl#11}::leading_zeros may panic: MightPani ;; call to core[a8c6]::num::{impl#11}::saturating_sub may panic: MightPan ;; call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/socket/tcp.rs	process	1641	
+src/socket/tcp.rs	process	1799	
+src/socket/tcp.rs	seq_to_transmit	2323	arithmetic operation may underflow ;; call to core[a8c6]::num::{impl#11}::saturating_sub may panic: MightPan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra
+src/socket/udp.rs	process	643	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/storage/assembler.rs	add	233	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::range::{impl#6}::next may panic: MightPanic( ;; call to core[a8c6]::option::{impl#0}::unwrap_or_else may panic: MightP
+src/storage/packet_buffer.rs	dequeue_with	195	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/packet_buffer.rs	dequeue_with	196	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/packet_buffer.rs	dequeue	215	call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::result::{impl#28}::from_residual may panic: MightP
+src/storage/packet_buffer.rs	peek	227	call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra
+src/storage/ring_buffer.rs	get_idx_unchecked	110	assertion might fail: possible remainder with a divisor of zero
+src/storage/ring_buffer.rs	get_idx_unchecked	110	assertion might fail: possible remainder with a divisor of zero
+src/storage/ring_buffer.rs	get_idx_unchecked	110	assertion might fail: possible remainder with a divisor of zero
+src/storage/ring_buffer.rs	get_idx_unchecked	110	assertion might fail: possible remainder with a divisor of zero
+src/storage/ring_buffer.rs	dequeue_one_with	154	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_one_with	154	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_one_with	154	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	enqueue_many_with	193	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	enqueue_many_with	193	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_many_with	245	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_many_with	245	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_many_with	245	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_many_with	245	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	dequeue_many_with	245	internal flux error: crates/flux-infer/src/infer.rs:888:22
+src/storage/ring_buffer.rs	get_unallocated	314	arithmetic operation may underflow ;; call to managed[ba83]::slice::{impl#3}::deref_mut may panic: MightPani ;; refinement type error
+src/storage/ring_buffer.rs	enqueue_unallocated	345	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/storage/ring_buffer.rs	get_allocated	369	arithmetic operation may underflow ;; call to managed[ba83]::slice::{impl#2}::deref may panic: MightPanic(No ;; refinement type error
+src/storage/ring_buffer.rs	get_allocated	369	arithmetic operation may underflow ;; call to managed[ba83]::slice::{impl#2}::deref may panic: MightPanic(No ;; refinement type error
+src/storage/ring_buffer.rs	dequeue_allocated	398	arithmetic operation may underflow ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/arp.rs	set_hardware_type	176	refinement type error
+src/wire/arp.rs	set_protocol_type	183	refinement type error
+src/wire/arp.rs	set_hardware_len	190	assertion might fail: possible out-of-bounds access
+src/wire/arp.rs	set_protocol_len	197	assertion might fail: possible out-of-bounds access
+src/wire/arp.rs	set_operation	204	refinement type error
+src/wire/arp.rs	set_source_hardware_addr	214	refinement type error
+src/wire/arp.rs	set_source_protocol_addr	224	refinement type error
+src/wire/arp.rs	set_target_hardware_addr	234	refinement type error
+src/wire/arp.rs	set_target_protocol_addr	244	refinement type error
+src/wire/dhcpv4.rs	set_sname_and_boot_file_to_zero	428	call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/dhcpv4.rs	set_sname_and_boot_file_to_zero	431	call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/dhcpv4.rs	set_magic_number	495	refinement type error
+src/wire/dhcpv4.rs	emit	935	call to core[a8c6]::array::{impl#15}::index may panic: MightPanic(Tran ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::iter::traits::iterator::Iterator::count may panic: ;; call to core[a8c6]::num::{impl#7}::to_be_bytes may panic: MightPanic(T ;; call to core[a8c6]::num::{impl#8}::to_be_bytes may panic: MightPanic(T ;; call to core[a8c6]::ops::arith::{impl#144}::mul may panic: MightPanic( ;; call to core[a8c6]::ops::arith::{impl#16}::add may panic: MightPanic(S ;; call to core[a8c6]::slice::iter::{impl#166}::next may panic: MightPani ;; call to heapless[ea1e]::vec::{impl#36}::deref may panic: MightPanic(No ;; refinement type error
+src/wire/ethernet.rs	from_bytes	76	refinement type error
+src/wire/ethernet.rs	set_src_addr	287	refinement type error
+src/wire/ethernet.rs	set_src_addr	287	refinement type error
+src/wire/ethernet.rs	set_src_addr	287	refinement type error
+src/wire/ethernet.rs	set_ethertype	294	refinement type error
+src/wire/ethernet.rs	set_ethertype	294	refinement type error
+src/wire/ethernet.rs	set_ethertype	294	refinement type error
+src/wire/icmpv4.rs	set_msg_code	308	assertion might fail: possible out-of-bounds access
+src/wire/icmpv4.rs	set_echo_ident	325	refinement type error
+src/wire/icmpv4.rs	set_echo_seq_no	335	refinement type error
+src/wire/icmpv4.rs	data_mut	355	refinement type error
+src/wire/icmpv4.rs	emit	530	call to xarxa_driver[1613]::{impl#1}::tx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/icmpv4.rs	emit	544	call to xarxa_driver[1613]::{impl#1}::tx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/icmpv6.rs	payload	458	refinement type error
+src/wire/icmpv6.rs	payload	458	refinement type error
+src/wire/icmpv6.rs	payload	458	refinement type error
+src/wire/icmpv6.rs	payload	458	refinement type error
+src/wire/icmpv6.rs	payload	458	refinement type error
+src/wire/icmpv6.rs	set_msg_type	470	assertion might fail: possible out-of-bounds access
+src/wire/icmpv6.rs	set_msg_type	470	assertion might fail: possible out-of-bounds access
+src/wire/icmpv6.rs	set_msg_code	479	assertion might fail: possible out-of-bounds access
+src/wire/icmpv6.rs	set_msg_code	479	assertion might fail: possible out-of-bounds access
+src/wire/icmpv6.rs	set_msg_code	479	assertion might fail: possible out-of-bounds access
+src/wire/icmpv6.rs	clear_reserved	502	assertion might fail: possible out-of-bounds access ;; refinement type error
+src/wire/icmpv6.rs	clear_reserved	502	assertion might fail: possible out-of-bounds access ;; refinement type error
+src/wire/icmpv6.rs	clear_reserved	507	assertion might fail: possible out-of-bounds access ;; refinement type error
+src/wire/icmpv6.rs	clear_reserved	511	assertion might fail: possible out-of-bounds access ;; refinement type error
+src/wire/icmpv6.rs	set_echo_ident	544	refinement type error
+src/wire/icmpv6.rs	set_echo_seq_no	554	refinement type error
+src/wire/icmpv6.rs	payload_mut	600	refinement type error
+src/wire/icmpv6.rs	payload_mut	600	refinement type error
+src/wire/icmpv6.rs	parse	680	call to core[a8c6]::result::{impl#0}::map may panic: MightPanic(Transi ;; call to xarxa_driver[1613]::{impl#1}::rx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/icmpv6.rs	emit	787	arithmetic operation may underflow ;; call to xarxa_driver[1613]::{impl#1}::tx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/icmpv6.rs	emit	794	arithmetic operation may underflow ;; call to xarxa_driver[1613]::{impl#1}::tx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/ieee802154.rs	frame_type	371	call to byteorder[387c]::{impl#3}::read_u16 may panic: MightPanic(NoMI ;; refinement type error
+src/wire/ieee802154.rs	frame_type	371	call to byteorder[387c]::{impl#3}::read_u16 may panic: MightPanic(NoMI ;; refinement type error
+src/wire/ieee802154.rs	dst_addressing_mode	388	call to byteorder[387c]::{impl#3}::read_u16 may panic: MightPanic(NoMI ;; refinement type error
+src/wire/ieee802154.rs	src_addressing_mode	406	call to byteorder[387c]::{impl#3}::read_u16 may panic: MightPanic(NoMI ;; refinement type error
+src/wire/ieee802154.rs	addressing_fields	450	refinement type error
+src/wire/ieee802154.rs	addressing_fields	450	refinement type error
+src/wire/ieee802154.rs	src_pan_id	543	call to byteorder[387c]::{impl#3}::read_u16 may panic: MightPanic(NoMI ;; refinement type error
+src/wire/ieee802154.rs	payload	721	refinement type error
+src/wire/ip.rs	pseudo_header	992	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ip.rs	pseudo_header	992	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ip.rs	pseudo_header	992	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ip.rs	pseudo_header	992	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ipv4.rs	new	101	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ipv4.rs	verify_checksum	369	refinement type error
+src/wire/ipv4.rs	payload	389	refinement type error
+src/wire/ipv4.rs	set_version	398	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_version	398	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_dscp	411	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_dscp	411	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_total_len	424	refinement type error
+src/wire/ipv4.rs	set_total_len	424	refinement type error
+src/wire/ipv4.rs	set_ident	431	refinement type error
+src/wire/ipv4.rs	set_ident	431	refinement type error
+src/wire/ipv4.rs	clear_flags	438	refinement type error
+src/wire/ipv4.rs	clear_flags	438	refinement type error
+src/wire/ipv4.rs	set_hop_limit	474	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_hop_limit	474	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_next_header	481	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_next_header	481	assertion might fail: possible out-of-bounds access
+src/wire/ipv4.rs	set_src_addr	495	refinement type error
+src/wire/ipv4.rs	set_src_addr	495	refinement type error
+src/wire/ipv4.rs	set_dst_addr	502	refinement type error
+src/wire/ipv4.rs	set_dst_addr	502	refinement type error
+src/wire/ipv6.rs	mask	163	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::{impl#0}::split_at may panic: MightPanic(Tr ;; refinement type error
+src/wire/ipv6.rs	mask	163	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::{impl#0}::split_at may panic: MightPanic(Tr ;; refinement type error
+src/wire/ipv6.rs	solicited_node	178	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/ipv6.rs	payload_len	448	refinement type error
+src/wire/ipv6.rs	payload_len	448	refinement type error
+src/wire/ipv6.rs	src_addr	475	call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/ipv6.rs	dst_addr	482	call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/ipv6.rs	payload	492	refinement type error
+src/wire/ipv6.rs	set_version	503	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_version	503	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_traffic_class	515	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_traffic_class	515	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_traffic_class	515	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_flow_label	523	assertion might fail: possible out-of-bounds access ;; call to byteorder[387c]::ByteOrder::write_u24 may panic: MightPanic(No ;; refinement type error
+src/wire/ipv6.rs	set_flow_label	524	assertion might fail: possible out-of-bounds access ;; call to byteorder[387c]::ByteOrder::write_u24 may panic: MightPanic(No ;; refinement type error
+src/wire/ipv6.rs	set_flow_label	524	assertion might fail: possible out-of-bounds access ;; call to byteorder[387c]::ByteOrder::write_u24 may panic: MightPanic(No ;; refinement type error
+src/wire/ipv6.rs	set_flow_label	524	assertion might fail: possible out-of-bounds access ;; call to byteorder[387c]::ByteOrder::write_u24 may panic: MightPanic(No ;; refinement type error
+src/wire/ipv6.rs	set_payload_len	531	refinement type error
+src/wire/ipv6.rs	set_payload_len	531	refinement type error
+src/wire/ipv6.rs	set_payload_len	531	refinement type error
+src/wire/ipv6.rs	set_next_header	538	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_hop_limit	545	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_hop_limit	545	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_hop_limit	545	assertion might fail: possible out-of-bounds access
+src/wire/ipv6.rs	set_src_addr	552	refinement type error
+src/wire/ipv6.rs	set_src_addr	552	refinement type error
+src/wire/ipv6.rs	set_src_addr	552	refinement type error
+src/wire/ipv6.rs	set_dst_addr	559	refinement type error
+src/wire/ipv6.rs	set_dst_addr	559	refinement type error
+src/wire/ipv6.rs	set_dst_addr	559	refinement type error
+src/wire/ipv6.rs	payload_mut	567	refinement type error
+src/wire/ipv6ext_header.rs	set_next_header	102	assertion might fail: possible out-of-bounds access
+src/wire/ipv6ext_header.rs	set_header_len	110	assertion might fail: possible out-of-bounds access
+src/wire/ipv6hbh.rs	emit	104	call to core[a8c6]::slice::iter::{impl#166}::next may panic: MightPani ;; call to heapless[ea1e]::vec::{impl#11}::into_iter may panic: MightPani ;; refinement type error
+src/wire/ipv6hbh.rs	emit	106	call to core[a8c6]::slice::iter::{impl#166}::next may panic: MightPani ;; call to heapless[ea1e]::vec::{impl#11}::into_iter may panic: MightPani ;; refinement type error
+src/wire/ipv6option.rs	set_option_type	229	assertion might fail: possible out-of-bounds access
+src/wire/ipv6option.rs	set_data_len	239	assertion might fail: possible out-of-bounds access
+src/wire/ipv6option.rs	set_data_len	239	assertion might fail: possible out-of-bounds access
+src/wire/ipv6option.rs	data_mut	252	refinement type error
+src/wire/ipv6option.rs	data_mut	252	refinement type error
+src/wire/ipv6option.rs	data_mut	252	refinement type error
+src/wire/ipv6option.rs	emit	366	call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/mld.rs	mcast_addr	52	call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/mld.rs	s_flag	59	assertion might fail: possible out-of-bounds access
+src/wire/mld.rs	qqic	73	assertion might fail: possible out-of-bounds access
+src/wire/mld.rs	num_srcs	80	refinement type error
+src/wire/mld.rs	set_qrv	134	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila
+src/wire/mld.rs	set_qqic	143	assertion might fail: possible out-of-bounds access
+src/wire/mld.rs	set_num_srcs	150	refinement type error
+src/wire/mld.rs	set_num_srcs	273	refinement type error
+src/wire/mld.rs	set_mcast_addr	282	call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/mld.rs	set_mcast_addr	284	call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/mod.rs	ethernet_or_panic	441	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/mod.rs	ethernet_or_panic	441	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/mod.rs	ieee802154_or_panic	450	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/mod.rs	as_bytes	549	call to core[a8c6]::array::{impl#15}::index may panic: MightPanic(Tran
+src/wire/ndisc.rs	reachable_time	59	refinement type error
+src/wire/ndisc.rs	retrans_time	66	refinement type error
+src/wire/ndisc.rs	target_addr	81	call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/ndisc.rs	dest_addr	107	call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/ndisc.rs	set_current_hop_limit	120	assertion might fail: possible out-of-bounds access
+src/wire/ndisc.rs	set_router_flags	126	assertion might fail: possible out-of-bounds access
+src/wire/ndisc.rs	set_router_lifetime	133	refinement type error
+src/wire/ndisc.rs	set_reachable_time	140	refinement type error
+src/wire/ndisc.rs	set_retrans_time	147	refinement type error
+src/wire/ndisc.rs	set_target_addr	162	refinement type error
+src/wire/ndisc.rs	set_target_addr	162	refinement type error
+src/wire/ndisc.rs	set_dest_addr	187	refinement type error
+src/wire/ndisc.rs	parse	240	refinement type error
+src/wire/ndisc.rs	emit	451	refinement type error
+src/wire/ndiscoption.rs	set_option_type	289	assertion might fail: possible out-of-bounds access
+src/wire/ndiscoption.rs	set_data_len	296	assertion might fail: possible out-of-bounds access
+src/wire/ndiscoption.rs	set_data_len	296	assertion might fail: possible out-of-bounds access
+src/wire/ndiscoption.rs	set_link_layer_addr	306	refinement type error
+src/wire/ndiscoption.rs	set_mtu	316	refinement type error
+src/wire/ndiscoption.rs	clear_prefix_reserved	352	refinement type error
+src/wire/ndiscoption.rs	set_prefix	359	refinement type error
+src/wire/ndiscoption.rs	clear_redirected_reserved	369	call to core[a8c6]::slice::{impl#0}::fill_with may panic: MightPanic(U ;; refinement type error
+src/wire/ndiscoption.rs	data_mut	379	refinement type error
+src/wire/ndiscoption.rs	data_mut	379	refinement type error
+src/wire/ndiscoption.rs	parse	488	call to core[a8c6]::iter::traits::exact_size::ExactSizeIterator::len m ;; refinement type error
+src/wire/ndiscoption.rs	emit	574	arithmetic operation may underflow ;; call to core[a8c6]::num::{impl#11}::div_ceil may panic: MightPanic(Syn ;; refinement type error
+src/wire/ndiscoption.rs	emit	588	arithmetic operation may underflow ;; call to core[a8c6]::num::{impl#11}::div_ceil may panic: MightPanic(Syn ;; refinement type error
+src/wire/sixlowpan/iphc.rs	next_header	133	refinement type error
+src/wire/sixlowpan/iphc.rs	hop_limit	147	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/iphc.rs	flow_label_field	206	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/iphc.rs	flow_label_field	212	call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/iphc.rs	dst_addr	332	refinement type error
+src/wire/sixlowpan/iphc.rs	dst_addr	335	refinement type error
+src/wire/sixlowpan/iphc.rs	dst_addr	338	refinement type error
+src/wire/sixlowpan/iphc.rs	payload	455	refinement type error
+src/wire/sixlowpan/iphc.rs	set_dispatch_field	462	refinement type error
+src/wire/sixlowpan/iphc.rs	set_field	481	refinement type error
+src/wire/sixlowpan/iphc.rs	set_field	481	refinement type error
+src/wire/sixlowpan/iphc.rs	buffer_len	845	call to core[a8c6]::array::equality::{impl#2}::eq may panic: MightPani ;; call to core[a8c6]::array::{impl#15}::index may panic: MightPanic(Tran ;; call to core[a8c6]::net::ip_addr::{impl#20}::is_multicast may panic: M ;; call to core[a8c6]::net::ip_addr::{impl#58}::eq may panic: MightPanic( ;; call to core[a8c6]::option::{impl#0}::map may panic: MightPanic(Transi ;; call to core[a8c6]::option::{impl#17}::eq may panic: MightPanic(Transi ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::cmp::{impl#0}::eq may panic: MightPanic(Tra
+src/wire/sixlowpan/mod.rs	resolve	86	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/sixlowpan/mod.rs	resolve	90	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/sixlowpan/mod.rs	resolve	96	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/sixlowpan/mod.rs	resolve	118	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/sixlowpan/mod.rs	resolve	124	arithmetic operation may underflow ;; assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::array::{impl#16}::index_mut may panic: MightPanic( ;; call to core[a8c6]::result::{impl#0}::unwrap may panic: MightPanic(Tra ;; refinement type error
+src/wire/sixlowpan/nhc.rs	length	179	assertion might fail: possible out-of-bounds access
+src/wire/sixlowpan/nhc.rs	length	179	assertion might fail: possible out-of-bounds access
+src/wire/sixlowpan/nhc.rs	payload	208	refinement type error
+src/wire/sixlowpan/nhc.rs	payload	208	refinement type error
+src/wire/sixlowpan/nhc.rs	src_port	525	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/nhc.rs	dst_port	553	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/nhc.rs	dst_port	567	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; refinement type error
+src/wire/sixlowpan/nhc.rs	checksum	586	refinement type error
+src/wire/sixlowpan/nhc.rs	payload	618	refinement type error
+src/wire/sixlowpan/nhc.rs	payload	618	refinement type error
+src/wire/sixlowpan/nhc.rs	payload	618	refinement type error
+src/wire/sixlowpan/nhc.rs	payload_mut	626	refinement type error
+src/wire/sixlowpan/nhc.rs	payload_mut	626	refinement type error
+src/wire/sixlowpan/nhc.rs	set_dispatch_field	632	assertion might fail: possible out-of-bounds access
+src/wire/sixlowpan/nhc.rs	set_ports	657	
+src/wire/sixlowpan/nhc.rs	set_ports	665	
+src/wire/sixlowpan/nhc.rs	set_ports	673	
+src/wire/sixlowpan/nhc.rs	set_checksum	682	refinement type error
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	add	44	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	55	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	sub	73	call to core[a8c6]::panicking::panic_fmt may panic: MightPanic(NoMIRAv
+src/wire/tcp.rs	options	392	refinement type error
+src/wire/tcp.rs	payload	400	refinement type error
+src/wire/tcp.rs	set_src_port	409	refinement type error
+src/wire/tcp.rs	set_dst_port	416	refinement type error
+src/wire/tcp.rs	set_seq_number	423	call to byteorder[387c]::ByteOrder::write_i32 may panic: MightPanic(No ;; refinement type error
+src/wire/tcp.rs	set_ack_number	430	call to byteorder[387c]::ByteOrder::write_i32 may panic: MightPanic(No ;; refinement type error
+src/wire/tcp.rs	set_window_len	572	refinement type error
+src/wire/tcp.rs	set_urgent_at	586	refinement type error
+src/wire/tcp.rs	options_mut	611	refinement type error
+src/wire/tcp.rs	payload_mut	619	refinement type error
+src/wire/tcp.rs	parse	694	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; refinement type error
+src/wire/tcp.rs	parse	695	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; refinement type error
+src/wire/tcp.rs	parse	712	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; refinement type error
+src/wire/tcp.rs	emit	740	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	744	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	753	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	767	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	781	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	786	assertion might fail: possible out-of-bounds access ;; call to core[a8c6]::iter::traits::iterator::Iterator::for_each may pan ;; call to core[a8c6]::option::{impl#0}::unwrap may panic: MightPanic(Tra ;; call to core[a8c6]::panicking::panic may panic: MightPanic(NoMIRAvaila ;; call to core[a8c6]::slice::iter::{impl#174}::next may panic: MightPani ;; refinement type error
+src/wire/tcp.rs	emit	1053	call to core[a8c6]::slice::iter::{impl#166}::any may panic: MightPanic ;; call to xarxa_driver[1613]::{impl#1}::tx may panic: MightPanic(NoMIRAv ;; refinement type error
+src/wire/udp.rs	len	94	refinement type error
+src/wire/udp.rs	checksum	101	refinement type error
+src/wire/udp.rs	verify_checksum	145	refinement type error
+src/wire/udp.rs	payload	156	refinement type error
+src/wire/udp.rs	set_src_port	165	refinement type error
+src/wire/udp.rs	set_src_port	165	refinement type error
+src/wire/udp.rs	set_src_port	165	refinement type error
+src/wire/udp.rs	set_dst_port	172	refinement type error
+src/wire/udp.rs	set_dst_port	172	refinement type error
+src/wire/udp.rs	set_dst_port	172	refinement type error
+src/wire/udp.rs	set_len	179	refinement type error
+src/wire/udp.rs	set_len	179	refinement type error
+src/wire/udp.rs	set_len	179	refinement type error
+src/wire/udp.rs	set_checksum	186	refinement type error
+src/wire/udp.rs	set_checksum	186	refinement type error
+src/wire/udp.rs	fill_checksum	200	refinement type error
+src/wire/udp.rs	payload_mut	215	refinement type error
+src/wire/udp.rs	payload_mut	215	refinement type error

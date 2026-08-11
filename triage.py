@@ -237,8 +237,43 @@ def main():
             if not mine:
                 rows.append((rel, name, lo, n, "CLEAN", "")); kinds["CLEAN"] += n
             else:
-                rows.append((rel, name, lo, n, "OBLIGATION", mine[0][:70]))
+                # EVERY distinct message, sorted. Not `mine[0]`: the order Flux
+                # emits diagnostics in is not reproducible -- two runs of the same
+                # code with the same features disagreed on 29 of these rows,
+                # because a function holding both an out-of-bounds error and a
+                # `write_u24` error reported them in either order. Anything
+                # downstream that categorises a function must see the whole set,
+                # and sorting makes the row itself byte-stable.
+                rows.append((rel, name, lo, n, "OBLIGATION",
+                             " ;; ".join(sorted({m[:70] for m in mine}))))
                 kinds["OBLIGATION"] += n
+
+    # Machine-readable companion: one row per PANIC SITE, with the site's line in
+    # the UNSTAMPED file. TRIAGE.md's line column is post-stamp and cannot be used
+    # against a clean checkout, which is what the ablation sweep needs.
+    sitesf = os.path.join(HERE, "results", "TRIAGE-sites.tsv")
+    site_lines = sites_by_file(checkout)
+    with open(sitesf, "w") as f:
+        f.write("file\tfn\tsite_line\tmessages\n")
+        for rel, fns in sorted(plan.items()):
+            # post[rel] is built by comprehension over plan[rel] in order, so
+            # position i in one is position i in the other.
+            postfns = post.get(rel, [])
+            for i, (idx, name, lo, hi, n) in enumerate(fns):
+                msgs = ""
+                if rel in iced_files:
+                    msgs = "rustc aborted; quarantine candidate"
+                elif i < len(postfns):
+                    _, plo, phi, _ = postfns[i]
+                    errs = results.get(rel, {})
+                    mine = sorted({m[:70] for (ff, ln), ms in errs.items()
+                                   if ff == rel and plo <= ln <= phi for m in ms})
+                    msgs = " ;; ".join(mine)
+                for ln, cnt in sorted(site_lines.get(rel, {}).items()):
+                    if lo <= ln <= hi:
+                        for _ in range(cnt):
+                            f.write(f"{rel}\t{name}\t{ln}\t{msgs}\n")
+    print(f"== wrote {sitesf}")
 
     out = os.path.join(HERE, "results", "TRIAGE.md")
     with open(out, "w") as f:

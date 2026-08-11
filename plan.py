@@ -46,15 +46,32 @@ WHAT = {
     "CLEAN": "no obligation (UPPER BOUND -- see caveats)",
 }
 ORDER = ["CHURN", "PANIC", "CORE", "SPEC", "FLUXBUG", "ICE", "CLEAN"]
+# Easiest to hardest. A function is categorised by the hardest error it holds.
+HARDNESS = ["CHURN", "SPEC", "CORE", "PANIC", "FLUXBUG", "ICE", "CLEAN"]
 
 
-def classify(outcome, msg):
-    if outcome in ("ICE", "CLEAN"):
-        return outcome
+def classify_one(msg):
     for name, pat in RULES:
         if re.search(pat, msg):
             return name
     return "CORE"
+
+
+def classify(outcome, msg):
+    """The HARDEST category among all of a function's errors.
+
+    Not the first error. Flux's diagnostic order is not reproducible -- two runs
+    of identical code disagreed on 29 rows, because a function holding both an
+    out-of-bounds error and a `NoMIRAvailable` error reported them in either
+    order. Taking the hardest is deterministic and conservative: a function is
+    not done until all its errors are discharged, so its bottleneck is what the
+    work actually costs. Sites therefore land in CHURN only if EVERY error on the
+    function is churn.
+    """
+    if outcome in ("ICE", "CLEAN"):
+        return outcome
+    cats = [classify_one(m) for m in msg.split(" ;; ")]
+    return max(cats, key=lambda c: HARDNESS.index(c))
 
 
 def triage_rows():

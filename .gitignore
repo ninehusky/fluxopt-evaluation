@@ -8,4 +8,7 @@ results/*
 !results/BLOCKING-MAP.md
 !results/PLAN-TOMORROW.md
 !results/PLAN.md
+!results/STATUS.md
+!results/ablation.json
+!results/TRIAGE-sites.tsv
 !results/PANIC-INVENTORY.md
