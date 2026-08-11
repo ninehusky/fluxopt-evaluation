@@ -49,26 +49,32 @@ to the callers. Four agents are on `udp.rs`, `ipv4.rs`, `ndiscoption.rs`,
 
 Fully delegable — this is what agents are for. **Exit: churn count 172 → 0.**
 
-### Phase 1 — close the attribution gap (86 + 53 sites) · DO THIS NEXT
+### Phase 1 — WITHDRAWN. The premise was wrong.
 
-Two blind spots that overlap, and together they are bigger than the PANIC bucket:
+This phase claimed 86 sites sat "outside any function the triage parser
+recognises — macro bodies, derives, closures". **Measured 2026-08-11 and false.**
+Across the three files that supposedly held most of them (`iphc.rs`,
+`ieee802154.rs`, `sixlowpan/mod.rs`), all 92 sites are inside ordinary named `fn`
+items: zero in a derive, zero in a `const`, zero in a closure, and every one has a
+real line number.
 
-- **86 UNATTRIBUTED sites.** The blame data places them in a file but they fall
-  outside any function the triage parser recognises — macro bodies, derives,
-  closures. They count in the metric and have no Flux obligation attached, so they
-  are invisible to every plan we have. `sixlowpan/iphc.rs` is 37 of them.
-- **53 sites survive full `get_unchecked` ablation.** Even the unsound mechanical
-  rewrite cannot remove them. 20 are in `iphc.rs`, 4 each in `wire/mod.rs`,
-  `ipv6.rs`, `ieee802154.rs`. Known causes so far: `const fn` bodies the rewriter
-  skips, `[u8; N]` arrays (the ablator's index trait covers `[T]` only), and
-  `assembler.rs` borrowck conflicts.
+"Unattributed" was an artifact of `results/TRIAGE-sites.tsv`, which only contains
+rows where a **prior Flux run emitted a diagnostic**. `iphc.rs` had zero functions
+carrying `#[flux_rs::trusted(no, ...)]`, so under `default_trusted = true` Flux
+emitted nothing for it and the join produced nothing. Re-running triage does not
+fix that; opting functions in does. There was never a diagnosis to do — it was
+ordinary phase-0 work all along, and `iphc.rs` duly gave up 47 of its 49 sites
+once someone opted its functions in.
 
-Neither is proof work — it is diagnosis, and it is cheap. Until it is done we
-cannot say what the xarxa endgame costs, and `iphc.rs` (49 sites, the largest file
-in the crate) cannot be planned at all.
+The lesson is about the tooling, not the crate: **a category derived from the
+absence of tool output is not a category.** Anything built on "no rows for X"
+should be treated as "X was never asked", which is what `cone.py` exists to
+distinguish.
 
-**Exit: every one of the 439 xarxa sites carries a category, and the 53 residue
-has a named cause per site.**
+The 53 ablation-resistant sites are a real finding and remain open, folded into
+whichever phase owns their file. Known causes: `const fn` bodies the ablator
+skips, `[u8; N]` arrays (its index trait covers `[T]` only), and `assembler.rs`
+borrowck conflicts.
 
 ### Phase 2 — xarxa PANIC (105 sites)
 
@@ -143,6 +149,20 @@ for `async fn` and self-referential state machines is much weaker than for wire
 formats.
 
 **Exit: 127 → 0, or a written argument for why some are out of scope.**
+
+## Trusted shims by construction — read before trusting any annotation
+
+`#[flux_rs::trusted(no, ...)]` written inside a `macro_rules!` body does NOT
+untrust the expansion. Measured on `enum_with_unknown!` (`src/macros.rs`), which
+every wire enum uses: putting an impossible postcondition `-> $ty{v: false}` on
+its generated `From` impl produces 61 errors, byte-identical to the baseline. The
+body is never checked. The iphc agent measured the same for `get_field!` three
+independent ways, and found the `#[flux_rs::sig]` still IS imposed on callers
+there -- so an annotated macro is a trusted shim by construction, and it looks
+exactly like a proof.
+
+Fix is to expand the macro at the call sites that need real checking: one edit
+covers all of a macro's accessors rather than one per accessor.
 
 ## The strategic question this exposes
 
