@@ -76,3 +76,75 @@ caller → callee, findable at that address in `llvm-objdump -d --demangle`.
   attributes expand to nothing, but it is a real difference between the two
   `Cargo.toml`s.
 * One build per side, no determinism check here. `sweep.py` does one.
+
+## Per-file ablation: which files are worth verifying
+
+`./sweep.py` answers a different question: for each xarxa source file, how many
+bytes of `usb_ethernet` would disappear if that file could not panic at all? It
+measures rather than estimates — it rewrites the file's panicking constructs
+into unchecked equivalents, rebuilds the real binary, and diffs `.text`.
+
+```sh
+./run.py                        # once, to create work/modified
+./sweep.py                      # every xarxa file owning >= 1 panic site
+./sweep.py src/wire/ipv4.rs     # or just one
+```
+
+Results land in `results/per-file-wins.tsv`, tabulated in
+`results/PER-FILE-WINS.md` and `results/PER-FILE-WINS-trimmed.md`.
+
+### Reading them
+
+Every number is a **ceiling, not a forecast**. `get_unchecked` removes every
+check in the file; Flux will discharge some fraction of them. This ranks
+targets, it does not predict the payoff.
+
+Rank by bytes per *distinct source line*, not per site. Sites count
+monomorphized copies — `socket_set.rs` has 28 sites across 9 lines — and
+verification effort scales with lines.
+
+Deltas do not sum. Two files that each empty part of the same panic bucket will
+both claim the machinery that dies when it empties.
+
+Small deltas are noise. Removing checks shifts inlining, so `.text` can move by
+more than the panic paths involved, occasionally the wrong way. The sweep
+reports the largest increase it saw; treat anything under that as unresolved.
+
+A `partial(n/m left)` status means the rewrite did not actually remove that
+file's sites, so the delta does not mean what the row says — usually `const fn`
+bodies, which are skipped because `get_unchecked` is not const-stable.
+`build-failed` means the mutable-vs-shared guess was wrong. Neither is reported
+as a small win. The sweep also confirms determinism before ablating anything,
+restores the checkout between files including on Ctrl-C, and rebuilds at the
+end so the binary left in `work/` matches its sources again.
+
+### The feature flag, which is bigger than all of them
+
+`examples/nrf52840` asks embassy-net for `medium-ieee802154`, because other bins
+in that package need it and cargo unifies features per package. So
+`usb_ethernet` — a CDC-NCM device that only speaks Ethernet — links the whole
+6LoWPAN and 802.15.4 stack.
+
+| | as shipped | feature dropped | delta |
+| --- | --- | --- | --- |
+| `.text` | 137620 | 117724 | **-19896 (-14.5%)** |
+| panic call sites | 657 | 496 | -161 |
+
+No verification involved, and more than twice the total prize from verifying
+xarxa in this binary. It does not make the verification pointless — it means the
+`sixlowpan/*` and `ieee802154` rows are wins against code a product build would
+not ship, so they rank last. `PER-FILE-WINS-trimmed.md` repeats the sweep
+without the feature for that reason.
+
+### What to audit
+
+`ablate.py` is the only component that edits code; everything else reads tool
+output. Read its rule list, then for any row you intend to act on:
+
+```sh
+python3 ablate.py --diff work/modified/third_party/xarxa/src/wire/icmpv6.rs
+```
+
+The rewrite is deliberately **unsound** — `get_unchecked` on an index nothing
+proved in range is UB. These binaries are measured with `llvm-size` and never
+flashed.
