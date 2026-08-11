@@ -42,11 +42,24 @@ FEATURES = ("defmt,socket-tcp,proto-ipv4,medium-ethernet,socket-dhcpv4,socket-ud
 ATTR = '#[flux_rs::trusted(no, reason = "cone probe: is this obligation established?")]'
 FN_RE = re.compile(r"\s*(?:pub(?:\([^)]*\))?\s+)?(?:const\s+|async\s+|unsafe\s+)*fn\s+(\w+)")
 
+# `flux_rs::defs! { fn header_len(code: int) -> int { .. } }` declares refinement
+# functions, not Rust ones. They match FN_RE, they are not items, and stamping one
+# with `#[flux_rs::trusted]` is a syntax error -- the same failure that `SKIP_FILES`
+# already handles for `flux_specs.rs`, except a `defs!` block can sit in any file.
+DEFS_RE = re.compile(r"^\s*(?:flux_rs::|flux::)?defs!\s*\{")
+
 
 def functions(path):
     out, src = [], open(path, errors="replace").read().splitlines()
     cur, depth, start = None, 0, 0
+    defs_depth = 0
     for i, line in enumerate(src, 1):
+        if defs_depth > 0:
+            defs_depth += line.count("{") - line.count("}")
+            continue
+        if DEFS_RE.match(line):
+            defs_depth = line.count("{") - line.count("}")
+            continue
         m = FN_RE.match(line)
         if m and cur is None:
             cur, start, depth = m.group(1), i, 0
@@ -155,12 +168,17 @@ def stamp_all(checkout):
 def main():
     checkout = os.path.abspath(sys.argv[1])
     targets = sys.argv[2:]
+    # Per-checkout, because several agents run this at once against different
+    # worktrees. A shared `/tmp/cone-base.log` meant the second run to start
+    # silently compared its own probe against someone else's baseline.
     scratch = os.environ.get("SCRATCH", "/tmp")
+    scratch = os.path.join(scratch, "cone-" + os.path.basename(checkout))
+    os.makedirs(scratch, exist_ok=True)
     restore = lambda: subprocess.run(["git", "checkout", "--", "."], cwd=checkout,
                                      check=False)
     try:
         restore()
-        print("== baseline (the branch as committed)", flush=True)
+        print(f"== baseline (the branch as committed); logs in {scratch}", flush=True)
         base = run(checkout, os.path.join(scratch, "cone-base.log"))
         print(f"   {sum(base.values())} errors", flush=True)
 
