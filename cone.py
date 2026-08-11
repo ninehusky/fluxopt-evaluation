@@ -78,6 +78,20 @@ def run(checkout, log):
     if "panicked" in body:
         sys.exit(f"REFUSING: {log} contains 'panicked' -- an ICE drops most "
                  "diagnostics, so nothing from this run can be compared.")
+    # A build that never ran produces zero Flux errors, which this script would
+    # otherwise read as "nothing absorbed" and report as a clean PASS. That
+    # happened for real: a worktree placed outside `../flux` broke xarxa's
+    # relative `flux-rs` path dependency, cargo failed, and cone reported OK for
+    # both target files. Demand positive evidence that Flux actually ran, and
+    # treat any non-E0999 rustc error as a broken build rather than a result.
+    if "summary." not in body:
+        sys.exit(f"REFUSING: {log} has no Flux `summary.` line -- the build did not "
+                 "run, so zero errors means nothing. (xarxa's flux-rs path dependency "
+                 "is relative: the checkout must sit beside ../flux.)")
+    rustc_errs = {m for m in re.findall(r"^error\[(E\d+)\]", body, re.M) if m != "E0999"}
+    if rustc_errs:
+        sys.exit(f"REFUSING: {log} contains rustc errors {sorted(rustc_errs)} -- the "
+                 "crate did not compile, so the Flux error set is not a result.")
     errs = collections.Counter()
     msg = None
     for l in body.splitlines():
