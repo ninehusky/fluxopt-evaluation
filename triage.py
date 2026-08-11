@@ -35,8 +35,24 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 BLAME = os.path.join(HERE, "results", "modified.blame.tsv")
 PREFIX = "third_party/xarxa/"
+# Exactly the xarxa features the measured firmware builds with. Resolved, not
+# guessed, with:
+#
+#   cd work/modified/examples/nrf52840
+#   cargo tree -i -e features -p xarxa --target thumbv7em-none-eabi \
+#     | grep 'xarxa feature' | sed 's/.*"\(.*\)".*/\1/' | sort -u
+#
+# which gives async, auto-icmp-echo-reply, defmt, medium-ethernet,
+# medium-ieee802154, proto-dhcpv4, proto-ipv4, proto-ipv6, proto-sixlowpan,
+# socket, socket-dhcpv4, socket-tcp, socket-udp. Four of those are implied
+# (`socket` by socket-tcp, `proto-dhcpv4` by socket-dhcpv4, `proto-sixlowpan`
+# by medium-ieee802154) and need not be listed -- but `async` is implied by
+# NOTHING here and was missing, so every `#[cfg(feature = "async")]` item in
+# `socket/*` was invisible to the triage run while being linked into the
+# firmware. An unchecked function reports no error and lands in CLEAN.
 TOOLCHAIN_FEATURES = ("defmt,socket-tcp,proto-ipv4,medium-ethernet,socket-dhcpv4,"
-                      "socket-udp,medium-ieee802154,proto-ipv6,auto-icmp-echo-reply")
+                      "socket-udp,medium-ieee802154,proto-ipv6,auto-icmp-echo-reply,"
+                      "async")
 ATTR = '#[flux_rs::trusted(no, reason = "breadth triage: does this discharge?")]'
 
 

@@ -6,9 +6,9 @@
 
 | sites | est. bytes | category | what it is |
 | ---: | ---: | --- | --- |
-| 224 | 10832 | **CHURN** | state a length/range precondition and discharge it |
-| 67 | 2711 | **PANIC** | explicit panic!/unreachable!/assert! -- needs a cross-API precondition |
-| 38 | 1683 | **CORE** | core iterator/Option/Result chain Flux cannot see through |
+| 216 | 9673 | **CHURN** | state a length/range precondition and discharge it |
+| 58 | 2147 | **PANIC** | explicit panic!/unreachable!/assert! -- needs a cross-API precondition |
+| 55 | 3407 | **CORE** | core iterator/Option/Result chain Flux cannot see through |
 | 12 | 176 | **FLUXBUG** | Flux emits `internal flux error` -- compiler bug, quarantine |
 | 7 | 3248 | **ICE** | rustc aborted -- quarantine or compiler fix |
 | 5 | 105 | **CLEAN** | no obligation (UPPER BOUND -- see caveats) |
@@ -19,53 +19,50 @@ Sorted by CHURN sites, which is the tractable work.
 
 | file | sites | churn | panic | core | spec | bug/ICE | Δ.text | status |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| `src/wire/ipv6.rs` | 33 | 29 | 1 | 1 | 0 | 0 | -1180 | partial(4/35 left) |
+| `src/wire/ipv6.rs` | 33 | 26 | 1 | 4 | 0 | 0 | -1180 | partial(4/35 left) |
+| `src/wire/icmpv6.rs` | 26 | 20 | 0 | 1 | 0 | 0 | -2604 | ok |
 | `src/wire/ipv4.rs` | 21 | 20 | 1 | 0 | 0 | 0 | -564 | ok |
-| `src/wire/icmpv6.rs` | 26 | 18 | 0 | 3 | 0 | 0 | -2604 | ok |
+| `src/wire/tcp.rs` | 34 | 19 | 14 | 1 | 0 | 0 | -996 | ok |
 | `src/wire/udp.rs` | 18 | 18 | 0 | 0 | 0 | 0 | -636 | ok |
-| `src/wire/tcp.rs` | 34 | 16 | 14 | 4 | 0 | 0 | -996 | ok |
-| `src/iface/interface/sixlowpan.rs` | 16 | 13 | 0 | 1 | 0 | 0 | -244 | partial(2/16 left) |
+| `src/wire/sixlowpan/nhc.rs` | 25 | 14 | 1 | 0 | 0 | 0 | -568 | ok |
 | `src/wire/ndisc.rs` | 16 | 13 | 0 | 1 | 0 | 0 | -348 | ok |
-| `src/wire/ndiscoption.rs` | 13 | 13 | 0 | 0 | 0 | 0 | -740 | partial(2/13 left) |
-| `src/wire/sixlowpan/nhc.rs` | 25 | 13 | 2 | 0 | 0 | 0 | -568 | ok |
+| `src/wire/ndiscoption.rs` | 13 | 12 | 0 | 1 | 0 | 0 | -740 | partial(2/13 left) |
+| `src/wire/sixlowpan/iphc.rs` | 49 | 11 | 0 | 1 | 0 | 0 | -944 | partial(20/49 left) |
 | `src/wire/arp.rs` | 9 | 9 | 0 | 0 | 0 | 0 | -652 | ok |
-| `src/wire/sixlowpan/iphc.rs` | 49 | 9 | 2 | 1 | 0 | 0 | -944 | partial(20/49 left) |
-| `src/wire/ieee802154.rs` | 18 | 8 | 0 | 0 | 0 | 0 | -256 | partial(6/34 left) |
-| `src/wire/mld.rs` | 18 | 8 | 0 | 2 | 0 | 0 | -1072 | ok |
 | `src/wire/ethernet.rs` | 7 | 7 | 0 | 0 | 0 | 0 | 236 | partial(1/7 left) |
+| `src/wire/ieee802154.rs` | 18 | 7 | 0 | 1 | 0 | 0 | -256 | partial(6/34 left) |
 | `src/wire/ipv6option.rs` | 7 | 7 | 0 | 0 | 0 | 0 | -216 | ok |
+| `src/wire/mld.rs` | 18 | 7 | 1 | 2 | 0 | 0 | -1072 | ok |
+| `src/iface/interface/sixlowpan.rs` | 16 | 6 | 7 | 1 | 0 | 0 | -244 | partial(2/16 left) |
+| `src/storage/ring_buffer.rs` | 20 | 6 | 2 | 1 | 0 | 10 | -164 | partial(3/15 left) |
 | `src/wire/icmpv4.rs` | 8 | 6 | 0 | 0 | 0 | 0 | -156 | partial(2/8 left) |
-| `src/storage/ring_buffer.rs` | 20 | 5 | 2 | 2 | 0 | 10 | -164 | partial(3/15 left) |
-| `src/wire/sixlowpan/mod.rs` | 10 | 5 | 0 | 0 | 0 | 0 | -1260 | partial(2/10 left) |
 | `src/wire/dhcpv4.rs` | 4 | 3 | 0 | 1 | 0 | 0 | 4 | ok |
 | `src/wire/ipv6ext_header.rs` | 2 | 2 | 0 | 0 | 0 | 0 | 20 | ok |
+| `src/iface/interface/ipv6.rs` | 3 | 1 | 0 | 2 | 0 | 0 | 268 | ok |
 | `src/socket/tcp.rs` | 8 | 1 | 0 | 1 | 0 | 0 | -20 | partial(4/8 left) |
 | `src/storage/assembler.rs` | 1 | 1 | 0 | 0 | 0 | 0 | -- | build-failed |
-| `src/iface/interface/ipv6.rs` | 3 | 0 | 2 | 1 | 0 | 0 | 268 | ok |
 | `src/iface/interface/mod.rs` | 7 | 0 | 0 | 0 | 0 | 7 | -3248 | ok |
 | `src/iface/neighbor.rs` | 4 | 0 | 2 | 2 | 0 | 0 | -424 | ok |
-| `src/iface/packet.rs` | 12 | 0 | 6 | 6 | 0 | 0 | -384 | ok |
+| `src/iface/packet.rs` | 12 | 0 | 12 | 0 | 0 | 0 | -384 | ok |
 | `src/iface/route.rs` | 2 | 0 | 2 | 0 | 0 | 0 | -148 | partial(1/1 left) |
-| `src/iface/socket_set.rs` | 28 | 0 | 24 | 4 | 0 | 0 | -1240 | ok |
+| `src/iface/socket_set.rs` | 28 | 0 | 5 | 23 | 0 | 0 | -1240 | ok |
 | `src/phy/mod.rs` | 1 | 0 | 1 | 0 | 0 | 0 | -200 | ok |
 | `src/socket/dhcpv4.rs` | 3 | 0 | 0 | 3 | 0 | 0 | 64 | ok |
 | `src/socket/udp.rs` | 1 | 0 | 1 | 0 | 0 | 0 | 0 | partial(1/1 left) |
-| `src/storage/packet_buffer.rs` | 5 | 0 | 0 | 2 | 0 | 2 | -180 | ok |
+| `src/storage/packet_buffer.rs` | 5 | 0 | 1 | 1 | 0 | 2 | -180 | ok |
 | `src/wire/ip.rs` | 4 | 0 | 4 | 0 | 0 | 0 | -184 | ok |
 | `src/wire/ipv6hbh.rs` | 2 | 0 | 0 | 2 | 0 | 0 | -128 | ok |
 | `src/wire/mod.rs` | 4 | 0 | 3 | 1 | 0 | 0 | -- | build-failed |
+| `src/wire/sixlowpan/mod.rs` | 10 | 0 | 0 | 5 | 0 | 0 | -1260 | partial(2/10 left) |
 
 ## Rows: every CHURN function, biggest first
 
 | file | fn | line | sites | first error |
 | --- | --- | ---: | ---: | --- |
 | `src/wire/tcp.rs` | `emit` | 743 | 6 | refinement type error |
-| `src/iface/interface/sixlowpan.rs` | `ipv6_to_sixlowpan` | 425 | 5 | refinement type error |
 | `src/wire/icmpv6.rs` | `payload` | 457 | 5 | refinement type error |
-| `src/wire/sixlowpan/mod.rs` | `resolve` | 66 | 5 | refinement type error |
 | `src/storage/ring_buffer.rs` | `get_idx_unchecked` | 110 | 4 | assertion might fail: possible remainder with a divisor of zero |
 | `src/wire/icmpv6.rs` | `clear_reserved` | 496 | 4 | refinement type error |
-| `src/wire/ipv6.rs` | `set_flow_label` | 529 | 4 | assertion might fail: possible out-of-bounds access |
 | `src/iface/interface/sixlowpan.rs` | `decompress_ext_hdr` | 713 | 3 | refinement type error |
 | `src/iface/interface/sixlowpan.rs` | `decompress_udp` | 750 | 3 | refinement type error |
 | `src/wire/ethernet.rs` | `set_src_addr` | 287 | 3 | refinement type error |
@@ -79,14 +76,16 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/ipv6option.rs` | `data_mut` | 252 | 3 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `dst_addr` | 282 | 3 | refinement type error |
 | `src/wire/sixlowpan/nhc.rs` | `payload` | 622 | 3 | refinement type error |
+| `src/wire/tcp.rs` | `parse` | 658 | 3 | refinement type error |
 | `src/wire/udp.rs` | `set_src_port` | 168 | 3 | refinement type error |
 | `src/wire/udp.rs` | `set_dst_port` | 176 | 3 | refinement type error |
 | `src/wire/udp.rs` | `set_len` | 184 | 3 | refinement type error |
-| `src/iface/interface/sixlowpan.rs` | `dispatch_sixlowpan` | 295 | 2 | refinement type error |
+| `src/storage/ring_buffer.rs` | `get_allocated` | 359 | 2 | refinement type error |
 | `src/wire/dhcpv4.rs` | `set_sname_and_boot_file_to_zero` | 427 | 2 | refinement type error |
 | `src/wire/icmpv4.rs` | `emit` | 492 | 2 | refinement type error |
 | `src/wire/icmpv6.rs` | `set_msg_type` | 468 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/icmpv6.rs` | `payload_mut` | 601 | 2 | refinement type error |
+| `src/wire/icmpv6.rs` | `emit` | 777 | 2 | refinement type error |
 | `src/wire/ieee802154.rs` | `frame_type` | 370 | 2 | refinement type error |
 | `src/wire/ieee802154.rs` | `addressing_fields` | 434 | 2 | refinement type error |
 | `src/wire/ipv4.rs` | `set_version` | 400 | 2 | assertion might fail: possible out-of-bounds access |
@@ -98,7 +97,7 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/ipv4.rs` | `set_next_header` | 489 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ipv4.rs` | `set_src_addr` | 504 | 2 | refinement type error |
 | `src/wire/ipv4.rs` | `set_dst_addr` | 512 | 2 | refinement type error |
-| `src/wire/ipv6.rs` | `mask` | 163 | 2 | refinement type error |
+| `src/wire/ipv6.rs` | `mask` | 163 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ipv6.rs` | `payload_len` | 449 | 2 | refinement type error |
 | `src/wire/ipv6.rs` | `set_version` | 506 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ipv6option.rs` | `set_data_len` | 239 | 2 | assertion might fail: possible out-of-bounds access |
@@ -106,15 +105,17 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/ndiscoption.rs` | `set_data_len` | 296 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ndiscoption.rs` | `data_mut` | 384 | 2 | refinement type error |
 | `src/wire/ndiscoption.rs` | `emit` | 542 | 2 | refinement type error |
+| `src/wire/sixlowpan/iphc.rs` | `flow_label_field` | 204 | 2 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `set_field` | 486 | 2 | refinement type error |
 | `src/wire/sixlowpan/nhc.rs` | `length` | 179 | 2 | assertion might fail: possible out-of-bounds access |
 | `src/wire/sixlowpan/nhc.rs` | `payload` | 207 | 2 | refinement type error |
+| `src/wire/sixlowpan/nhc.rs` | `dst_port` | 550 | 2 | refinement type error |
 | `src/wire/sixlowpan/nhc.rs` | `payload_mut` | 631 | 2 | refinement type error |
 | `src/wire/udp.rs` | `set_checksum` | 192 | 2 | refinement type error |
 | `src/wire/udp.rs` | `payload_mut` | 222 | 2 | refinement type error |
+| `src/iface/interface/ipv6.rs` | `process_hopbyhop` | 265 | 1 | refinement type error |
 | `src/socket/tcp.rs` | `seq_to_transmit` | 2319 | 1 | arithmetic operation may underflow |
 | `src/storage/assembler.rs` | `add` | 197 | 1 | assertion might fail: possible out-of-bounds access |
-| `src/storage/ring_buffer.rs` | `get_unallocated` | 302 | 1 | refinement type error |
 | `src/wire/arp.rs` | `set_hardware_type` | 175 | 1 | refinement type error |
 | `src/wire/arp.rs` | `set_protocol_type` | 183 | 1 | refinement type error |
 | `src/wire/arp.rs` | `set_hardware_len` | 191 | 1 | assertion might fail: possible out-of-bounds access |
@@ -134,10 +135,10 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/icmpv6.rs` | `set_echo_seq_no` | 555 | 1 | refinement type error |
 | `src/wire/ieee802154.rs` | `dst_addressing_mode` | 388 | 1 | refinement type error |
 | `src/wire/ieee802154.rs` | `src_addressing_mode` | 407 | 1 | refinement type error |
-| `src/wire/ieee802154.rs` | `src_pan_id` | 542 | 1 | refinement type error |
 | `src/wire/ieee802154.rs` | `payload` | 721 | 1 | refinement type error |
 | `src/wire/ipv4.rs` | `verify_checksum` | 365 | 1 | refinement type error |
 | `src/wire/ipv4.rs` | `payload` | 389 | 1 | refinement type error |
+| `src/wire/ipv6.rs` | `src_addr` | 477 | 1 | refinement type error |
 | `src/wire/ipv6.rs` | `dst_addr` | 485 | 1 | refinement type error |
 | `src/wire/ipv6.rs` | `payload` | 495 | 1 | refinement type error |
 | `src/wire/ipv6.rs` | `set_next_header` | 547 | 1 | assertion might fail: possible out-of-bounds access |
@@ -150,13 +151,12 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/mld.rs` | `s_flag` | 59 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/mld.rs` | `qqic` | 74 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/mld.rs` | `num_srcs` | 82 | 1 | refinement type error |
-| `src/wire/mld.rs` | `set_qrv` | 138 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/mld.rs` | `set_qqic` | 147 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/mld.rs` | `set_num_srcs` | 155 | 1 | refinement type error |
 | `src/wire/mld.rs` | `set_num_srcs` | 279 | 1 | refinement type error |
 | `src/wire/ndisc.rs` | `reachable_time` | 58 | 1 | refinement type error |
 | `src/wire/ndisc.rs` | `retrans_time` | 66 | 1 | refinement type error |
-| `src/wire/ndisc.rs` | `target_addr` | 82 | 1 | refinement type error |
+| `src/wire/ndisc.rs` | `dest_addr` | 109 | 1 | refinement type error |
 | `src/wire/ndisc.rs` | `set_current_hop_limit` | 123 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ndisc.rs` | `set_router_flags` | 131 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/ndisc.rs` | `set_router_lifetime` | 138 | 1 | refinement type error |
@@ -171,12 +171,10 @@ Sorted by CHURN sites, which is the tractable work.
 | `src/wire/ndiscoption.rs` | `clear_prefix_reserved` | 355 | 1 | refinement type error |
 | `src/wire/ndiscoption.rs` | `set_prefix` | 363 | 1 | refinement type error |
 | `src/wire/ndiscoption.rs` | `clear_redirected_reserved` | 374 | 1 | refinement type error |
-| `src/wire/ndiscoption.rs` | `parse` | 449 | 1 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `next_header` | 122 | 1 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `hop_limit` | 141 | 1 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `payload` | 449 | 1 | refinement type error |
 | `src/wire/sixlowpan/iphc.rs` | `set_dispatch_field` | 467 | 1 | refinement type error |
-| `src/wire/sixlowpan/nhc.rs` | `src_port` | 521 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/sixlowpan/nhc.rs` | `checksum` | 586 | 1 | refinement type error |
 | `src/wire/sixlowpan/nhc.rs` | `set_dispatch_field` | 638 | 1 | assertion might fail: possible out-of-bounds access |
 | `src/wire/sixlowpan/nhc.rs` | `set_checksum` | 687 | 1 | refinement type error |
