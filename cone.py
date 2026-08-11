@@ -183,6 +183,19 @@ def main():
     os.makedirs(scratch, exist_ok=True)
     restore = lambda: subprocess.run(["git", "checkout", "--", "."], cwd=checkout,
                                      check=False)
+    # REFUSE to run on a dirty tree. This script stamps the whole crate and then
+    # restores with `git checkout -- .`, which does not distinguish its own
+    # stamping from your uncommitted work -- it destroyed an agent's entire
+    # session of edits, and then printed numbers for the committed baseline as
+    # though they were that agent's result. Silently wrong, twice over.
+    dirty = subprocess.run(["git", "status", "--porcelain"], cwd=checkout,
+                           capture_output=True, text=True).stdout.strip()
+    if dirty:
+        sys.exit("REFUSING: the checkout has uncommitted changes, and this script "
+                 "restores with `git checkout -- .` -- it would destroy them and then "
+                 "report numbers for the committed state as if they were yours.\n"
+                 "Commit first.\n\n" + dirty)
+
     try:
         restore()
         print(f"== baseline (the branch as committed); logs in {scratch}", flush=True)
