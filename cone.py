@@ -104,7 +104,14 @@ SKIP_FILES = {"flux_specs.rs"}
 # Quarantining means those callers stay trusted, so an obligation absorbed THERE
 # is invisible to this check. That is a hole in the gate and it is reported as
 # one, rather than being silently counted as a pass.
-SKIP_PATHS = {"src/iface/interface/mod.rs"}
+# Measured 2026-08-11, and much narrower than it first looked: opting in ALL 45
+# functions of `iface/interface/mod.rs` ICEs, but excluding `dispatch_ip` alone
+# leaves the other 44 checking cleanly (0 panicked, 61 -> 98 errors, i.e. 37
+# obligations that were being absorbed invisibly become stateable). So quarantine
+# the FUNCTION, not the file -- quarantining the file overstated the blind spot
+# 44x and made every cone number pessimistic.
+SKIP_PATHS = set()
+SKIP_FNS = {"dispatch_ip"}
 
 
 def attrs_by_fn_line(src):
@@ -156,7 +163,7 @@ def stamp_all(checkout):
             attrs = attrs_by_fn_line(src)
             for name, lo, hi in sorted(functions(p), key=lambda f: -f[1]):
                 head = attrs.get(lo, "")
-                if "trusted" in head or "ignore" in head:
+                if "trusted" in head or "ignore" in head or name in SKIP_FNS:
                     continue
                 indent = re.match(r"\s*", src[lo - 1]).group(0)
                 src.insert(lo - 1, f"{indent}{ATTR}\n")
@@ -183,6 +190,16 @@ def main():
         print(f"   {sum(base.values())} errors", flush=True)
 
         n = stamp_all(checkout)
+        # Function ranges AS STAMPED. Probe errors carry stamped line numbers, so
+        # this is the only mapping that can name the function absorbing an
+        # obligation -- and the absorbing function, not the file, is what
+        # identifies which blocker is in the way.
+        fnmap = {}
+        for root, _, files in os.walk(os.path.join(checkout, "src")):
+            for fname in files:
+                if fname.endswith(".rs"):
+                    fp = os.path.join(root, fname)
+                    fnmap[os.path.relpath(fp, checkout)] = functions(fp)
         print(f"== probe: opted in {n} further functions; re-running", flush=True)
         probe = run(checkout, os.path.join(scratch, "cone-probe.log"))
         print(f"   {sum(probe.values())} errors", flush=True)
@@ -216,9 +233,28 @@ def main():
                                    for _ in range(c))
     added = key(probe) - key(base)
 
+    def enclosing(f, ln):
+        for nm, lo, hi in fnmap.get(f, []):
+            if lo <= ln <= hi:
+                return nm
+        return "<not in a fn>"
+
+    # Attribute the added obligations to the function they land in. Budgeted by
+    # (file, message) because that is the granularity `added` is computed at --
+    # line numbers shift under stamping and cannot be diffed directly.
+    budget = dict(added)
+    absorbers = collections.Counter()
+    for (f, ln, col, m), c in sorted(probe.items()):
+        left = budget.get((f, m), 0)
+        if left <= 0:
+            continue
+        take = min(left, c)
+        budget[(f, m)] = left - take
+        absorbers[(f, enclosing(f, ln))] += take
+
     print(f"\n== {sum(added.values())} obligations were being absorbed by trusted callers")
-    if SKIP_PATHS:
-        print(f"   (blind spot: {sorted(SKIP_PATHS)} stayed trusted -- they ICE Flux "
+    if SKIP_PATHS or SKIP_FNS:
+        print(f"   (blind spot: {sorted(SKIP_PATHS | SKIP_FNS)} stayed trusted -- ICEs "
               f"when opted in, so anything absorbed there is NOT counted here)")
     byfile = collections.Counter()
     for (f, _), c in added.items():
@@ -226,6 +262,10 @@ def main():
     for f, c in byfile.most_common(20):
         mark = "  <-- TARGET" if any(f == t for t in targets) else ""
         print(f"   {c:4}  {f}{mark}")
+
+    print("\n== the functions absorbing them (this is what identifies the blocker)")
+    for (f, fn), c in absorbers.most_common(25):
+        print(f"   {c:4}  {f}::{fn}")
 
     if targets:
         print()
