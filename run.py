@@ -97,7 +97,11 @@ def use_local_xarxa(repo, src):
     """
     dst = os.path.join(repo, "third_party", "xarxa")
     shutil.rmtree(dst, ignore_errors=True)
-    shutil.copytree(src, dst, symlinks=True,
+    # copy_function=shutil.copy, NOT the copytree default copy2: copy2 preserves the
+    # source mtimes, and cargo fingerprints path dependencies by mtime.  A checkout whose
+    # files are not newer than the last build is silently treated as up to date, so the
+    # run re-measures the PREVIOUS binary and reports a delta of exactly zero.
+    shutil.copytree(src, dst, symlinks=True, copy_function=shutil.copy,
                     ignore=shutil.ignore_patterns(".git", "target"))
 
 
