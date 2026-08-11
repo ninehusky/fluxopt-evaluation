@@ -119,10 +119,15 @@ def main():
     # call site. Bare `Packet`/`Repr`/... are shared by ~32 wire types and would
     # match everything, so they are only accepted for a module whose type is
     # named after it.
+    # Matching is CASE-INSENSITIVE. A module name does not tell you how its type
+    # is capitalised: `ndiscoption` gives the camel form `Ndiscoption`, but the
+    # type is spelled `NdiscOption`, so an exact-case filter rejected `wire/ndisc.rs`
+    # -- the one file that calls into it. Found by an agent, not by this script.
     toks = {f"{mod_tok}::", cam} | {f"{cam}{t}" for t in type_toks}
-    toks |= {t for t in type_toks if t == cam}
+    toks |= {t for t in type_toks if t.lower() == cam.lower()}
+    toks = {t.lower() for t in toks}
     def plausible(f):
-        body = open(f, errors="replace").read()
+        body = open(f, errors="replace").read().lower()
         return any(t in body for t in toks)
 
     unchecked = []
