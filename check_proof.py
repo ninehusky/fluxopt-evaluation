@@ -103,19 +103,27 @@ def main():
     # that cut 96 rows to the handful that matter. It is still a heuristic: a
     # file that mentions the module for an unrelated reason can slip through, so
     # rows are reported as candidates, not as facts.
-    # KNOWN BUG: capitalize() mangles snake_case module names (ring_buffer ->
-    # Ring_buffer), so this filter produced a FALSE OK on ring_buffer, where a
-    # genuine unchecked caller exists in socket/tcp.rs::process. A false negative
-    # is worse than the false positives it was added to fix. Fix before relying
-    # on check 2.
+    # str.capitalize() used to build the camel form, which mangles snake_case
+    # (ring_buffer -> Ring_buffer). Nothing matched, so the filter rejected every
+    # candidate file and check 2 reported a FALSE OK on ring_buffer -- where
+    # socket/tcp.rs::process is a genuine unchecked caller. A false negative is
+    # worse than the false positives this filter was added to remove, so the
+    # rewrite below errs permissive: it also accepts the module's own type names
+    # and the bare camel module name (`RingBuffer`), which is how a module named
+    # after its single type is referred to.
     mod_tok = os.path.splitext(os.path.basename(relpath))[0]
-    type_toks = re.findall(r"^\s*(?:pub\s+)?struct\s+(\w+)", "\n".join(src), re.M)
+    cam = "".join(p[:1].upper() + p[1:] for p in mod_tok.split("_"))
+    type_toks = re.findall(r"^\s*(?:pub\s+)?(?:struct|enum)\s+(\w+)", "\n".join(src), re.M)
+    # xarxa re-exports wire types under a module-prefixed alias
+    # (`arp::Repr as ArpRepr`), so the prefixed spelling is the usual one at a
+    # call site. Bare `Packet`/`Repr`/... are shared by ~32 wire types and would
+    # match everything, so they are only accepted for a module whose type is
+    # named after it.
+    toks = {f"{mod_tok}::", cam} | {f"{cam}{t}" for t in type_toks}
+    toks |= {t for t in type_toks if t == cam}
     def plausible(f):
         body = open(f, errors="replace").read()
-        if f"{mod_tok}::" in body:
-            return True
-        cam = mod_tok.capitalize()
-        return any(f"{cam}{t}" in body for t in type_toks) or f"{cam}Packet" in body
+        return any(t in body for t in toks)
 
     unchecked = []
     for name in gated:

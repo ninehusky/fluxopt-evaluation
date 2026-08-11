@@ -67,16 +67,25 @@ def sites_by_file(checkout):
 
 
 def targets(checkout, files=None):
-    """{relpath: [(fn, start, end, n_sites)]} -- functions holding panic sites."""
+    """{relpath: [(idx, fn, start, end, n_sites)]} -- functions holding panic sites.
+
+    `idx` is the function's ORDINAL POSITION in `functions(path)`, and it, not the
+    name, is the identity used from here on. xarxa's wire modules define the same
+    accessor name in several impl blocks (`nhc.rs` has 8 duplicates), so keying by
+    bare name collapses distinct functions onto one row and then re-expands them
+    over every same-named function in the file -- attributing one function's panic
+    sites to its namesakes. Ordinals survive stamping because inserting an
+    attribute line never adds or removes a `fn`.
+    """
     out = {}
     for rel, lines in sites_by_file(checkout).items():
         if files and rel not in files:
             continue
         fns, chosen = functions(os.path.join(checkout, rel)), []
-        for name, lo, hi in fns:
+        for idx, (name, lo, hi) in enumerate(fns):
             n = sum(c for ln, c in lines.items() if lo <= ln <= hi)
             if n:
-                chosen.append((name, lo, hi, n))
+                chosen.append((idx, name, lo, hi, n))
         if chosen:
             out[rel] = chosen
     return out
@@ -90,12 +99,17 @@ def stamp(checkout, plan):
     every line below it, so ranges taken before stamping do not line up with the
     line numbers Flux reports. Attributing errors with pre-stamp ranges silently
     misfiles them and inflates the CLEAN bucket.
+
+    The re-parsed ranges are matched back to targets BY ORDINAL, not by name --
+    see `targets`. Stamping only inserts attribute lines, so the function list of
+    a file has the same length and order before and after; if it does not, the
+    parse disagrees with itself and the file is dropped rather than misreported.
     """
     n = 0
     for rel, fns in plan.items():
         p = os.path.join(checkout, rel)
         src = open(p, errors="replace").read().splitlines(True)
-        for name, lo, hi, _ in sorted(fns, key=lambda f: -f[1]):  # back to front
+        for _, name, lo, hi, _ in sorted(fns, key=lambda f: -f[2]):  # back to front
             head = "".join(src[max(0, lo - 10):lo - 1])
             if "trusted(" in head:      # already opted in, or deliberately trusted
                 continue
@@ -103,11 +117,22 @@ def stamp(checkout, plan):
             src.insert(lo - 1, f"{indent}{ATTR}\n")
             n += 1
         open(p, "w").writelines(src)
-    post = {}
+    post, dropped = {}, []
     for rel, fns in plan.items():
         newfns = functions(os.path.join(checkout, rel))
-        sites = {name: cnt for name, _, _, cnt in fns}
-        post[rel] = [(nm, lo, hi, sites[nm]) for nm, lo, hi in newfns if nm in sites]
+        pre_len = max(idx for idx, *_ in fns) + 1
+        if len(newfns) < pre_len:
+            dropped.append(rel)
+            continue
+        post[rel] = [(newfns[idx][0], newfns[idx][1], newfns[idx][2], cnt)
+                     for idx, name, _, _, cnt in fns
+                     if newfns[idx][0] == name]
+        if len(post[rel]) != len(fns):
+            dropped.append(rel)
+            del post[rel]
+    if dropped:
+        print(f"== WARNING: function list changed under stamping in {len(dropped)} "
+              f"file(s); dropping them rather than misattributing: {dropped}", flush=True)
     return n, post
 
 
@@ -162,6 +187,9 @@ def main():
             for rel in sorted(plan):
                 restore(checkout)
                 _, post_one = stamp(checkout, {rel: plan[rel]})
+                if rel not in post_one:
+                    post.pop(rel, None)
+                    continue
                 post[rel] = post_one[rel]
                 tag = rel.replace("/", "_")
                 ic, b = run_flux(checkout, os.path.join(scratch, f"triage-{tag}.log"))
@@ -177,12 +205,13 @@ def main():
     finally:
         restore(checkout)
 
-    # Classify each target function.
+    # Classify each target function. Rows carry the (post-stamp) start line because
+    # the name alone does not identify a function in these files.
     rows, kinds = [], collections.Counter()
     for rel, fns in sorted(post.items()):
         if rel in iced_files:
             for name, lo, hi, n in fns:
-                rows.append((rel, name, n, "ICE", "rustc aborted; quarantine candidate"))
+                rows.append((rel, name, lo, n, "ICE", "rustc aborted; quarantine candidate"))
                 kinds["ICE"] += n
             continue
         errs = results.get(rel, {})
@@ -190,9 +219,9 @@ def main():
             mine = [m for (f, ln), ms in errs.items() if f == rel and lo <= ln <= hi
                     for m in ms]
             if not mine:
-                rows.append((rel, name, n, "CLEAN", "")); kinds["CLEAN"] += n
+                rows.append((rel, name, lo, n, "CLEAN", "")); kinds["CLEAN"] += n
             else:
-                rows.append((rel, name, n, "OBLIGATION", mine[0][:70]))
+                rows.append((rel, name, lo, n, "OBLIGATION", mine[0][:70]))
                 kinds["OBLIGATION"] += n
 
     out = os.path.join(HERE, "results", "TRIAGE.md")
@@ -202,10 +231,10 @@ def main():
         f.write("| sites | outcome |\n| ---: | --- |\n")
         for k, v in kinds.most_common():
             f.write(f"| {v} | {k} |\n")
-        f.write("\n| file | fn | sites | outcome | first error |\n")
-        f.write("| --- | --- | ---: | --- | --- |\n")
-        for rel, name, n, kind, msg in sorted(rows, key=lambda r: (r[3], -r[2])):
-            f.write(f"| `{rel}` | `{name}` | {n} | {kind} | {msg} |\n")
+        f.write("\n| file | fn | line | sites | outcome | first error |\n")
+        f.write("| --- | --- | ---: | ---: | --- | --- |\n")
+        for rel, name, lo, n, kind, msg in sorted(rows, key=lambda r: (r[4], -r[3])):
+            f.write(f"| `{rel}` | `{name}` | {lo} | {n} | {kind} | {msg} |\n")
     print(f"\n== wrote {out}")
     for k, v in kinds.most_common():
         print(f"   {v:4} sites  {k}")
