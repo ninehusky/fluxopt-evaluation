@@ -10,6 +10,7 @@ results/*
 !results/PLAN.md
 !results/STATUS.md
 !results/ROADMAP.md
+!results/WORKLIST.md
 !results/ablation.json
 !results/TRIAGE-sites.tsv
 !results/PANIC-INVENTORY.md
