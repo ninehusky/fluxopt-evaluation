@@ -1,6 +1,6 @@
 # Attack list
 
-190 functions hold 353 of the 439 xarxa panic sites in the firmware; the rest sit outside a function this parser recognises (macro bodies, derives, closures).
+190 functions hold 353 of the 453 xarxa panic sites in the firmware; the rest sit outside a function this parser recognises (macro bodies, derives, closures).
 
 ## By kind of work
 
@@ -19,41 +19,41 @@ Sorted by CHURN sites, which is the tractable work.
 
 | file | sites | churn | panic | core | spec | bug/ICE | Δ.text | status |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| `src/wire/ipv6.rs` | 33 | 22 | 3 | 6 | 0 | 0 | -1180 | partial(4/35 left) |
+| `src/wire/ipv6.rs` | 34 | 22 | 3 | 6 | 0 | 0 | -1180 | partial(4/35 left) |
 | `src/wire/ipv4.rs` | 21 | 20 | 1 | 0 | 0 | 0 | -564 | ok |
-| `src/wire/icmpv6.rs` | 26 | 18 | 0 | 3 | 0 | 0 | -2604 | ok |
+| `src/wire/icmpv6.rs` | 29 | 18 | 0 | 3 | 0 | 0 | -2604 | ok |
 | `src/wire/udp.rs` | 18 | 18 | 0 | 0 | 0 | 0 | -636 | ok |
 | `src/wire/ndisc.rs` | 16 | 12 | 0 | 2 | 0 | 0 | -348 | ok |
 | `src/wire/sixlowpan/nhc.rs` | 25 | 12 | 3 | 0 | 0 | 0 | -568 | ok |
 | `src/wire/arp.rs` | 9 | 9 | 0 | 0 | 0 | 0 | -652 | ok |
 | `src/wire/ndiscoption.rs` | 13 | 9 | 0 | 4 | 0 | 0 | -740 | partial(2/13 left) |
 | `src/wire/sixlowpan/iphc.rs` | 49 | 8 | 4 | 0 | 0 | 0 | -944 | partial(20/49 left) |
-| `src/wire/tcp.rs` | 34 | 8 | 20 | 6 | 0 | 0 | -996 | ok |
+| `src/wire/tcp.rs` | 38 | 8 | 20 | 6 | 0 | 0 | -996 | ok |
 | `src/wire/ethernet.rs` | 7 | 7 | 0 | 0 | 0 | 0 | 236 | partial(1/7 left) |
 | `src/wire/ipv6option.rs` | 7 | 6 | 0 | 1 | 0 | 0 | -216 | ok |
-| `src/wire/mld.rs` | 18 | 6 | 3 | 1 | 0 | 0 | -1072 | ok |
-| `src/storage/ring_buffer.rs` | 20 | 4 | 2 | 3 | 0 | 10 | -164 | partial(3/15 left) |
+| `src/wire/mld.rs` | 15 | 6 | 3 | 1 | 0 | 0 | -1072 | ok |
+| `src/storage/ring_buffer.rs` | 21 | 4 | 2 | 3 | 0 | 10 | -164 | partial(3/15 left) |
 | `src/wire/icmpv4.rs` | 8 | 4 | 0 | 2 | 0 | 0 | -156 | partial(2/8 left) |
 | `src/iface/interface/sixlowpan.rs` | 16 | 3 | 7 | 4 | 0 | 0 | -244 | partial(2/16 left) |
-| `src/wire/ieee802154.rs` | 18 | 3 | 0 | 5 | 0 | 0 | -256 | partial(6/34 left) |
+| `src/wire/ieee802154.rs` | 34 | 3 | 0 | 5 | 0 | 0 | -256 | partial(6/34 left) |
 | `src/wire/ipv6ext_header.rs` | 2 | 2 | 0 | 0 | 0 | 0 | 20 | ok |
 | `src/wire/dhcpv4.rs` | 4 | 1 | 0 | 3 | 0 | 0 | 4 | ok |
 | `src/iface/interface/ipv6.rs` | 3 | 0 | 2 | 1 | 0 | 0 | 268 | ok |
 | `src/iface/interface/mod.rs` | 7 | 0 | 0 | 0 | 0 | 7 | -3248 | ok |
 | `src/iface/neighbor.rs` | 4 | 0 | 4 | 0 | 0 | 0 | -424 | ok |
-| `src/iface/packet.rs` | 12 | 0 | 12 | 0 | 0 | 0 | -384 | ok |
-| `src/iface/route.rs` | 2 | 0 | 2 | 0 | 0 | 0 | -148 | partial(1/1 left) |
+| `src/iface/packet.rs` | 11 | 0 | 12 | 0 | 0 | 0 | -384 | ok |
+| `src/iface/route.rs` | 1 | 0 | 2 | 0 | 0 | 0 | -148 | partial(1/1 left) |
 | `src/iface/socket_set.rs` | 28 | 0 | 28 | 0 | 0 | 0 | -1240 | ok |
 | `src/phy/mod.rs` | 1 | 0 | 1 | 0 | 0 | 0 | -200 | ok |
 | `src/socket/dhcpv4.rs` | 3 | 0 | 3 | 0 | 0 | 0 | 64 | ok |
-| `src/socket/tcp.rs` | 8 | 0 | 1 | 1 | 0 | 0 | -20 | partial(4/8 left) |
+| `src/socket/tcp.rs` | 4 | 0 | 1 | 1 | 0 | 0 | -20 | partial(4/8 left) |
 | `src/socket/udp.rs` | 1 | 0 | 1 | 0 | 0 | 0 | 0 | partial(1/1 left) |
 | `src/storage/assembler.rs` | 1 | 0 | 0 | 1 | 0 | 0 | -- | build-failed |
-| `src/storage/packet_buffer.rs` | 5 | 0 | 1 | 1 | 0 | 2 | -180 | ok |
+| `src/storage/packet_buffer.rs` | 4 | 0 | 1 | 1 | 0 | 2 | -180 | ok |
 | `src/wire/ip.rs` | 4 | 0 | 4 | 0 | 0 | 0 | -184 | ok |
 | `src/wire/ipv6hbh.rs` | 2 | 0 | 0 | 2 | 0 | 0 | -128 | ok |
 | `src/wire/mod.rs` | 4 | 0 | 3 | 1 | 0 | 0 | -- | build-failed |
-| `src/wire/sixlowpan/mod.rs` | 10 | 0 | 0 | 5 | 0 | 0 | -1260 | partial(2/10 left) |
+| `src/wire/sixlowpan/mod.rs` | 9 | 0 | 0 | 5 | 0 | 0 | -1260 | partial(2/10 left) |
 
 ## Rows: every CHURN function, biggest first
 

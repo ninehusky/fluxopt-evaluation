@@ -12,9 +12,19 @@ Covers all 650 sites, not just the xarxa ones: phases 5 and 6 are the crates
 xarxa proofs cannot reach, and they were unscoped until now.
 
 Inputs are all tool output:
+  results/modified.json        the measured binary, and its path     (measure.py)
   results/modified.blame.tsv   every site in the linked binary       (blame.py)
   results/TRIAGE-sites.tsv     the Flux obligation per xarxa site    (triage.py)
   results/ablation.json        measured budgets                      (sweep.py)
+
+TRIAGE-sites.tsv is keyed by source line, and blame.py's lines moved when it
+switched from DWARF to core::panic::Location -- so a site whose line changed no
+longer joins to its Flux result.  The join therefore falls back to the enclosing
+FUNCTION, which is the granularity triage.py actually works at: it stamps
+#[trusted(no)] per function, so every site in a function shares its outcome.
+What is left over after that fallback is a genuine gap -- a function Flux was
+never asked about, or a site that is not inside a fn at all (a macro_rules body,
+a const, a derive) -- and that, not a missing line number, is what phase 1 is.
 """
 
 import collections
@@ -26,12 +36,32 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import plan as P                                                    # noqa: E402
+import triage as T                                                  # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 R = lambda *p: os.path.join(HERE, "results", *p)
 XARXA_PREFIX = "third_party/xarxa/"
 XARXA = os.environ.get("XARXA", "/Users/andrew/research/xarxa-specs")
-REPO = os.path.join(HERE, "work", "modified")
+
+
+def build_tree():
+    """The tree the measured ELF was built from -- <root>/examples/<board>/target.
+
+    Taken from the measurement rather than assumed, because the line numbers in
+    modified.blame.tsv are only meaningful against the sources that produced that
+    ELF.  Falls back to ./work/modified, which is where run.py puts it.
+    """
+    default = os.path.join(HERE, "work", "modified")
+    try:
+        elf = json.load(open(R("modified.json")))["elf"]
+    except (OSError, KeyError, ValueError):
+        return default
+    root = elf.rsplit("/examples/", 1)[0] if "/examples/" in elf else ""
+    return root if root and os.path.isdir(root) else default
+
+
+REPO = build_tree()
+BUILT_XARXA = os.path.join(REPO, XARXA_PREFIX)
 
 SHORT = {
     "core::slice::index::slice_index_fail": "slice-index",
@@ -55,10 +85,12 @@ PHASES = {
         "obligation to the callers. Fully delegable; four agents are on udp, ipv4, "
         "ndiscoption and nhc as of 2026-08-11."),
     1: ("Phase 1 — the attribution gap",
-        "Sites with no Flux obligation attached: they fall outside any function the "
-        "triage parser recognises (macro bodies, derives, closures), or DWARF gave no "
-        "statement at all. Diagnosis, not proof. Until these are categorised the xarxa "
-        "endgame cannot be costed."),
+        "Sites with no Flux obligation attached. Every one now has an exact span -- "
+        "blame.py reads it from the panic's own core::panic::Location -- so what is "
+        "left is not a missing line but a missing obligation: the site sits outside "
+        "any fn the triage parser recognises (a macro_rules body, a const, a derive), "
+        "or its function was never in a triage run. Re-running triage.py against the "
+        "current blame data is what shrinks this."),
     2: ("Phase 2 — xarxa PANIC",
         "An explicit panic!/unreachable!/assert!/expect. Needs a REACHABILITY argument, "
         "and the fact that kills the branch usually lives in another module. Blocked on "
@@ -99,7 +131,9 @@ def const_spans_for(rel):
         import ablate                                               # noqa
     except Exception:
         return set()
-    path = os.path.join(XARXA, rel)
+    path = os.path.join(BUILT_XARXA, rel)
+    if not os.path.exists(path):
+        path = os.path.join(XARXA, rel)
     if not os.path.exists(path):
         return set()
     src = open(path, errors="replace").read()
@@ -114,10 +148,13 @@ def source_of(path, line):
     build tree; registry and rustc paths are read if present, skipped if not."""
     if line <= 0:
         return ""
-    # xarxa rows are keyed by a path already relative to the checkout; everything
-    # else is relative to the build tree, or absolute (registry / rustc sources).
+    # The line numbers came out of the measured ELF, so only the tree that ELF
+    # was built from is guaranteed to line up.  xarxa rows arrive already
+    # relative to the crate root, everything else relative to the build tree or
+    # absolute; XARXA is tried last, for when the build tree is gone.
     rel = path[len(XARXA_PREFIX):] if path.startswith(XARXA_PREFIX) else path
-    for cand in (os.path.join(XARXA, rel), os.path.join(REPO, path), path):
+    for cand in (os.path.join(BUILT_XARXA, rel), os.path.join(REPO, path),
+                 os.path.join(XARXA, rel), path):
         if cand and os.path.exists(cand) and os.path.isfile(cand):
             try:
                 lines = open(cand, errors="replace").read().splitlines()
@@ -126,6 +163,33 @@ def source_of(path, line):
             if line <= len(lines):
                 return lines[line - 1].strip()
     return ""
+
+
+def spans(rel):
+    """[(fn name, first line, last line)] for a xarxa file, or [] if unreadable.
+
+    triage.py's parser, so the function identities here are the ones its rows
+    were written with.
+    """
+    path = os.path.join(BUILT_XARXA, rel)
+    if not os.path.exists(path):
+        path = os.path.join(XARXA, rel)
+    return T.functions(path) if os.path.exists(path) else []
+
+
+def by_function(cats):
+    """{file: {fn name: category}} from the per-line triage rows.
+
+    A name that triage gave more than one outcome in the same file -- these
+    modules define the same accessor in several impl blocks -- is dropped rather
+    than guessed at, so it falls through to UNATTRIBUTED.
+    """
+    seen = collections.defaultdict(lambda: collections.defaultdict(set))
+    for (f, _line), (cat, fn) in cats.items():
+        if fn:
+            seen[f][fn].add(cat)
+    return {f: {fn: next(iter(cs)) for fn, cs in fns.items() if len(cs) == 1}
+            for f, fns in seen.items()}
 
 
 def main():
@@ -137,6 +201,19 @@ def main():
                  "ICE" if m.startswith("rustc aborted") else
                  P.classify("OBLIGATION", m))
             cats[(row["file"], int(row["site_line"]))] = (c, row["fn"])
+    fn_cats, span_cache, fell_back = by_function(cats), {}, collections.Counter()
+
+    def category(rel, line):
+        """(category, fn) for a xarxa site: by line, else by enclosing function."""
+        if (rel, line) in cats:
+            return cats[(rel, line)]
+        if rel not in span_cache:
+            span_cache[rel] = spans(rel)
+        for name, lo, hi in span_cache[rel]:
+            if lo <= line <= hi and name in fn_cats.get(rel, {}):
+                fell_back[rel] += 1
+                return fn_cats[rel][name], name
+        return "UNATTRIBUTED", ""
 
     # (phase, path, line) -> [kinds]
     rows = collections.defaultdict(list)
@@ -145,7 +222,7 @@ def main():
         line = int(line)
         if path.startswith(XARXA_PREFIX):
             rel = path[len(XARXA_PREFIX):]
-            cat, fn = cats.get((rel, line), ("UNATTRIBUTED", ""))
+            cat, fn = category(rel, line)
             ph = CAT_TO_PHASE.get(cat, 1)
             rows[(ph, rel, line)].append((short(sym), cat, fn))
         elif any(k in path for k in FMT_MARKERS):
@@ -170,8 +247,13 @@ def main():
       "`./worklist.py`.\n\n")
     w("One row per source **line**; `sites` is how many machine call sites that "
       "line compiles to, because generics and inlining duplicate it. Lines track "
-      "effort, sites track the metric. `line 0` means DWARF blamed the file but no "
-      "statement.\n\n")
+      "effort, sites track the metric.\n\n")
+    w("Spans come from each panic's `core::panic::Location` argument, read out of "
+      "`.rodata` — the location the panic would print at runtime — not from DWARF, "
+      "which reports no line for the branches the optimiser tail-merged and "
+      "misattributes others to the core code they inlined. `(no line)` means the "
+      "site carries no Location either; on this firmware that is defmt's panic "
+      "macro, and never xarxa.\n\n")
 
     w("| phase | sites | what |\n| --- | ---: | --- |\n")
     for ph in sorted(PHASES):
@@ -222,6 +304,10 @@ def main():
     for ph in sorted(PHASES):
         print(f"  phase {ph}: {per_phase[ph]:4} sites")
     print(f"  total:   {total:4}")
+    if fell_back:
+        n = sum(fell_back.values())
+        print(f"  {n} xarxa sites took their category from the enclosing function "
+              f"rather than an exact line; re-run triage.py to make the join exact.")
 
 
 if __name__ == "__main__":

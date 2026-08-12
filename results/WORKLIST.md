@@ -2,17 +2,19 @@
 
 All 650 panic sites in the linked nRF52840 `usb_ethernet` binary, grouped into the phases in [ROADMAP.md](ROADMAP.md). Regenerate with `./worklist.py`.
 
-One row per source **line**; `sites` is how many machine call sites that line compiles to, because generics and inlining duplicate it. Lines track effort, sites track the metric. `line 0` means DWARF blamed the file but no statement.
+One row per source **line**; `sites` is how many machine call sites that line compiles to, because generics and inlining duplicate it. Lines track effort, sites track the metric.
+
+Spans come from each panic's `core::panic::Location` argument, read out of `.rodata` — the location the panic would print at runtime — not from DWARF, which reports no line for the branches the optimiser tail-merged and misattributes others to the core code they inlined. `(no line)` means the site carries no Location either; on this firmware that is defmt's panic macro, and never xarxa.
 
 | phase | sites | what |
 | --- | ---: | --- |
-| [0](#phase-0) | 177 | xarxa CHURN |
-| [1](#phase-1) | 86 | the attribution gap |
-| [2](#phase-2) | 105 | xarxa PANIC |
-| [3](#phase-3) | 52 | xarxa CORE |
-| [4](#phase-4) | 19 | compiler work |
-| [5](#phase-5) | 60 | logging and formatting |
-| [6](#phase-6) | 151 | the embassy crates and other dependencies |
+| [0](#phase-0) | 205 | xarxa CHURN |
+| [1](#phase-1) | 54 | the attribution gap |
+| [2](#phase-2) | 112 | xarxa PANIC |
+| [3](#phase-3) | 62 | xarxa CORE |
+| [4](#phase-4) | 20 | compiler work |
+| [5](#phase-5) | 33 | logging and formatting |
+| [6](#phase-6) | 164 | the embassy crates and other dependencies |
 | | **650** | |
 
 ---
@@ -20,15 +22,34 @@ One row per source **line**; `sites` is how many machine call sites that line co
 <a id="phase-0"></a>
 ## Phase 0 — xarxa CHURN
 
-177 sites. State a length or range precondition and discharge it, then follow the obligation to the callers. Fully delegable; four agents are on udp, ipv4, ndiscoption and nhc as of 2026-08-11.
+205 sites. State a length or range precondition and discharge it, then follow the obligation to the callers. Fully delegable; four agents are on udp, ipv4, ndiscoption and nhc as of 2026-08-11.
 
-### `src/wire/ipv6.rs` — 22 sites
+### `src/wire/sixlowpan/iphc.rs` — 25 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/sixlowpan/iphc.rs:133` | 1 | slice-index | `next_header` | `let nh = data[start..start + 1][0];` |
+| `src/wire/sixlowpan/iphc.rs:288` | 2 | slice-index | `dst_addr` | `&data[start..][..16],` |
+| `src/wire/sixlowpan/iphc.rs:291` | 2 | slice-index | `dst_addr` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| `src/wire/sixlowpan/iphc.rs:294` | 2 | slice-index | `dst_addr` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| `src/wire/sixlowpan/iphc.rs:302` | 2 | slice-index | `dst_addr` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| `src/wire/sixlowpan/iphc.rs:312` | 2 | slice-index | `dst_addr` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| `src/wire/sixlowpan/iphc.rs:329` | 2 | slice-index | `dst_addr` | `&data[start..][..16],` |
+| `src/wire/sixlowpan/iphc.rs:332` | 2 | slice-index | `dst_addr` | `AddressMode::Multicast48bits(&data[start..][..6]),` |
+| `src/wire/sixlowpan/iphc.rs:335` | 2 | slice-index | `dst_addr` | `AddressMode::Multicast32bits(&data[start..][..4]),` |
+| `src/wire/sixlowpan/iphc.rs:338` | 2 | slice-index | `dst_addr` | `AddressMode::Multicast8bits(&data[start..][..1]),` |
+| `src/wire/sixlowpan/iphc.rs:455` | 1 | slice-index | `payload` | `&data[len..]` |
+| `src/wire/sixlowpan/iphc.rs:462` | 1 | slice-index | `set_dispatch_field` | `let data = &mut self.buffer.as_mut()[field::IPHC_FIELD];` |
+| `src/wire/sixlowpan/iphc.rs:481` | 4 | slice-index | `set_field` | `raw[idx..idx + value.len()].copy_from_slice(value);` |
+
+### `src/wire/ipv6.rs` — 24 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
 | `src/wire/ipv6.rs:448` | 2 | slice-index | `payload_len` | `NetworkEndian::read_u16(&data[field::LENGTH])` |
 | `src/wire/ipv6.rs:492` | 1 | slice-index | `payload` | `&data[range]` |
-| `src/wire/ipv6.rs:503` | 2 | bounds-check | `set_version` | `data[0] = (data[0] & 0x0f) \| ((value & 0x0f) << 4);` |
+| `src/wire/ipv6.rs:503` | 3 | bounds-check | `set_version` | `data[0] = (data[0] & 0x0f) \| ((value & 0x0f) << 4);` |
+| `src/wire/ipv6.rs:512` | 1 | bounds-check | `set_traffic_class` | `data[0] = (data[0] & 0xf0) \| ((value & 0xf0) >> 4);` |
 | `src/wire/ipv6.rs:515` | 3 | bounds-check | `set_traffic_class` | `data[1] = (data[1] & 0x0f) \| ((value & 0x0f) << 4);` |
 | `src/wire/ipv6.rs:531` | 3 | slice-index | `set_payload_len` | `NetworkEndian::write_u16(&mut data[field::LENGTH], value);` |
 | `src/wire/ipv6.rs:538` | 1 | bounds-check | `set_next_header` | `data[field::NXT_HDR] = value.into();` |
@@ -36,6 +57,21 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/ipv6.rs:552` | 3 | slice-index | `set_src_addr` | `data[field::SRC_ADDR].copy_from_slice(&value.octets());` |
 | `src/wire/ipv6.rs:559` | 3 | slice-index | `set_dst_addr` | `data[field::DST_ADDR].copy_from_slice(&value.octets());` |
 | `src/wire/ipv6.rs:567` | 1 | slice-index | `payload_mut` | `&mut data[range]` |
+
+### `src/wire/icmpv6.rs` — 21 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/icmpv6.rs:458` | 5 | slice-index | `payload` | `&data[self.header_len()..]` |
+| `src/wire/icmpv6.rs:470` | 3 | bounds-check | `set_msg_type` | `data[field::TYPE] = value.into()` |
+| `src/wire/icmpv6.rs:479` | 4 | bounds-check | `set_msg_code` | `data[field::CODE] = value` |
+| `src/wire/icmpv6.rs:502` | 2 | slice-index | `clear_reserved` | `NetworkEndian::write_u32(&mut data[field::UNUSED], 0);` |
+| `src/wire/icmpv6.rs:506` | 1 | slice-index | `clear_reserved` | `NetworkEndian::write_u16(&mut data[field::QUERY_RESV], 0);` |
+| `src/wire/icmpv6.rs:507` | 1 | bounds-check | `clear_reserved` | `data[field::SQRV] &= 0xf;` |
+| `src/wire/icmpv6.rs:511` | 1 | slice-index | `clear_reserved` | `NetworkEndian::write_u16(&mut data[field::RECORD_RESV], 0);` |
+| `src/wire/icmpv6.rs:544` | 1 | slice-index | `set_echo_ident` | `NetworkEndian::write_u16(&mut data[field::ECHO_IDENT], value)` |
+| `src/wire/icmpv6.rs:554` | 1 | slice-index | `set_echo_seq_no` | `NetworkEndian::write_u16(&mut data[field::ECHO_SEQNO], value)` |
+| `src/wire/icmpv6.rs:600` | 2 | slice-index | `payload_mut` | `&mut data[range]` |
 
 ### `src/wire/ipv4.rs` — 20 sites
 
@@ -53,19 +89,24 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/ipv4.rs:495` | 2 | slice-index | `set_src_addr` | `data[field::SRC_ADDR].copy_from_slice(&value.octets())` |
 | `src/wire/ipv4.rs:502` | 2 | slice-index | `set_dst_addr` | `data[field::DST_ADDR].copy_from_slice(&value.octets())` |
 
-### `src/wire/icmpv6.rs` — 18 sites
+### `src/wire/sixlowpan/nhc.rs` — 19 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/icmpv6.rs:458` | 5 | slice-index | `payload` | `&data[self.header_len()..]` |
-| `src/wire/icmpv6.rs:470` | 2 | bounds-check | `set_msg_type` | `data[field::TYPE] = value.into()` |
-| `src/wire/icmpv6.rs:479` | 3 | bounds-check | `set_msg_code` | `data[field::CODE] = value` |
-| `src/wire/icmpv6.rs:502` | 2 | slice-index | `clear_reserved` | `NetworkEndian::write_u32(&mut data[field::UNUSED], 0);` |
-| `src/wire/icmpv6.rs:507` | 1 | bounds-check | `clear_reserved` | `data[field::SQRV] &= 0xf;` |
-| `src/wire/icmpv6.rs:511` | 1 | slice-index | `clear_reserved` | `NetworkEndian::write_u16(&mut data[field::RECORD_RESV], 0);` |
-| `src/wire/icmpv6.rs:544` | 1 | slice-index | `set_echo_ident` | `NetworkEndian::write_u16(&mut data[field::ECHO_IDENT], value)` |
-| `src/wire/icmpv6.rs:554` | 1 | slice-index | `set_echo_seq_no` | `NetworkEndian::write_u16(&mut data[field::ECHO_SEQNO], value)` |
-| `src/wire/icmpv6.rs:600` | 2 | slice-index | `payload_mut` | `&mut data[range]` |
+| `src/wire/sixlowpan/nhc.rs:179` | 2 | bounds-check | `length` | `self.buffer.as_ref()[1 + self.next_header_size()]` |
+| `src/wire/sixlowpan/nhc.rs:208` | 2 | slice-index | `payload` | `&self.buffer.as_ref()[start..][..len]` |
+| `src/wire/sixlowpan/nhc.rs:586` | 1 | slice-index | `checksum` | `Some(NetworkEndian::read_u16(&data[start..start + 2]))` |
+| `src/wire/sixlowpan/nhc.rs:618` | 3 | slice-index | `payload` | `&self.buffer.as_ref()[start..]` |
+| `src/wire/sixlowpan/nhc.rs:626` | 2 | slice-index | `payload_mut` | `&mut self.buffer.as_mut()[start..]` |
+| `src/wire/sixlowpan/nhc.rs:632` | 1 | bounds-check | `set_dispatch_field` | `data[0] = (data[0] & !(0b11111 << 3)) \| (DISPATCH_UDP_HEADER << 3);` |
+| `src/wire/sixlowpan/nhc.rs:648` | 1 | bounds-check | `set_ports` | `data[idx] = (((src_port - 0xf0b0) as u8) << 4) & ((dst_port - 0xf0b0) as u8);` |
+| `src/wire/sixlowpan/nhc.rs:654` | 1 | bounds-check | `set_ports` | `data[idx] = (src_port - 0xf000) as u8;` |
+| `src/wire/sixlowpan/nhc.rs:657` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
+| `src/wire/sixlowpan/nhc.rs:663` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], src_port);` |
+| `src/wire/sixlowpan/nhc.rs:665` | 1 | bounds-check | `set_ports` | `data[idx] = (dst_port - 0xf000) as u8;` |
+| `src/wire/sixlowpan/nhc.rs:671` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], src_port);` |
+| `src/wire/sixlowpan/nhc.rs:673` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
+| `src/wire/sixlowpan/nhc.rs:682` | 1 | slice-index | `set_checksum` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], checksum);` |
 
 ### `src/wire/udp.rs` — 18 sites
 
@@ -82,22 +123,7 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/udp.rs:200` | 1 | slice-index | `fill_checksum` | `checksum::data(&data[..self.len() as usize]),` |
 | `src/wire/udp.rs:215` | 2 | slice-index | `payload_mut` | `&mut data[field::PAYLOAD(length)]` |
 
-### `src/wire/sixlowpan/nhc.rs` — 15 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/nhc.rs:179` | 2 | bounds-check | `length` | `self.buffer.as_ref()[1 + self.next_header_size()]` |
-| `src/wire/sixlowpan/nhc.rs:208` | 2 | slice-index | `payload` | `&self.buffer.as_ref()[start..][..len]` |
-| `src/wire/sixlowpan/nhc.rs:586` | 1 | slice-index | `checksum` | `Some(NetworkEndian::read_u16(&data[start..start + 2]))` |
-| `src/wire/sixlowpan/nhc.rs:618` | 3 | slice-index | `payload` | `&self.buffer.as_ref()[start..]` |
-| `src/wire/sixlowpan/nhc.rs:626` | 2 | slice-index | `payload_mut` | `&mut self.buffer.as_mut()[start..]` |
-| `src/wire/sixlowpan/nhc.rs:632` | 1 | bounds-check | `set_dispatch_field` | `data[0] = (data[0] & !(0b11111 << 3)) \| (DISPATCH_UDP_HEADER << 3);` |
-| `src/wire/sixlowpan/nhc.rs:657` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
-| `src/wire/sixlowpan/nhc.rs:665` | 1 | bounds-check | `set_ports` | `data[idx] = (dst_port - 0xf000) as u8;` |
-| `src/wire/sixlowpan/nhc.rs:673` | 1 | slice-index | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
-| `src/wire/sixlowpan/nhc.rs:682` | 1 | slice-index | `set_checksum` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], checksum);` |
-
-### `src/wire/ndisc.rs` — 12 sites
+### `src/wire/ndisc.rs` — 14 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
@@ -111,6 +137,8 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/ndisc.rs:162` | 2 | slice-index | `set_target_addr` | `data[field::TARGET_ADDR].copy_from_slice(&value.octets());` |
 | `src/wire/ndisc.rs:187` | 1 | slice-index | `set_dest_addr` | `data[field::DEST_ADDR].copy_from_slice(&value.octets());` |
 | `src/wire/ndisc.rs:240` | 1 | slice-index | `parse` | `let pkt = NdiscOption::new_checked(&packet.payload()[offset..])?;` |
+| `src/wire/ndisc.rs:389` | 1 | slice-index | `emit` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
+| `src/wire/ndisc.rs:395` | 1 | slice-index | `emit` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
 | `src/wire/ndisc.rs:451` | 1 | slice-index | `emit` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
 
 ### `src/wire/arp.rs` — 9 sites
@@ -138,18 +166,6 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/ndiscoption.rs:352` | 1 | slice-index | `clear_prefix_reserved` | `NetworkEndian::write_u32(&mut data[field::PREF_RESERVED], 0);` |
 | `src/wire/ndiscoption.rs:359` | 1 | slice-index | `set_prefix` | `data[field::PREFIX].copy_from_slice(&addr.octets());` |
 | `src/wire/ndiscoption.rs:379` | 2 | slice-index | `data_mut` | `&mut data[field::DATA(len)]` |
-
-### `src/wire/sixlowpan/iphc.rs` — 8 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/iphc.rs:133` | 1 | slice-index | `next_header` | `let nh = data[start..start + 1][0];` |
-| `src/wire/sixlowpan/iphc.rs:332` | 1 | slice-index | `dst_addr` | `AddressMode::Multicast48bits(&data[start..][..6]),` |
-| `src/wire/sixlowpan/iphc.rs:335` | 1 | slice-index | `dst_addr` | `AddressMode::Multicast32bits(&data[start..][..4]),` |
-| `src/wire/sixlowpan/iphc.rs:338` | 1 | slice-index | `dst_addr` | `AddressMode::Multicast8bits(&data[start..][..1]),` |
-| `src/wire/sixlowpan/iphc.rs:455` | 1 | slice-index | `payload` | `&data[len..]` |
-| `src/wire/sixlowpan/iphc.rs:462` | 1 | slice-index | `set_dispatch_field` | `let data = &mut self.buffer.as_mut()[field::IPHC_FIELD];` |
-| `src/wire/sixlowpan/iphc.rs:481` | 2 | slice-index | `set_field` | `raw[idx..idx + value.len()].copy_from_slice(value);` |
 
 ### `src/wire/tcp.rs` — 8 sites
 
@@ -246,96 +262,84 @@ One row per source **line**; `sites` is how many machine call sites that line co
 <a id="phase-1"></a>
 ## Phase 1 — the attribution gap
 
-86 sites. Sites with no Flux obligation attached: they fall outside any function the triage parser recognises (macro bodies, derives, closures), or DWARF gave no statement at all. Diagnosis, not proof. Until these are categorised the xarxa endgame cannot be costed.
+54 sites. Sites with no Flux obligation attached. Every one now has an exact span -- blame.py reads it from the panic's own core::panic::Location -- so what is left is not a missing line but a missing obligation: the site sits outside any fn the triage parser recognises (a macro_rules body, a const, a derive), or its function was never in a triage run. Re-running triage.py against the current blame data is what shrinks this.
 
 **Also in this phase, and not in the table below:** 53 xarxa sites survive even a full unsound `get_unchecked` ablation, so they cannot be removed by any means currently known. 20 are in `src/wire/sixlowpan/iphc.rs`, 4 each in `wire/mod.rs`, `ipv6.rs` and `ieee802154.rs`. Named causes so far: `const fn` bodies (the ablator skips them, `get_unchecked` is not const-stable), `[u8; N]` arrays (the ablator's index trait covers `[T]` only), and borrowck conflicts in `assembler.rs`. Rows below marked `const-fn` are inside a const body and are the prime suspects.
 
-### `src/wire/sixlowpan/iphc.rs` — 37 sites
+### `src/wire/ieee802154.rs` — 25 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/iphc.rs` (no line) | 35 | bounds-check, slice-index | `` | `` |
-| `src/wire/sixlowpan/iphc.rs:22` | 2 | slice-index | `` | `let raw = NetworkEndian::read_u16(&data[field::IPHC_FIELD]);` |
+| `src/wire/ieee802154.rs:501` | 1 | slice-index | `` | `Some(Pan(LittleEndian::read_u16(&addressing_fields[..2])))` |
+| `src/wire/ieee802154.rs:518` | 1 | slice-index | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 2]);` |
+| `src/wire/ieee802154.rs:524` | 1 | slice-index | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 8]);` |
+| `src/wire/ieee802154.rs:563` | 1 | slice-index | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 2]);` |
+| `src/wire/ieee802154.rs:569` | 1 | slice-index | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 8]);` |
+| `src/wire/ieee802154.rs:640` | 2 | bounds-check, slice-index | `` | `let b = self.buffer.as_ref()[index..][0];` |
+| `src/wire/ieee802154.rs:647` | 2 | bounds-check, slice-index | `` | `let b = self.buffer.as_ref()[index..][0];` |
+| `src/wire/ieee802154.rs:732` | 1 | slice-index | `` | `let data = &mut self.buffer.as_mut()[field::FRAMECONTROL];` |
+| `src/wire/ieee802154.rs:758` | 1 | bounds-check | `` | `data[field::SEQUENCE_NUMBER] = value;` |
+| `src/wire/ieee802154.rs:769` | 2 | slice-index | `` | `data[field::ADDRESSING][..2].copy_from_slice(&value.as_bytes());` |
+| `src/wire/ieee802154.rs:781` | 2 | slice-index | `` | `data[field::ADDRESSING][2..2 + 2].copy_from_slice(&value);` |
+| `src/wire/ieee802154.rs:787` | 1 | slice-index | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| `src/wire/ieee802154.rs:788` | 1 | slice-index | `` | `data[2..2 + 8].copy_from_slice(&value);` |
+| `src/wire/ieee802154.rs:811` | 1 | panic!/unreachable! | `` | `_ => unreachable!(),` |
+| `src/wire/ieee802154.rs:814` | 1 | slice-index | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| `src/wire/ieee802154.rs:815` | 1 | slice-index | `` | `data[offset..offset + 2].copy_from_slice(&value.as_bytes());` |
+| `src/wire/ieee802154.rs:825` | 1 | panic!/unreachable! | `` | `_ => unreachable!(),` |
+| `src/wire/ieee802154.rs:835` | 1 | slice-index | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| `src/wire/ieee802154.rs:836` | 1 | slice-index | `` | `data[offset..offset + 2].copy_from_slice(&value);` |
+| `src/wire/ieee802154.rs:842` | 1 | slice-index | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| `src/wire/ieee802154.rs:843` | 1 | slice-index | `` | `data[offset..offset + 8].copy_from_slice(&value);` |
 
-### `src/wire/ieee802154.rs` — 10 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/ieee802154.rs` (no line) | 10 | bounds-check, slice-index | `` | `` |
-
-### `src/wire/mld.rs` — 8 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/mld.rs` (no line) | 8 | bounds-check, copy_from_slice, slice-index | `` | `` |
-
-### `src/wire/sixlowpan/nhc.rs` — 7 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/nhc.rs` (no line) | 4 | bounds-check, slice-index | `` | `` |
-| `src/wire/sixlowpan/nhc.rs:16` | 3 | bounds-check | `` | `let raw = &data[0];` |
-
-### `src/wire/icmpv6.rs` — 5 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/icmpv6.rs` (no line) | 5 | slice-index | `` | `` |
-
-### `src/wire/sixlowpan/mod.rs` — 5 sites
+### `src/wire/sixlowpan/iphc.rs` — 18 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/mod.rs` (no line) | 5 | bounds-check, slice-index | `` | `` |
+| `src/wire/sixlowpan/iphc.rs:160` | 1 | bounds-check | `` | `Some(data[2] >> 4)` |
+| `src/wire/sixlowpan/iphc.rs:170` | 1 | bounds-check | `` | `Some(data[2] & 0x0f)` |
+| `src/wire/sixlowpan/iphc.rs:181` | 2 | bounds-check, slice-index | `` | `Some(self.buffer.as_ref()[start..][0] & 0b1100_0000)` |
+| `src/wire/sixlowpan/iphc.rs:193` | 2 | bounds-check, slice-index | `` | `Some(self.buffer.as_ref()[start..][0] & 0b111111)` |
+| `src/wire/sixlowpan/iphc.rs:230` | 2 | slice-index | `` | `&data[start..][..16],` |
+| `src/wire/sixlowpan/iphc.rs:233` | 2 | slice-index | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| `src/wire/sixlowpan/iphc.rs:236` | 2 | slice-index | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| `src/wire/sixlowpan/iphc.rs:247` | 2 | slice-index | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| `src/wire/sixlowpan/iphc.rs:257` | 2 | slice-index | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| `src/wire/sixlowpan/iphc.rs:349` | 1 | slice-index | `` | `get_field!(dispatch_field, 0b111, 13);` |
+| `src/wire/sixlowpan/iphc.rs:353` | 1 | slice-index | `` | `get_field!(cid_field, 0b1, 7);` |
 
-### `src/socket/tcp.rs` — 4 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/socket/tcp.rs` (no line) | 4 | panic!(fmt) | `` | `` |
-
-### `src/iface/interface/sixlowpan.rs` — 2 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/iface/interface/sixlowpan.rs` (no line) | 2 | slice-index | `` | `` |
-
-### `src/wire/icmpv4.rs` — 2 sites
+### `src/wire/mld.rs` — 5 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/icmpv4.rs` (no line) | 2 | slice-index | `` | `` |
+| `src/wire/mld.rs:163` | 1 | slice-index | `` | `NetworkEndian::write_u16(&mut data[field::NR_MCAST_RCRDS], value)` |
+| `src/wire/mld.rs:259` | 1 | bounds-check | `` | `data[field::RECORD_TYPE] = rty.into();` |
+| `src/wire/mld.rs:266` | 1 | bounds-check | `` | `data[field::AUX_DATA_LEN] = len;` |
+| `src/wire/mld.rs:432` | 1 | copy_from_slice | `` | `packet.payload_mut().copy_from_slice(&data[..]);` |
+| `src/wire/mld.rs:442` | 1 | copy_from_slice | `` | `packet.payload_mut().copy_from_slice(&data[..]);` |
 
-### `src/wire/ipv6.rs` — 2 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/ipv6.rs` (no line) | 2 | bounds-check | `` | `` |
-
-### `src/wire/ndisc.rs` — 2 sites
+### `src/wire/icmpv6.rs` — 3 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/ndisc.rs` (no line) | 2 | slice-index | `` | `` |
+| `src/wire/icmpv6.rs:534` | 1 | slice-index | `` | `NetworkEndian::write_u16(&mut data[field::CHECKSUM], value)` |
+| `src/wire/icmpv6.rs:564` | 1 | slice-index | `` | `NetworkEndian::write_u32(&mut data[field::MTU], value)` |
+| `src/wire/icmpv6.rs:574` | 1 | slice-index | `` | `NetworkEndian::write_u32(&mut data[field::POINTER], value)` |
 
-### `src/storage/packet_buffer.rs` — 1 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/storage/packet_buffer.rs` (no line) | 1 | slice-index | `` | `` |
-
-### `src/storage/ring_buffer.rs` — 1 sites
+### `src/wire/sixlowpan/nhc.rs` — 3 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/storage/ring_buffer.rs` (no line) | 1 | slice-index | `` | `` |
+| `src/wire/sixlowpan/nhc.rs:160` | 1 | bounds-check | `` | `get_field!(eid_field, 0b111, 1);` |
+| `src/wire/sixlowpan/nhc.rs:161` | 1 | bounds-check | `` | `get_field!(nh_field, 0b1, 0);` |
+| `src/wire/sixlowpan/nhc.rs:510` | 1 | bounds-check | `` | `get_field!(ports_field, 0b11, 0);` |
 
 ---
 
 <a id="phase-2"></a>
 ## Phase 2 — xarxa PANIC
 
-105 sites. An explicit panic!/unreachable!/assert!/expect. Needs a REACHABILITY argument, and the fact that kills the branch usually lives in another module. Blocked on picking a type invariant, not on effort.
+112 sites. An explicit panic!/unreachable!/assert!/expect. Needs a REACHABILITY argument, and the fact that kills the branch usually lives in another module. Blocked on picking a type invariant, not on effort.
 
 ### `src/iface/socket_set.rs` — 28 sites
 
@@ -351,13 +355,13 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/iface/socket_set.rs:126` | 1 | bounds-check | `remove` | `match self.sockets[handle.0].inner.take() {` |
 | `src/iface/socket_set.rs:128` | 1 | panic!(fmt) | `remove` | `None => panic!("handle does not refer to a valid socket"),` |
 
-### `src/wire/tcp.rs` — 20 sites
+### `src/wire/tcp.rs` — 24 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/tcp.rs:44` | 7 | panic!(fmt) | `add` | `panic!("attempt to add to sequence number with unsigned overflow")` |
+| `src/wire/tcp.rs:44` | 10 | panic!(fmt) | `add` | `panic!("attempt to add to sequence number with unsigned overflow")` |
 | `src/wire/tcp.rs:55` | 1 | panic!(fmt) | `sub` | `panic!("attempt to subtract to sequence number with unsigned overflow")` |
-| `src/wire/tcp.rs:73` | 6 | panic!(fmt) | `sub` | `panic!("attempt to subtract sequence numbers with underflow")` |
+| `src/wire/tcp.rs:73` | 7 | panic!(fmt) | `sub` | `panic!("attempt to subtract sequence numbers with underflow")` |
 | `src/wire/tcp.rs:740` | 1 | bounds-check | `emit` | `buffer[0] = field::OPT_NOP;` |
 | `src/wire/tcp.rs:744` | 1 | bounds-check | `emit` | `buffer[1] = length as u8;` |
 | `src/wire/tcp.rs:753` | 1 | bounds-check | `emit` | `buffer[2] = value;` |
@@ -365,7 +369,7 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/tcp.rs:781` | 1 | copy_from_slice | `emit` | `buffer[2..].copy_from_slice(provided)` |
 | `src/wire/tcp.rs:786` | 1 | slice-index | `emit` | `&mut buffer[length..]` |
 
-### `src/iface/packet.rs` — 12 sites
+### `src/iface/packet.rs` — 11 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
@@ -374,12 +378,11 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/iface/packet.rs:115` | 1 | slice-index | `emit_payload` | `&mut payload[..ipv6_ext_hdr.header_len()],` |
 | `src/iface/packet.rs:121` | 1 | slice-index | `emit_payload` | `&mut payload[hbh_start..hbh_end],` |
 | `src/iface/packet.rs:143` | 1 | copy_from_slice | `emit_payload` | `\|buf\| buf.copy_from_slice(inner_payload),` |
-| `src/iface/packet.rs:179` | 1 | unwrap | `emit_payload` | `\|buf\| dhcp_repr.emit(&mut DhcpPacket::new_unchecked(buf)).unwrap(),` |
 | `src/iface/packet.rs:234` | 2 | panic!/unreachable! | `as_sixlowpan_next_header` | `Self::Icmpv4(_) => unreachable!(),` |
 | `src/iface/packet.rs:236` | 2 | panic!/unreachable! | `as_sixlowpan_next_header` | `Self::Dhcpv4(..) => unreachable!(),` |
 | `src/iface/packet.rs:240` | 2 | panic!/unreachable! | `as_sixlowpan_next_header` | `Self::HopByHopIcmpv6(_, _) => unreachable!(),` |
 
-### `src/iface/interface/sixlowpan.rs` — 7 sites
+### `src/iface/interface/sixlowpan.rs` — 9 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
@@ -387,9 +390,20 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/iface/interface/sixlowpan.rs:413` | 1 | slice-index | `dispatch_sixlowpan` | `let mut ieee_packet = Ieee802154Frame::new_unchecked(&mut tx_buf[..ieee_len]);` |
 | `src/iface/interface/sixlowpan.rs:458` | 1 | slice-index | `ipv6_to_sixlowpan` | `&mut buffer[..iphc_repr.buffer_len()],` |
 | `src/iface/interface/sixlowpan.rs:460` | 1 | slice-index | `ipv6_to_sixlowpan` | `buffer = &mut buffer[iphc_repr.buffer_len()..];` |
+| `src/iface/interface/sixlowpan.rs:518` | 1 | slice-index | `ipv6_to_sixlowpan` | `&mut Icmpv6Packet::new_unchecked(&mut buffer[..icmp_repr.buffer_len()]),` |
 | `src/iface/interface/sixlowpan.rs:527` | 1 | slice-index | `ipv6_to_sixlowpan` | `&mut buffer[..udp_repr.header_len() + payload.len()],` |
 | `src/iface/interface/sixlowpan.rs:532` | 1 | copy_from_slice | `ipv6_to_sixlowpan` | `\|buf\| buf.copy_from_slice(payload),` |
+| `src/iface/interface/sixlowpan.rs:539` | 1 | slice-index | `ipv6_to_sixlowpan` | `&mut TcpPacket::new_unchecked(&mut buffer[..tcp_repr.buffer_len()]),` |
 | `src/iface/interface/sixlowpan.rs:549` | 1 | panic!/unreachable! | `ipv6_to_sixlowpan` | `_ => unreachable!(),` |
+
+### `src/wire/sixlowpan/iphc.rs` — 6 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/sixlowpan/iphc.rs:147` | 1 | slice-index | `hop_limit` | `data[start..start + 1][0]` |
+| `src/wire/sixlowpan/iphc.rs:206` | 2 | slice-index | `flow_label_field` | `&self.buffer.as_ref()[start..][2..4],` |
+| `src/wire/sixlowpan/iphc.rs:212` | 2 | slice-index | `flow_label_field` | `&self.buffer.as_ref()[start..][1..3],` |
+| `src/wire/sixlowpan/iphc.rs:845` | 1 | panic!/unreachable! | `buffer_len` | `_ => unreachable!(),` |
 
 ### `src/iface/neighbor.rs` — 4 sites
 
@@ -405,14 +419,12 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | --- | ---: | --- | --- | --- |
 | `src/wire/ip.rs:992` | 4 | panic!/unreachable! | `pseudo_header` | `_ => unreachable!(),` |
 
-### `src/wire/sixlowpan/iphc.rs` — 4 sites
+### `src/wire/ipv6.rs` — 4 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/iphc.rs:147` | 1 | slice-index | `hop_limit` | `data[start..start + 1][0]` |
-| `src/wire/sixlowpan/iphc.rs:206` | 1 | slice-index | `flow_label_field` | `&self.buffer.as_ref()[start..][2..4],` |
-| `src/wire/sixlowpan/iphc.rs:212` | 1 | slice-index | `flow_label_field` | `&self.buffer.as_ref()[start..][1..3],` |
-| `src/wire/sixlowpan/iphc.rs:845` | 1 | panic!/unreachable! | `buffer_len` | `_ => unreachable!(),` |
+| `src/wire/ipv6.rs:163` | 3 | panic!/unreachable! | `mask` | `assert!(mask <= 128);` |
+| `src/wire/ipv6.rs:178` | 1 | panic!/unreachable! | `solicited_node` | `assert!(self.x_is_unicast());` |
 
 ### `src/socket/dhcpv4.rs` — 3 sites
 
@@ -421,13 +433,6 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/socket/dhcpv4.rs:315` | 1 | panic!/unreachable! | `process` | `assert!(repr.src_port == self.server_port && repr.dst_port == self.client_port);` |
 | `src/socket/dhcpv4.rs:333` | 1 | panic!(fmt) | `process` | `panic!("using DHCPv4 socket with a non-ethernet hardware address.");` |
 | `src/socket/dhcpv4.rs:570` | 1 | panic!(fmt) | `dispatch` | `panic!("using DHCPv4 socket with a non-ethernet hardware address.");` |
-
-### `src/wire/ipv6.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/ipv6.rs:163` | 2 | panic!/unreachable! | `mask` | `assert!(mask <= 128);` |
-| `src/wire/ipv6.rs:178` | 1 | panic!/unreachable! | `solicited_node` | `assert!(self.x_is_unicast());` |
 
 ### `src/wire/mld.rs` — 3 sites
 
@@ -459,19 +464,18 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/iface/interface/ipv6.rs:31` | 1 | panic!/unreachable! | `get_source_address_ipv6` | `assert!(!dst_addr.is_unspecified());` |
 | `src/iface/interface/ipv6.rs:98` | 1 | unwrap | `get_source_address_ipv6` | `.unwrap(); // NOTE: we check above that there is at least one IPv6 address.` |
 
-### `src/iface/route.rs` — 2 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/iface/route.rs:173` | 1 | panic!/unreachable! | `lookup` | `assert!(addr.is_unicast());` |
-| `src/iface/route.rs:187` | 1 | panic!/unreachable! | `lookup` | `.max_by_key(\|route\| route.cidr.prefix_len())` |
-
 ### `src/storage/ring_buffer.rs` — 2 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
 | `src/storage/ring_buffer.rs:345` | 1 | panic!/unreachable! | `enqueue_unallocated` | `assert!(count <= self.window());` |
 | `src/storage/ring_buffer.rs:398` | 1 | panic!/unreachable! | `dequeue_allocated` | `assert!(count <= self.len());` |
+
+### `src/iface/route.rs` — 1 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/iface/route.rs:173` | 1 | panic!/unreachable! | `lookup` | `assert!(addr.is_unicast());` |
 
 ### `src/phy/mod.rs` — 1 sites
 
@@ -508,7 +512,30 @@ One row per source **line**; `sites` is how many machine call sites that line co
 <a id="phase-3"></a>
 ## Phase 3 — xarxa CORE
 
-52 sites. Iterator / Option / Result chains Flux cannot see through. Same shape as the byteorder work in PR #14: copy the dependency closure from flux/lib/flux-core/src/ into flux_specs.rs. Do NOT load flux-core wholesale.
+62 sites. Iterator / Option / Result chains Flux cannot see through. Same shape as the byteorder work in PR #14: copy the dependency closure from flux/lib/flux-core/src/ into flux_specs.rs. Do NOT load flux-core wholesale.
+
+### `src/wire/sixlowpan/mod.rs` — 9 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/sixlowpan/mod.rs:90` | 1 | copy_from_slice | `resolve` | `bytes[8..].copy_from_slice(inline);` |
+| `src/wire/sixlowpan/mod.rs:96` | 1 | copy_from_slice | `resolve` | `bytes[14..].copy_from_slice(inline);` |
+| `src/wire/sixlowpan/mod.rs:117` | 1 | bounds-check | `resolve` | `bytes[1] = inline[0];` |
+| `src/wire/sixlowpan/mod.rs:118` | 1 | slice-index | `resolve` | `bytes[11..].copy_from_slice(&inline[1..][..5]);` |
+| `src/wire/sixlowpan/mod.rs:123` | 1 | bounds-check | `resolve` | `bytes[1] = inline[0];` |
+| `src/wire/sixlowpan/mod.rs:124` | 1 | slice-index | `resolve` | `bytes[13..].copy_from_slice(&inline[1..][..3]);` |
+| `src/wire/sixlowpan/mod.rs:130` | 1 | bounds-check | `resolve` | `bytes[15] = inline[0];` |
+| `src/wire/sixlowpan/mod.rs:139` | 1 | slice-index | `resolve` | `bytes[16 - inline.len()..].copy_from_slice(inline);` |
+| `src/wire/sixlowpan/mod.rs:144` | 1 | slice-index | `resolve` | `bytes[16 - inline.len()..].copy_from_slice(inline);` |
+
+### `src/wire/ieee802154.rs` — 6 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/ieee802154.rs:371` | 2 | slice-index | `frame_type` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
+| `src/wire/ieee802154.rs:388` | 1 | slice-index | `dst_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
+| `src/wire/ieee802154.rs:406` | 1 | slice-index | `src_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
+| `src/wire/ieee802154.rs:543` | 2 | slice-index | `src_pan_id` | `&addressing_fields[offset..][..2],` |
 
 ### `src/wire/ipv6.rs` — 6 sites
 
@@ -530,24 +557,15 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/tcp.rs:712` | 1 | slice-index | `parse` | `Ok((&buffer[length..], option))` |
 | `src/wire/tcp.rs:1053` | 1 | slice-index | `emit` | `packet.payload_mut()[..self.payload.len()].copy_from_slice(self.payload);` |
 
-### `src/wire/ieee802154.rs` — 5 sites
+### `src/wire/icmpv6.rs` — 5 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `src/wire/ieee802154.rs:371` | 2 | slice-index | `frame_type` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
-| `src/wire/ieee802154.rs:388` | 1 | slice-index | `dst_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
-| `src/wire/ieee802154.rs:406` | 1 | slice-index | `src_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
-| `src/wire/ieee802154.rs:543` | 1 | slice-index | `src_pan_id` | `&addressing_fields[offset..][..2],` |
-
-### `src/wire/sixlowpan/mod.rs` — 5 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/sixlowpan/mod.rs:86` | 1 | unwrap | `resolve` | `Ok(ipv6::Address::from_octets(addr.try_into().unwrap()))` |
-| `src/wire/sixlowpan/mod.rs:90` | 1 | copy_from_slice | `resolve` | `bytes[8..].copy_from_slice(inline);` |
-| `src/wire/sixlowpan/mod.rs:96` | 1 | copy_from_slice | `resolve` | `bytes[14..].copy_from_slice(inline);` |
-| `src/wire/sixlowpan/mod.rs:118` | 1 | slice-index | `resolve` | `bytes[11..].copy_from_slice(&inline[1..][..5]);` |
-| `src/wire/sixlowpan/mod.rs:124` | 1 | slice-index | `resolve` | `bytes[13..].copy_from_slice(&inline[1..][..3]);` |
+| `src/wire/icmpv6.rs:680` | 1 | slice-index | `parse` | `let payload = &packet.payload()[ip_packet.header_len()..];` |
+| `src/wire/icmpv6.rs:787` | 1 | slice-index | `emit` | `let payload = &mut ip_packet.into_inner()[header.buffer_len()..];` |
+| `src/wire/icmpv6.rs:794` | 1 | slice-index | `emit` | `payload[..payload_len].copy_from_slice(&data[..payload_len]);` |
+| `src/wire/icmpv6.rs:851` | 1 | slice-index | `emit` | `packet.payload_mut()[..data_len].copy_from_slice(&data[..data_len])` |
+| `src/wire/icmpv6.rs:864` | 1 | slice-index | `emit` | `packet.payload_mut()[..data_len].copy_from_slice(&data[..data_len])` |
 
 ### `src/iface/interface/sixlowpan.rs` — 4 sites
 
@@ -556,6 +574,22 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/iface/interface/sixlowpan.rs:81` | 1 | slice-index | `process_sixlowpan` | `Ok(len) => &f.decompress_buf[..len],` |
 | `src/iface/interface/sixlowpan.rs:771` | 1 | slice-index | `decompress_udp` | `let mut udp = UdpPacket::new_unchecked(&mut buffer[..payload.len() + 8]);` |
 | `src/iface/interface/sixlowpan.rs:773` | 2 | slice-index | `decompress_udp` | `buffer[8..][..payload.len()].copy_from_slice(payload);` |
+
+### `src/storage/ring_buffer.rs` — 4 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/storage/ring_buffer.rs:314` | 1 | slice-index | `get_unallocated` | `&mut self.storage[start_at..start_at + size]` |
+| `src/storage/ring_buffer.rs:369` | 3 | slice-index | `get_allocated` | `&self.storage[start_at..start_at + size]` |
+
+### `src/wire/icmpv4.rs` — 4 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `src/wire/icmpv4.rs:529` | 1 | slice-index | `emit` | `let payload = &mut ip_packet.into_inner()[header.buffer_len()..];` |
+| `src/wire/icmpv4.rs:530` | 1 | copy_from_slice | `emit` | `payload.copy_from_slice(data)` |
+| `src/wire/icmpv4.rs:543` | 1 | slice-index | `emit` | `let payload = &mut ip_packet.into_inner()[header.buffer_len()..];` |
+| `src/wire/icmpv4.rs:544` | 1 | copy_from_slice | `emit` | `payload.copy_from_slice(data)` |
 
 ### `src/wire/ndiscoption.rs` — 4 sites
 
@@ -566,13 +600,6 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/ndiscoption.rs:574` | 1 | copy_from_slice | `emit` | `ip_packet.payload_mut().copy_from_slice(data);` |
 | `src/wire/ndiscoption.rs:588` | 1 | copy_from_slice | `emit` | `opt.data_mut().copy_from_slice(data);` |
 
-### `src/storage/ring_buffer.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/storage/ring_buffer.rs:314` | 1 | slice-index | `get_unallocated` | `&mut self.storage[start_at..start_at + size]` |
-| `src/storage/ring_buffer.rs:369` | 2 | slice-index | `get_allocated` | `&self.storage[start_at..start_at + size]` |
-
 ### `src/wire/dhcpv4.rs` — 3 sites
 
 | span | sites | kind | fn | source |
@@ -580,21 +607,6 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `src/wire/dhcpv4.rs:428` | 1 | slice-index | `set_sname_and_boot_file_to_zero` | `for byte in &mut data[field::SNAME] {` |
 | `src/wire/dhcpv4.rs:431` | 1 | slice-index | `set_sname_and_boot_file_to_zero` | `for byte in &mut data[field::FILE] {` |
 | `src/wire/dhcpv4.rs:935` | 1 | slice-index | `emit` | `servers[(i * IP_SIZE)..((i + 1) * IP_SIZE)].copy_from_slice(&ip.octets());` |
-
-### `src/wire/icmpv6.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/icmpv6.rs:680` | 1 | slice-index | `parse` | `let payload = &packet.payload()[ip_packet.header_len()..];` |
-| `src/wire/icmpv6.rs:787` | 1 | slice-index | `emit` | `let payload = &mut ip_packet.into_inner()[header.buffer_len()..];` |
-| `src/wire/icmpv6.rs:794` | 1 | slice-index | `emit` | `payload[..payload_len].copy_from_slice(&data[..payload_len]);` |
-
-### `src/wire/icmpv4.rs` — 2 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `src/wire/icmpv4.rs:530` | 1 | copy_from_slice | `emit` | `payload.copy_from_slice(data)` |
-| `src/wire/icmpv4.rs:544` | 1 | copy_from_slice | `emit` | `payload.copy_from_slice(data)` |
 
 ### `src/wire/ipv6hbh.rs` — 2 sites
 
@@ -657,16 +669,16 @@ One row per source **line**; `sites` is how many machine call sites that line co
 <a id="phase-4"></a>
 ## Phase 4 — compiler work
 
-19 sites. Flux itself falls over: `internal flux error`, or rustc aborts. Not delegable. The `<&T as AsRef<[u8]>>::idx` gap belongs here too -- it has no site of its own but gates payload() in 16 wire files.
+20 sites. Flux itself falls over: `internal flux error`, or rustc aborts. Not delegable. The `<&T as AsRef<[u8]>>::idx` gap belongs here too -- it has no site of its own but gates payload() in 16 wire files.
 
 **Also in this phase:** the `<&T as AsRef<[u8]>>::idx` gap. Repro is left uncommitted in `/Users/andrew/research/xarxa-icmpv6` at `src/wire/icmpv6.rs:529` — 0 `panicked`, exactly 2 errors, one function. ICE-2 made the signature convert; it still does not discharge.
 
-### `src/storage/ring_buffer.rs` — 10 sites
+### `src/storage/ring_buffer.rs` — 11 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
 | `src/storage/ring_buffer.rs:154` | 3 | bounds-check | `dequeue_one_with` | `let res = f(&mut self.storage[self.read_at]);` |
-| `src/storage/ring_buffer.rs:193` | 2 | slice-index | `enqueue_many_with` | `let (size, result) = f(&mut self.storage[write_at..write_at + max_size]);` |
+| `src/storage/ring_buffer.rs:193` | 3 | slice-index | `enqueue_many_with` | `let (size, result) = f(&mut self.storage[write_at..write_at + max_size]);` |
 | `src/storage/ring_buffer.rs:245` | 5 | slice-index | `dequeue_many_with` | `let (size, result) = f(&mut self.storage[self.read_at..self.read_at + max_size]);` |
 
 ### `src/iface/interface/mod.rs` — 7 sites
@@ -693,34 +705,13 @@ One row per source **line**; `sites` is how many machine call sites that line co
 <a id="phase-5"></a>
 ## Phase 5 — logging and formatting
 
-60 sites. defmt, defmt-rtt and core's integer formatting. NOT proof targets: no annotation removes these, they only go away if the example builds without defmt. A decision about what the benchmark may be.
+33 sites. defmt, defmt-rtt and core's integer formatting. NOT proof targets: no annotation removes these, they only go away if the example builds without defmt. A decision about what the benchmark may be.
 
 ### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/defmt-1.1.1/src/export/mod.rs` — 25 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/defmt-1.1.1/src/export/mod.rs:133` | 25 | defmt | `` | `unsafe { _defmt_panic() }` |
-
-### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs` — 17 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs` (no line) | 2 | panic!/unreachable!, slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:430` | 6 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:431` | 2 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:432` | 1 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:434` | 2 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:440` | 2 | bounds-check, panic!/unreachable! | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:448` | 1 | unwrap | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:462` | 1 | slice-index | `` | `` |
-
-### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs` — 13 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs:45` | 1 | defmt | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs:62` | 1 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs:90` | 11 | bounds-check, defmt, panic!/unreachable!, slice-index | `` | `` |
 
 ### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/defmt-rtt-1.3.0/src/channel.rs` — 3 sites
 
@@ -735,12 +726,45 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/defmt-rtt-1.3.0/src/lib.rs:173` | 1 | panic!(fmt) | `` | `panic!("defmt logger taken reentrantly")` |
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/defmt-rtt-1.3.0/src/lib.rs:226` | 1 | panic!(fmt) | `` | `panic!("defmt release out of context")` |
 
+### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs` — 2 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs:45` | 1 | defmt | `` | `` |
+| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/num/imp/int_log10.rs:90` | 1 | defmt | `` | `` |
+
+### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs` — 1 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/fmt/num.rs:448` | 1 | unwrap | `` | `` |
+
 ---
 
 <a id="phase-6"></a>
 ## Phase 6 — the embassy crates and other dependencies
 
-151 sites. Outside xarxa entirely, so no xarxa proof reaches them. Lives in ninehusky/embassy, a fork we control, so the same opt-in method applies -- but this is async executors and USB state machines, expect it to be harder.
+164 sites. Outside xarxa entirely, so no xarxa proof reaches them. Lives in ninehusky/embassy, a fork we control, so the same opt-in method applies -- but this is async executors and USB state machines, expect it to be harder.
+
+### `embassy-nrf/src/usb/mod.rs` — 20 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `embassy-nrf/src/usb/mod.rs` (no line) | 2 | defmt | `` | `` |
+| `embassy-nrf/src/usb/mod.rs:189` | 1 | async-resumed | `` | `async fn enable(&mut self) {` |
+| `embassy-nrf/src/usb/mod.rs:228` | 1 | async-resumed | `` | `async fn disable(&mut self) {` |
+| `embassy-nrf/src/usb/mod.rs:419` | 3 | bounds-check | `` | `&EP_IN_WAKERS[i - 1]` |
+| `embassy-nrf/src/usb/mod.rs:436` | 2 | bounds-check | `` | `&EP_OUT_WAKERS[i - 1]` |
+| `embassy-nrf/src/usb/mod.rs:472` | 1 | async-resumed | `` | `async fn wait_enabled(&mut self) {` |
+| `embassy-nrf/src/usb/mod.rs:503` | 2 | async-resumed | `` | `{` |
+| `embassy-nrf/src/usb/mod.rs:576` | 1 | async-resumed | `` | `async fn read(&mut self, buf: &mut [u8]) -> Result<usize, EndpointError> {` |
+| `embassy-nrf/src/usb/mod.rs:587` | 1 | async-resumed | `` | `async fn write(&mut self, buf: &[u8]) -> Result<(), EndpointError> {` |
+| `embassy-nrf/src/usb/mod.rs:611` | 1 | async-resumed | `` | `async fn setup(&mut self) -> [u8; 8] {` |
+| `embassy-nrf/src/usb/mod.rs:645` | 1 | async-resumed | `` | `async fn data_out(&mut self, buf: &mut [u8], _first: bool, _last: bool) -> Result<usize,` |
+| `embassy-nrf/src/usb/mod.rs:679` | 1 | async-resumed | `` | `async fn data_in(&mut self, buf: &[u8], _first: bool, last: bool) -> Result<(), Endpoint` |
+| `embassy-nrf/src/usb/mod.rs:713` | 1 | async-resumed | `` | `async fn accept(&mut self) {` |
+| `embassy-nrf/src/usb/mod.rs:718` | 1 | async-resumed | `` | `async fn reject(&mut self) {` |
+| `embassy-nrf/src/usb/mod.rs:723` | 1 | async-resumed | `` | `async fn accept_set_address(&mut self, _addr: u8) {` |
 
 ### `embassy-sync/src/zerocopy_channel.rs` — 18 sites
 
@@ -754,6 +778,29 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `embassy-sync/src/zerocopy_channel.rs:248` | 1 | RefCell | `` | `let s = &mut *s.borrow_mut();` |
 | `embassy-sync/src/zerocopy_channel.rs:266` | 1 | RefCell | `` | `let s = &mut *s.borrow_mut();` |
 | `embassy-sync/src/zerocopy_channel.rs:329` | 2 | RefCell | `` | `self.state.lock(\|s\| s.borrow_mut().pop_done());` |
+
+### `embassy-usb/src/lib.rs` — 18 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `embassy-usb/src/lib.rs:273` | 1 | async-resumed | `` | `pub async fn run_until_suspend(&mut self) {` |
+| `embassy-usb/src/lib.rs:301` | 1 | async-resumed | `` | `pub async fn wait_resume(&mut self) {` |
+| `embassy-usb/src/lib.rs:331` | 1 | async-resumed | `` | `async fn handle_control(&mut self, req: [u8; 8]) {` |
+| `embassy-usb/src/lib.rs:342` | 1 | async-resumed | `` | `async fn handle_control_in(&mut self, req: Request) {` |
+| `embassy-usb/src/lib.rs:360` | 1 | rem-by-zero | `` | `let needs_zlp = len != resp_length && (len % max_packet_size) == 0;` |
+| `embassy-usb/src/lib.rs:370` | 1 | async-resumed | `` | `async fn handle_control_out(&mut self, req: Request) {` |
+| `embassy-usb/src/lib.rs:395` | 1 | slice-index | `` | `let data = &self.control_buf[0..total];` |
+| `embassy-usb/src/lib.rs:416` | 1 | async-resumed | `` | `async fn handle_bus_event(&mut self, evt: Event) {` |
+| `embassy-usb/src/lib.rs:507` | 1 | bounds-check | `` | `let iface = &self.interfaces[ep.interface.0 as usize];` |
+| `embassy-usb/src/lib.rs:609` | 1 | slice-index | `` | `buf[..2].copy_from_slice(&status.to_le_bytes());` |
+| `embassy-usb/src/lib.rs:618` | 1 | bounds-check | `` | `buf[0] = status;` |
+| `embassy-usb/src/lib.rs:631` | 1 | slice-index | `` | `buf[..2].copy_from_slice(&status.to_le_bytes());` |
+| `embassy-usb/src/lib.rs:635` | 1 | bounds-check | `` | `buf[0] = iface.current_alt_setting;` |
+| `embassy-usb/src/lib.rs:648` | 1 | slice-index | `` | `buf[..2].copy_from_slice(&status.to_le_bytes());` |
+| `embassy-usb/src/lib.rs:708` | 1 | bounds-check | `` | `buf[0] = 4; // len` |
+| `embassy-usb/src/lib.rs:709` | 1 | bounds-check | `` | `buf[1] = descriptor_type::STRING;` |
+| `embassy-usb/src/lib.rs:710` | 1 | bounds-check | `` | `buf[2] = lang_id::ENGLISH_US as u8;` |
+| `embassy-usb/src/lib.rs:711` | 1 | bounds-check | `` | `buf[3] = (lang_id::ENGLISH_US >> 8) as u8;` |
 
 ### `embassy-net-driver-channel/src/lib.rs` — 17 sites
 
@@ -770,28 +817,11 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `embassy-net-driver-channel/src/lib.rs:446` | 4 | panic!(fmt) | `` | `let mut pkt = unwrap!(self.tx.try_send());` |
 | `embassy-net-driver-channel/src/lib.rs:447` | 4 | slice-index | `` | `let r = f(&mut pkt.buf[..len]);` |
 
-### `embassy-nrf/src/usb/mod.rs` — 16 sites
+### `embassy-usb/src/class/cdc_ncm/mod.rs` — 14 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `embassy-nrf/src/usb/mod.rs` (no line) | 2 | defmt | `` | `` |
-| `embassy-nrf/src/usb/mod.rs:189` | 1 | async-resumed | `` | `async fn enable(&mut self) {` |
-| `embassy-nrf/src/usb/mod.rs:228` | 1 | async-resumed | `` | `async fn disable(&mut self) {` |
-| `embassy-nrf/src/usb/mod.rs:419` | 3 | bounds-check | `` | `&EP_IN_WAKERS[i - 1]` |
-| `embassy-nrf/src/usb/mod.rs:436` | 1 | bounds-check | `` | `&EP_OUT_WAKERS[i - 1]` |
-| `embassy-nrf/src/usb/mod.rs:503` | 2 | async-resumed | `` | `{` |
-| `embassy-nrf/src/usb/mod.rs:576` | 1 | async-resumed | `` | `async fn read(&mut self, buf: &mut [u8]) -> Result<usize, EndpointError> {` |
-| `embassy-nrf/src/usb/mod.rs:587` | 1 | async-resumed | `` | `async fn write(&mut self, buf: &[u8]) -> Result<(), EndpointError> {` |
-| `embassy-nrf/src/usb/mod.rs:611` | 1 | async-resumed | `` | `async fn setup(&mut self) -> [u8; 8] {` |
-| `embassy-nrf/src/usb/mod.rs:645` | 1 | async-resumed | `` | `async fn data_out(&mut self, buf: &mut [u8], _first: bool, _last: bool) -> Result<usize,` |
-| `embassy-nrf/src/usb/mod.rs:679` | 1 | async-resumed | `` | `async fn data_in(&mut self, buf: &[u8], _first: bool, last: bool) -> Result<(), Endpoint` |
-| `embassy-nrf/src/usb/mod.rs:723` | 1 | async-resumed | `` | `async fn accept_set_address(&mut self, _addr: u8) {` |
-
-### `embassy-usb/src/class/cdc_ncm/mod.rs` — 15 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `embassy-usb/src/class/cdc_ncm/mod.rs` (no line) | 4 | async-resumed, defmt, unwrap | `` | `` |
+| `embassy-usb/src/class/cdc_ncm/mod.rs` (no line) | 3 | defmt, unwrap | `` | `` |
 | `embassy-usb/src/class/cdc_ncm/mod.rs:115` | 1 | slice-index | `` | `&buf[..len]` |
 | `embassy-usb/src/class/cdc_ncm/mod.rs:380` | 1 | async-resumed | `` | `pub async fn write_packet(&mut self, data: &[u8]) -> Result<(), EndpointError> {` |
 | `embassy-usb/src/class/cdc_ncm/mod.rs:411` | 1 | slice-index | `` | `buf[OUT_HEADER_LEN..][..data.len()].copy_from_slice(data);` |
@@ -807,30 +837,20 @@ One row per source **line**; `sites` is how many machine call sites that line co
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `embassy-usb/src/descriptor.rs` (no line) | 6 | bounds-check | `` | `` |
 | `embassy-usb/src/descriptor.rs:98` | 1 | slice-index | `` | `&mut self.buf[..self.position]` |
+| `embassy-usb/src/descriptor.rs:117` | 1 | bounds-check | `` | `self.buf[self.position] = (total_length + 2) as u8;` |
+| `embassy-usb/src/descriptor.rs:118` | 1 | bounds-check | `` | `self.buf[self.position + 1] = descriptor_type;` |
 | `embassy-usb/src/descriptor.rs:122` | 1 | slice-index | `` | `self.buf[start..start + descriptor_length].copy_from_slice(descriptor);` |
 | `embassy-usb/src/descriptor.rs:123` | 1 | slice-index | `` | `self.buf[start + descriptor_length..start + total_length].copy_from_slice(extra_fields);` |
 | `embassy-usb/src/descriptor.rs:154` | 1 | slice-index | `` | `self.buf[2..4].copy_from_slice(&position.to_le_bytes());` |
 | `embassy-usb/src/descriptor.rs:218` | 1 | bounds-check | `` | `Some(mark) => self.buf[mark] += 1,` |
 | `embassy-usb/src/descriptor.rs:261` | 1 | bounds-check | `` | `Some(mark) => self.buf[mark] += 1,` |
+| `embassy-usb/src/descriptor.rs:431` | 1 | bounds-check | `` | `Some(mark) => self.writer.buf[mark] += 1,` |
+| `embassy-usb/src/descriptor.rs:443` | 1 | bounds-check | `` | `self.writer.buf[start] = (blen + 3) as u8;` |
+| `embassy-usb/src/descriptor.rs:444` | 1 | bounds-check | `` | `self.writer.buf[start + 1] = descriptor_type::CAPABILITY;` |
+| `embassy-usb/src/descriptor.rs:445` | 1 | bounds-check | `` | `self.writer.buf[start + 2] = capability_type;` |
 | `embassy-usb/src/descriptor.rs:448` | 1 | slice-index | `` | `self.writer.buf[start..start + blen].copy_from_slice(data);` |
 | `embassy-usb/src/descriptor.rs:458` | 1 | slice-index | `` | `self.writer.buf[2..4].copy_from_slice(&position.to_le_bytes());` |
-
-### `embassy-usb/src/lib.rs` — 11 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `embassy-usb/src/lib.rs` (no line) | 2 | async-resumed | `` | `` |
-| `embassy-usb/src/lib.rs:273` | 1 | async-resumed | `` | `pub async fn run_until_suspend(&mut self) {` |
-| `embassy-usb/src/lib.rs:301` | 1 | async-resumed | `` | `pub async fn wait_resume(&mut self) {` |
-| `embassy-usb/src/lib.rs:331` | 1 | async-resumed | `` | `async fn handle_control(&mut self, req: [u8; 8]) {` |
-| `embassy-usb/src/lib.rs:342` | 1 | async-resumed | `` | `async fn handle_control_in(&mut self, req: Request) {` |
-| `embassy-usb/src/lib.rs:360` | 1 | rem-by-zero | `` | `let needs_zlp = len != resp_length && (len % max_packet_size) == 0;` |
-| `embassy-usb/src/lib.rs:370` | 1 | async-resumed | `` | `async fn handle_control_out(&mut self, req: Request) {` |
-| `embassy-usb/src/lib.rs:395` | 1 | slice-index | `` | `let data = &self.control_buf[0..total];` |
-| `embassy-usb/src/lib.rs:416` | 1 | async-resumed | `` | `async fn handle_bus_event(&mut self, evt: Event) {` |
-| `embassy-usb/src/lib.rs:507` | 1 | bounds-check | `` | `let iface = &self.interfaces[ep.interface.0 as usize];` |
 
 ### `embassy-net/src/lib.rs` — 9 sites
 
@@ -853,6 +873,17 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `embassy-usb-driver/src/lib.rs:450` | 1 | panic!(fmt) | `` | `for chunk in buf.chunks(self.info().max_packet_size as usize) {` |
 | `embassy-usb-driver/src/lib.rs:453` | 1 | rem-by-zero | `` | `if needs_zlp && buf.len() % self.info().max_packet_size as usize == 0 {` |
 
+### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs` — 8 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40264` | 1 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40275` | 1 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40367` | 2 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40658` | 1 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:41119` | 2 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:41254` | 1 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+
 ### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heapless-0.9.3/src/vec/mod.rs` — 5 sites
 
 | span | sites | kind | fn | source |
@@ -860,21 +891,19 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heapless-0.9.3/src/vec/mod.rs:922` | 1 | panic!/unreachable! | `` | `assert!(index < self.len());` |
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/heapless-0.9.3/src/vec/mod.rs:1094` | 4 | panic!(fmt) | `` | `panic!("removal index (is {index}) should be < len (is {len})");` |
 
-### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs` — 5 sites
+### `/Users/andrew/.rustup/toolchains/1.97-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/result.rs` — 5 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40367` | 2 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
-| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:40658` | 1 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
-| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/nrf-pac-0.4.0/src/./chips/nrf52840/pac.rs:41119` | 2 | panic!/unreachable! | `` | `assert!(n < 8usize);` |
+| `/Users/andrew/.rustup/toolchains/1.97-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/result.rs:1185` | 1 | unwrap | `` | `Err(e) => unwrap_failed(msg, &e),` |
+| `/Users/andrew/.rustup/toolchains/1.97-aarch64-apple-darwin/lib/rustlib/src/rust/library/core/src/result.rs:1233` | 4 | unwrap | `` | `Err(e) => unwrap_failed("called `Result::unwrap()` on an `Err` value", &e),` |
 
 ### `embassy-usb/src/msos.rs` — 4 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `embassy-usb/src/msos.rs` (no line) | 1 | slice-index | `` | `` |
 | `embassy-usb/src/msos.rs:72` | 1 | slice-index | `` | `descriptor: &self.buf[..self.position],` |
-| `embassy-usb/src/msos.rs:164` | 2 | slice-index | `` | `buf[p..(p + 2)].copy_from_slice(&(len as u16).to_le_bytes());` |
+| `embassy-usb/src/msos.rs:164` | 3 | slice-index | `` | `buf[p..(p + 2)].copy_from_slice(&(len as u16).to_le_bytes());` |
 
 ### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/byteorder-1.5.0/src/lib.rs` — 3 sites
 
@@ -891,13 +920,6 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/embedded-io-async-0.7.0/src/lib.rs:143` | 1 | panic!(fmt) | `` | `Ok(0) => panic!("write() returned Ok(0)"),` |
 | `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/embedded-io-async-0.7.0/src/lib.rs:144` | 1 | slice-index | `` | `Ok(n) => buf = &buf[n..],` |
 
-### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/slice/index.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/slice/index.rs:443` | 2 | slice-index | `` | `` |
-| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/slice/index.rs:569` | 1 | slice-index | `` | `` |
-
 ### `embassy-nrf/src/time_driver.rs` — 3 sites
 
 | span | sites | kind | fn | source |
@@ -906,28 +928,11 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | `embassy-nrf/src/time_driver.rs:330` | 1 | RefCell | `` | `next = self.queue.borrow(cs).borrow_mut().next_expiration(self.now());` |
 | `embassy-nrf/src/time_driver.rs:428` | 1 | RefCell | `` | `let mut queue = self.queue.borrow(cs).borrow_mut();` |
 
-### `embassy-usb/src/builder.rs` — 3 sites
+### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/net/display_buffer.rs` — 2 sites
 
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
-| `embassy-usb/src/builder.rs:392` | 1 | bounds-check | `` | `self.builder.config_descriptor.buf[i] += 1;` |
-| `embassy-usb/src/builder.rs:460` | 1 | bounds-check | `` | `self.builder.interfaces[self.interface_number.0 as usize].num_alt_settings += 1;` |
-| `embassy-usb/src/builder.rs:572` | 1 | unwrap | `` | `.expect("alloc_endpoint_out failed")` |
-
-### `embassy-usb/src/class/cdc_ncm/embassy_net.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `embassy-usb/src/class/cdc_ncm/embassy_net.rs` (no line) | 2 | bounds-check, panic!/unreachable! | `` | `` |
-| `embassy-usb/src/class/cdc_ncm/embassy_net.rs:50` | 1 | unwrap | `` | `self.rx_usb.wait_connection().await.unwrap();` |
-
-### `examples/nrf52840/src/bin/usb_ethernet.rs` — 3 sites
-
-| span | sites | kind | fn | source |
-| --- | ---: | --- | --- | --- |
-| `examples/nrf52840/src/bin/usb_ethernet.rs` (no line) | 1 | panic!(fmt) | `` | `` |
-| `examples/nrf52840/src/bin/usb_ethernet.rs:45` | 1 | unwrap | `` | `#[embassy_executor::main]` |
-| `examples/nrf52840/src/bin/usb_ethernet.rs:146` | 1 | slice-index | `` | `info!("rxd {:02x}", &buf[..n]);` |
+| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/net/display_buffer.rs:21` | 2 | slice-index | `` | `` |
 
 ### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/result.rs` — 2 sites
 
@@ -941,6 +946,25 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | --- | ---: | --- | --- | --- |
 | `embassy-net/src/tcp.rs:429` | 1 | async-resumed | `` | `{` |
 | `embassy-net/src/tcp.rs:1019` | 1 | async-resumed | `` | `async fn write(&mut self, buf: &[u8]) -> Result<usize, Self::Error> {` |
+
+### `embassy-usb/src/builder.rs` — 2 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `embassy-usb/src/builder.rs:392` | 1 | bounds-check | `` | `self.builder.config_descriptor.buf[i] += 1;` |
+| `embassy-usb/src/builder.rs:460` | 1 | bounds-check | `` | `self.builder.interfaces[self.interface_number.0 as usize].num_alt_settings += 1;` |
+
+### `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/static_cell-2.1.1/src/lib.rs` — 1 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `/Users/andrew/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/static_cell-2.1.1/src/lib.rs:84` | 1 | panic!(fmt) | `` | `panic!("`StaticCell` is already full, it can't be initialized twice.");` |
+
+### `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/net/ip_addr.rs` — 1 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `/rustc/8bab26f4f68e0e26f0bb7960be334d5b520ea452/library/core/src/net/ip_addr.rs:2192` | 1 | slice-index | `` | `` |
 
 ### `embassy-nrf/src/gpiote.rs` — 1 sites
 
@@ -959,4 +983,10 @@ One row per source **line**; `sites` is how many machine call sites that line co
 | span | sites | kind | fn | source |
 | --- | ---: | --- | --- | --- |
 | `embassy-sync/src/waitqueue/atomic_waker.rs:191` | 1 | unwrap | `` | `let w = (*self.waker.get()).take().unwrap();` |
+
+### `examples/nrf52840/src/bin/usb_ethernet.rs` — 1 sites
+
+| span | sites | kind | fn | source |
+| --- | ---: | --- | --- | --- |
+| `examples/nrf52840/src/bin/usb_ethernet.rs:146` | 1 | slice-index | `` | `info!("rxd {:02x}", &buf[..n]);` |
 

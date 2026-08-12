@@ -32,42 +32,42 @@ Nothing has been removed yet: every branch so far is proof-only. A site leaves t
 
 | file | sites | churn | panic | core | bug/ICE | other | Δ alone | owner |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| [`src/wire/ipv6.rs`](#srcwireipv6rs) | 33 | 22 | 3 | 6 | 0 | 2 | -416 | andrew |
+| [`src/wire/ipv6.rs`](#srcwireipv6rs) | 34 | 23 | 4 | 6 | 0 | 1 | -416 | andrew |
+| [`src/wire/icmpv6.rs`](#srcwireicmpv6rs) | 29 | 20 | 0 | 3 | 0 | 6 | -180 | andrew |
 | [`src/wire/ipv4.rs`](#srcwireipv4rs) | 21 | 20 | 1 | 0 | 0 | 0 | -212 | agent |
-| [`src/wire/icmpv6.rs`](#srcwireicmpv6rs) | 26 | 18 | 0 | 3 | 0 | 5 | -180 | andrew |
 | [`src/wire/udp.rs`](#srcwireudprs) | 18 | 18 | 0 | 0 | 0 | 0 | -628 | agent |
+| [`src/wire/sixlowpan/iphc.rs`](#srcwiresixlowpaniphcrs) | 49 | 13 | 6 | 0 | 0 | 30 | -- |  |
 | [`src/wire/ndisc.rs`](#srcwirendiscrs) | 16 | 12 | 0 | 2 | 0 | 2 | -204 | andrew |
 | [`src/wire/sixlowpan/nhc.rs`](#srcwiresixlowpannhcrs) | 25 | 12 | 3 | 0 | 0 | 10 | -220 | agent |
 | [`src/wire/arp.rs`](#srcwirearprs) | 9 | 9 | 0 | 0 | 0 | 0 | 84 | blocked: const fn new_unchecked |
 | [`src/wire/ndiscoption.rs`](#srcwirendiscoptionrs) | 13 | 9 | 0 | 4 | 0 | 0 | -128 | agent |
-| [`src/wire/sixlowpan/iphc.rs`](#srcwiresixlowpaniphcrs) | 49 | 8 | 4 | 0 | 0 | 37 | -- |  |
-| [`src/wire/tcp.rs`](#srcwiretcprs) | 34 | 8 | 20 | 6 | 0 | 0 | -- |  |
+| [`src/wire/tcp.rs`](#srcwiretcprs) | 38 | 8 | 24 | 6 | 0 | 0 | -- |  |
 | [`src/wire/ethernet.rs`](#srcwireethernetrs) | 7 | 7 | 0 | 0 | 0 | 0 | -- |  |
 | [`src/wire/ipv6option.rs`](#srcwireipv6optionrs) | 7 | 6 | 0 | 1 | 0 | 0 | -- |  |
-| [`src/wire/mld.rs`](#srcwiremldrs) | 18 | 6 | 3 | 1 | 0 | 8 | -- |  |
-| [`src/storage/ring_buffer.rs`](#srcstorageringbufferrs) | 20 | 4 | 2 | 3 | 10 | 1 | -- |  |
+| [`src/wire/mld.rs`](#srcwiremldrs) | 15 | 6 | 3 | 1 | 0 | 5 | -- |  |
+| [`src/storage/ring_buffer.rs`](#srcstorageringbufferrs) | 21 | 4 | 2 | 4 | 11 | 0 | -- |  |
 | [`src/wire/icmpv4.rs`](#srcwireicmpv4rs) | 8 | 4 | 0 | 2 | 0 | 2 | -- |  |
 | [`src/iface/interface/sixlowpan.rs`](#srcifaceinterfacesixlowpanrs) | 16 | 3 | 7 | 4 | 0 | 2 | -- |  |
-| [`src/wire/ieee802154.rs`](#srcwireieee802154rs) | 18 | 3 | 0 | 5 | 0 | 10 | -- |  |
+| [`src/wire/ieee802154.rs`](#srcwireieee802154rs) | 34 | 3 | 0 | 6 | 0 | 25 | -- |  |
 | [`src/wire/ipv6ext_header.rs`](#srcwireipv6extheaderrs) | 2 | 2 | 0 | 0 | 0 | 0 | -- |  |
 | [`src/wire/dhcpv4.rs`](#srcwiredhcpv4rs) | 4 | 1 | 0 | 3 | 0 | 0 | -- |  |
 | [`src/iface/interface/ipv6.rs`](#srcifaceinterfaceipv6rs) | 3 | 0 | 2 | 1 | 0 | 0 | -- |  |
 | [`src/iface/interface/mod.rs`](#srcifaceinterfacemodrs) | 7 | 0 | 0 | 0 | 7 | 0 | -- |  |
 | [`src/iface/neighbor.rs`](#srcifaceneighborrs) | 4 | 0 | 4 | 0 | 0 | 0 | -- |  |
-| [`src/iface/packet.rs`](#srcifacepacketrs) | 12 | 0 | 12 | 0 | 0 | 0 | -- |  |
-| [`src/iface/route.rs`](#srcifacerouters) | 2 | 0 | 2 | 0 | 0 | 0 | -- |  |
+| [`src/iface/packet.rs`](#srcifacepacketrs) | 11 | 0 | 11 | 0 | 0 | 0 | -- |  |
+| [`src/iface/route.rs`](#srcifacerouters) | 1 | 0 | 1 | 0 | 0 | 0 | -- |  |
 | [`src/iface/socket_set.rs`](#srcifacesocketsetrs) | 28 | 0 | 28 | 0 | 0 | 0 | -- |  |
 | [`src/phy/mod.rs`](#srcphymodrs) | 1 | 0 | 1 | 0 | 0 | 0 | -- |  |
 | [`src/socket/dhcpv4.rs`](#srcsocketdhcpv4rs) | 3 | 0 | 3 | 0 | 0 | 0 | -- |  |
-| [`src/socket/tcp.rs`](#srcsockettcprs) | 8 | 0 | 1 | 1 | 0 | 6 | -- |  |
+| [`src/socket/tcp.rs`](#srcsockettcprs) | 4 | 0 | 1 | 1 | 0 | 2 | -- |  |
 | [`src/socket/udp.rs`](#srcsocketudprs) | 1 | 0 | 1 | 0 | 0 | 0 | -- |  |
 | [`src/storage/assembler.rs`](#srcstorageassemblerrs) | 1 | 0 | 0 | 1 | 0 | 0 | -- |  |
-| [`src/storage/packet_buffer.rs`](#srcstoragepacketbufferrs) | 5 | 0 | 1 | 1 | 2 | 1 | -- |  |
+| [`src/storage/packet_buffer.rs`](#srcstoragepacketbufferrs) | 4 | 0 | 1 | 1 | 2 | 0 | -- |  |
 | [`src/wire/ip.rs`](#srcwireiprs) | 4 | 0 | 4 | 0 | 0 | 0 | -- |  |
 | [`src/wire/ipv6hbh.rs`](#srcwireipv6hbhrs) | 2 | 0 | 0 | 2 | 0 | 0 | -- |  |
 | [`src/wire/mod.rs`](#srcwiremodrs) | 4 | 0 | 3 | 1 | 0 | 0 | -- |  |
-| [`src/wire/sixlowpan/mod.rs`](#srcwiresixlowpanmodrs) | 10 | 0 | 0 | 5 | 0 | 5 | -- |  |
-| **total** | **439** | **172** | **105** | **52** | **19** | **91** | | |
+| [`src/wire/sixlowpan/mod.rs`](#srcwiresixlowpanmodrs) | 9 | 0 | 0 | 4 | 0 | 5 | -- |  |
+| **total** | **453** | **180** | **110** | **53** | **20** | **90** | | |
 
 `other` is mostly UNATTRIBUTED: a site the blame data puts in this file but that falls outside any function the triage parser recognised -- macro bodies, derives, closures. Those sites are real and counted in the metric; they just have no Flux obligation attached yet.
 
@@ -78,27 +78,53 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcwireipv6rs"></a>
 ### `src/wire/ipv6.rs`
 
-33 sites across 17 lines. churn 22, panic 3, core 6. Owner: andrew.
+34 sites across 17 lines. churn 23, panic 4, core 6. Owner: andrew.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 2 | bounds-check | UNATTRIBUTED | `` | `` |
-| 163 | 2 | panic!/unreachable! | PANIC | `mask` | `assert!(mask <= 128);` |
+| 163 | 3 | panic!/unreachable! | PANIC | `mask` | `assert!(mask <= 128);` |
 | 178 | 1 | panic!/unreachable! | PANIC | `solicited_node` | `assert!(self.x_is_unicast());` |
-| 448 | 2 | slice-index | CHURN | `payload_len` | `NetworkEndian::read_u16(&data[field::LENGTH])` |
-| 475 | 1 | slice-index | CORE | `src_addr` | `Address::from_octets(data[field::SRC_ADDR].try_into().unwrap())` |
-| 482 | 1 | slice-index | CORE | `dst_addr` | `Address::from_octets(data[field::DST_ADDR].try_into().unwrap())` |
-| 492 | 1 | slice-index | CHURN | `payload` | `&data[range]` |
-| 503 | 2 | bounds-check | CHURN | `set_version` | `data[0] = (data[0] & 0x0f) \| ((value & 0x0f) << 4);` |
-| 515 | 3 | bounds-check | CHURN | `set_traffic_class` | `data[1] = (data[1] & 0x0f) \| ((value & 0x0f) << 4);` |
-| 523 | 1 | bounds-check | CORE | `set_flow_label` | `let raw = (((data[1] & 0xf0) as u32) << 16) \| (value & 0x0fffff);` |
-| 524 | 3 | slice-index | CORE | `set_flow_label` | `NetworkEndian::write_u24(&mut data[1..4], raw);` |
-| 531 | 3 | slice-index | CHURN | `set_payload_len` | `NetworkEndian::write_u16(&mut data[field::LENGTH], value);` |
-| 538 | 1 | bounds-check | CHURN | `set_next_header` | `data[field::NXT_HDR] = value.into();` |
-| 545 | 3 | bounds-check | CHURN | `set_hop_limit` | `data[field::HOP_LIMIT] = value;` |
-| 552 | 3 | slice-index | CHURN | `set_src_addr` | `data[field::SRC_ADDR].copy_from_slice(&value.octets());` |
-| 559 | 3 | slice-index | CHURN | `set_dst_addr` | `data[field::DST_ADDR].copy_from_slice(&value.octets());` |
-| 567 | 1 | slice-index | CHURN | `payload_mut` | `&mut data[range]` |
+| 448 | 2 | slice-index | CHURN | `payload_len` | `pub fn payload_len(&self) -> u16 {` |
+| 475 | 1 | slice-index | CORE | `src_addr` | `pub fn src_addr(&self) -> Address {` |
+| 482 | 1 | slice-index | CORE | `dst_addr` | `pub fn dst_addr(&self) -> Address {` |
+| 492 | 1 | slice-index | CHURN | `payload` | `let data = self.buffer.as_ref();` |
+| 503 | 3 | bounds-check | CHURN | `set_version` | `// Make sure to retain the lower order bits which contain` |
+| 512 | 1 | bounds-check | UNATTRIBUTED | `` | `// Put the higher order 4-bits of value in the lower order` |
+| 515 | 3 | bounds-check | CHURN | `set_traffic_class` | `// Put the lower order 4-bits of value in the higher order` |
+| 523 | 1 | bounds-check | CORE | `set_flow_label` | `let data = self.buffer.as_mut();` |
+| 524 | 3 | slice-index | CORE | `set_flow_label` | `// Retain the lower order 4-bits of the traffic class` |
+| 531 | 3 | slice-index | CHURN | `set_payload_len` | `pub fn set_payload_len(&mut self, value: u16) {` |
+| 538 | 1 | bounds-check | CHURN | `set_next_header` | `pub fn set_next_header(&mut self, value: Protocol) {` |
+| 545 | 3 | bounds-check | CHURN | `set_hop_limit` | `pub fn set_hop_limit(&mut self, value: u8) {` |
+| 552 | 3 | slice-index | CHURN | `set_src_addr` | `pub fn set_src_addr(&mut self, value: Address) {` |
+| 559 | 3 | slice-index | CHURN | `set_dst_addr` | `pub fn set_dst_addr(&mut self, value: Address) {` |
+| 567 | 1 | slice-index | CHURN | `payload_mut` | `let range = self.header_len()..self.total_len();` |
+
+<a id="srcwireicmpv6rs"></a>
+### `src/wire/icmpv6.rs`
+
+29 sites across 18 lines. churn 20, panic 0, core 3. Owner: andrew.
+
+| line | sites | kind | work | fn | source |
+| ---: | ---: | --- | --- | --- | --- |
+| 458 | 5 | slice-index | CHURN | `payload` | `let data = self.buffer.as_ref();` |
+| 470 | 3 | bounds-check | CHURN | `set_msg_type` | `self.ty = value;` |
+| 479 | 4 | bounds-check | CHURN | `set_msg_code` | `pub fn set_msg_code(&mut self, value: u8) {` |
+| 502 | 2 | slice-index | CHURN | `clear_reserved` | `\| Message::Redirect => {` |
+| 506 | 1 | slice-index | UNATTRIBUTED | `` | `Message::MldQuery => {` |
+| 507 | 1 | bounds-check | CHURN | `clear_reserved` | `let data = self.buffer.as_mut();` |
+| 511 | 1 | slice-index | CHURN | `clear_reserved` | `Message::MldReport => {` |
+| 534 | 1 | slice-index | UNATTRIBUTED | `` | `pub fn set_checksum(&mut self, value: u16) {` |
+| 544 | 1 | slice-index | CHURN | `set_echo_ident` | `pub fn set_echo_ident(&mut self, value: u16) {` |
+| 554 | 1 | slice-index | CHURN | `set_echo_seq_no` | `pub fn set_echo_seq_no(&mut self, value: u16) {` |
+| 564 | 1 | slice-index | UNATTRIBUTED | `` | `pub fn set_pkt_too_big_mtu(&mut self, value: u32) {` |
+| 574 | 1 | slice-index | UNATTRIBUTED | `` | `pub fn set_param_problem_ptr(&mut self, value: u32) {` |
+| 600 | 2 | slice-index | CHURN | `payload_mut` | `let range = self.header_len()..;` |
+| 680 | 1 | slice-index | CORE | `parse` | `Ipv6Packet::new_unchecked(packet.payload())` |
+| 787 | 1 | slice-index | CORE | `emit` | `T: AsRef<[u8]> + AsMut<[u8]> + ?Sized,` |
+| 794 | 1 | slice-index | CORE | `emit` | `// much space we have for the packet due to IPv6 options and etc` |
+| 851 | 1 | slice-index | UNATTRIBUTED | `` | `packet.set_msg_type(Message::EchoRequest);` |
+| 864 | 1 | slice-index | UNATTRIBUTED | `` | `packet.set_msg_type(Message::EchoReply);` |
 
 <a id="srcwireipv4rs"></a>
 ### `src/wire/ipv4.rs`
@@ -108,38 +134,17 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
 | 101 | 1 | panic!/unreachable! | PANIC | `new` | `assert!(prefix_len <= 32);` |
-| 369 | 1 | slice-index | CHURN | `verify_checksum` | `checksum::data(&data[..self.header_len() as usize]) == !0` |
-| 389 | 1 | slice-index | CHURN | `payload` | `&data[range]` |
-| 398 | 2 | bounds-check | CHURN | `set_version` | `data[field::VER_IHL] = (data[field::VER_IHL] & !0xf0) \| (value << 4);` |
-| 411 | 2 | bounds-check | CHURN | `set_dscp` | `data[field::DSCP_ECN] = (data[field::DSCP_ECN] & !0xfc) \| (value << 2)` |
-| 424 | 2 | slice-index | CHURN | `set_total_len` | `NetworkEndian::write_u16(&mut data[field::LENGTH], value)` |
-| 431 | 2 | slice-index | CHURN | `set_ident` | `NetworkEndian::write_u16(&mut data[field::IDENT], value)` |
-| 438 | 2 | slice-index | CHURN | `clear_flags` | `let raw = NetworkEndian::read_u16(&data[field::FLG_OFF]);` |
-| 474 | 2 | bounds-check | CHURN | `set_hop_limit` | `data[field::TTL] = value` |
-| 481 | 2 | bounds-check | CHURN | `set_next_header` | `data[field::PROTOCOL] = value.into()` |
-| 495 | 2 | slice-index | CHURN | `set_src_addr` | `data[field::SRC_ADDR].copy_from_slice(&value.octets())` |
-| 502 | 2 | slice-index | CHURN | `set_dst_addr` | `data[field::DST_ADDR].copy_from_slice(&value.octets())` |
-
-<a id="srcwireicmpv6rs"></a>
-### `src/wire/icmpv6.rs`
-
-26 sites across 13 lines. churn 18, panic 0, core 3. Owner: andrew.
-
-| line | sites | kind | work | fn | source |
-| ---: | ---: | --- | --- | --- | --- |
-| ? | 5 | slice-index | UNATTRIBUTED | `` | `` |
-| 458 | 5 | slice-index | CHURN | `payload` | `&data[self.header_len()..]` |
-| 470 | 2 | bounds-check | CHURN | `set_msg_type` | `data[field::TYPE] = value.into()` |
-| 479 | 3 | bounds-check | CHURN | `set_msg_code` | `data[field::CODE] = value` |
-| 502 | 2 | slice-index | CHURN | `clear_reserved` | `NetworkEndian::write_u32(&mut data[field::UNUSED], 0);` |
-| 507 | 1 | bounds-check | CHURN | `clear_reserved` | `data[field::SQRV] &= 0xf;` |
-| 511 | 1 | slice-index | CHURN | `clear_reserved` | `NetworkEndian::write_u16(&mut data[field::RECORD_RESV], 0);` |
-| 544 | 1 | slice-index | CHURN | `set_echo_ident` | `NetworkEndian::write_u16(&mut data[field::ECHO_IDENT], value)` |
-| 554 | 1 | slice-index | CHURN | `set_echo_seq_no` | `NetworkEndian::write_u16(&mut data[field::ECHO_SEQNO], value)` |
-| 600 | 2 | slice-index | CHURN | `payload_mut` | `&mut data[range]` |
-| 680 | 1 | slice-index | CORE | `parse` | `let payload = &packet.payload()[ip_packet.header_len()..];` |
-| 787 | 1 | slice-index | CORE | `emit` | `let payload = &mut ip_packet.into_inner()[header.buffer_len()..];` |
-| 794 | 1 | slice-index | CORE | `emit` | `payload[..payload_len].copy_from_slice(&data[..payload_len]);` |
+| 369 | 1 | slice-index | CHURN | `verify_checksum` | `` |
+| 389 | 1 | slice-index | CHURN | `payload` | `let range = self.header_len() as usize..self.total_len() as usize;` |
+| 398 | 2 | bounds-check | CHURN | `set_version` | `pub fn set_version(&mut self, value: u8) {` |
+| 411 | 2 | bounds-check | CHURN | `set_dscp` | `pub fn set_dscp(&mut self, value: u8) {` |
+| 424 | 2 | slice-index | CHURN | `set_total_len` | `pub fn set_total_len(&mut self, value: u16) {` |
+| 431 | 2 | slice-index | CHURN | `set_ident` | `pub fn set_ident(&mut self, value: u16) {` |
+| 438 | 2 | slice-index | CHURN | `clear_flags` | `pub fn clear_flags(&mut self) {` |
+| 474 | 2 | bounds-check | CHURN | `set_hop_limit` | `pub fn set_hop_limit(&mut self, value: u8) {` |
+| 481 | 2 | bounds-check | CHURN | `set_next_header` | `pub fn set_next_header(&mut self, value: Protocol) {` |
+| 495 | 2 | slice-index | CHURN | `set_src_addr` | `pub fn set_src_addr(&mut self, value: Address) {` |
+| 502 | 2 | slice-index | CHURN | `set_dst_addr` | `pub fn set_dst_addr(&mut self, value: Address) {` |
 
 <a id="srcwireudprs"></a>
 ### `src/wire/udp.rs`
@@ -148,25 +153,60 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| 94 | 1 | slice-index | CHURN | `len` | `NetworkEndian::read_u16(&data[field::LENGTH])` |
-| 101 | 1 | slice-index | CHURN | `checksum` | `NetworkEndian::read_u16(&data[field::CHECKSUM])` |
-| 145 | 1 | slice-index | CHURN | `verify_checksum` | `checksum::data(&data[..self.len() as usize]),` |
-| 156 | 1 | slice-index | CHURN | `payload` | `&data[field::PAYLOAD(length)]` |
-| 165 | 3 | slice-index | CHURN | `set_src_port` | `NetworkEndian::write_u16(&mut data[field::SRC_PORT], value)` |
-| 172 | 3 | slice-index | CHURN | `set_dst_port` | `NetworkEndian::write_u16(&mut data[field::DST_PORT], value)` |
-| 179 | 3 | slice-index | CHURN | `set_len` | `NetworkEndian::write_u16(&mut data[field::LENGTH], value)` |
-| 186 | 2 | slice-index | CHURN | `set_checksum` | `NetworkEndian::write_u16(&mut data[field::CHECKSUM], value)` |
-| 200 | 1 | slice-index | CHURN | `fill_checksum` | `checksum::data(&data[..self.len() as usize]),` |
-| 215 | 2 | slice-index | CHURN | `payload_mut` | `&mut data[field::PAYLOAD(length)]` |
+| 94 | 1 | slice-index | CHURN | `len` | `pub fn len(&self) -> u16 {` |
+| 101 | 1 | slice-index | CHURN | `checksum` | `pub fn checksum(&self) -> u16 {` |
+| 145 | 1 | slice-index | CHURN | `verify_checksum` | `checksum::combine(&[` |
+| 156 | 1 | slice-index | CHURN | `payload` | `let length = self.len();` |
+| 165 | 3 | slice-index | CHURN | `set_src_port` | `pub fn set_src_port(&mut self, value: u16) {` |
+| 172 | 3 | slice-index | CHURN | `set_dst_port` | `pub fn set_dst_port(&mut self, value: u16) {` |
+| 179 | 3 | slice-index | CHURN | `set_len` | `pub fn set_len(&mut self, value: u16) {` |
+| 186 | 2 | slice-index | CHURN | `set_checksum` | `pub fn set_checksum(&mut self, value: u16) {` |
+| 200 | 1 | slice-index | CHURN | `fill_checksum` | `!checksum::combine(&[` |
+| 215 | 2 | slice-index | CHURN | `payload_mut` | `let length = self.len();` |
+
+<a id="srcwiresixlowpaniphcrs"></a>
+### `src/wire/sixlowpan/iphc.rs`
+
+49 sites across 28 lines. churn 13, panic 6, core 0. Owner: --.
+
+| line | sites | kind | work | fn | source |
+| ---: | ---: | --- | --- | --- | --- |
+| 133 | 1 | slice-index | CHURN | `next_header` | `let nh = data[start..start + 1][0];` |
+| 147 | 1 | slice-index | PANIC | `hop_limit` | `data[start..start + 1][0]` |
+| 160 | 1 | bounds-check | UNATTRIBUTED | `` | `Some(data[2] >> 4)` |
+| 170 | 1 | bounds-check | UNATTRIBUTED | `` | `Some(data[2] & 0x0f)` |
+| 181 | 2 | bounds-check, slice-index | UNATTRIBUTED | `` | `Some(self.buffer.as_ref()[start..][0] & 0b1100_0000)` |
+| 193 | 2 | bounds-check, slice-index | UNATTRIBUTED | `` | `Some(self.buffer.as_ref()[start..][0] & 0b111111)` |
+| 206 | 2 | slice-index | PANIC | `flow_label_field` | `&self.buffer.as_ref()[start..][2..4],` |
+| 212 | 2 | slice-index | PANIC | `flow_label_field` | `&self.buffer.as_ref()[start..][1..3],` |
+| 230 | 2 | slice-index | UNATTRIBUTED | `` | `&data[start..][..16],` |
+| 233 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| 236 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| 247 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| 257 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| 288 | 2 | slice-index | UNATTRIBUTED | `` | `&data[start..][..16],` |
+| 291 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| 294 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| 302 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine64bits(&data[start..][..8]),` |
+| 312 | 2 | slice-index | UNATTRIBUTED | `` | `AddressMode::InLine16bits(&data[start..][..2]),` |
+| 329 | 2 | slice-index | UNATTRIBUTED | `` | `&data[start..][..16],` |
+| 332 | 2 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast48bits(&data[start..][..6]),` |
+| 335 | 2 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast32bits(&data[start..][..4]),` |
+| 338 | 2 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast8bits(&data[start..][..1]),` |
+| 349 | 1 | slice-index | UNATTRIBUTED | `` | `get_field!(dispatch_field, 0b111, 13);` |
+| 353 | 1 | slice-index | UNATTRIBUTED | `` | `get_field!(cid_field, 0b1, 7);` |
+| 455 | 1 | slice-index | CHURN | `payload` | `&data[len..]` |
+| 462 | 1 | slice-index | CHURN | `set_dispatch_field` | `let data = &mut self.buffer.as_mut()[field::IPHC_FIELD];` |
+| 481 | 4 | slice-index | CHURN | `set_field` | `raw[idx..idx + value.len()].copy_from_slice(value);` |
+| 845 | 1 | panic!/unreachable! | PANIC | `buffer_len` | `_ => unreachable!(),` |
 
 <a id="srcwirendiscrs"></a>
 ### `src/wire/ndisc.rs`
 
-16 sites across 14 lines. churn 12, panic 0, core 2. Owner: andrew.
+16 sites across 15 lines. churn 12, panic 0, core 2. Owner: andrew.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 2 | slice-index | UNATTRIBUTED | `` | `` |
 | 59 | 1 | slice-index | CHURN | `reachable_time` | `Duration::from_millis(NetworkEndian::read_u32(&data[field::REACHABLE_TM]) as u64)` |
 | 66 | 1 | slice-index | CHURN | `retrans_time` | `Duration::from_millis(NetworkEndian::read_u32(&data[field::RETRANS_TM]) as u64)` |
 | 81 | 1 | slice-index | CORE | `target_addr` | `Ipv6Address::from_octets(data[field::TARGET_ADDR].try_into().unwrap())` |
@@ -179,19 +219,22 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | 162 | 2 | slice-index | CHURN | `set_target_addr` | `data[field::TARGET_ADDR].copy_from_slice(&value.octets());` |
 | 187 | 1 | slice-index | CHURN | `set_dest_addr` | `data[field::DEST_ADDR].copy_from_slice(&value.octets());` |
 | 240 | 1 | slice-index | CHURN | `parse` | `let pkt = NdiscOption::new_checked(&packet.payload()[offset..])?;` |
+| 389 | 1 | slice-index | UNATTRIBUTED | `` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
+| 395 | 1 | slice-index | UNATTRIBUTED | `` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
 | 451 | 1 | slice-index | CHURN | `emit` | `NdiscOption::new_unchecked(&mut packet.payload_mut()[offset..]);` |
 
 <a id="srcwiresixlowpannhcrs"></a>
 ### `src/wire/sixlowpan/nhc.rs`
 
-25 sites across 15 lines. churn 12, panic 3, core 0. Owner: agent.
+25 sites across 20 lines. churn 12, panic 3, core 0. Owner: agent.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 4 | bounds-check, slice-index | UNATTRIBUTED | `` | `` |
-| 16 | 3 | bounds-check | UNATTRIBUTED | `` | `let raw = &data[0];` |
+| 160 | 1 | bounds-check | UNATTRIBUTED | `` | `get_field!(eid_field, 0b111, 1);` |
+| 161 | 1 | bounds-check | UNATTRIBUTED | `` | `get_field!(nh_field, 0b1, 0);` |
 | 179 | 2 | bounds-check | CHURN | `length` | `self.buffer.as_ref()[1 + self.next_header_size()]` |
 | 208 | 2 | slice-index | CHURN | `payload` | `&self.buffer.as_ref()[start..][..len]` |
+| 510 | 1 | bounds-check | UNATTRIBUTED | `` | `get_field!(ports_field, 0b11, 0);` |
 | 525 | 1 | slice-index | PANIC | `src_port` | `NetworkEndian::read_u16(&data[start..start + 2])` |
 | 553 | 1 | slice-index | PANIC | `dst_port` | `NetworkEndian::read_u16(&data[idx + 2..idx + 4])` |
 | 567 | 1 | slice-index | PANIC | `dst_port` | `NetworkEndian::read_u16(&data[idx + 1..idx + 1 + 2])` |
@@ -199,8 +242,12 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | 618 | 3 | slice-index | CHURN | `payload` | `&self.buffer.as_ref()[start..]` |
 | 626 | 2 | slice-index | CHURN | `payload_mut` | `&mut self.buffer.as_mut()[start..]` |
 | 632 | 1 | bounds-check | CHURN | `set_dispatch_field` | `data[0] = (data[0] & !(0b11111 << 3)) \| (DISPATCH_UDP_HEADER << 3);` |
+| 648 | 1 | bounds-check | UNATTRIBUTED | `` | `data[idx] = (((src_port - 0xf0b0) as u8) << 4) & ((dst_port - 0xf0b0) as u8);` |
+| 654 | 1 | bounds-check | UNATTRIBUTED | `` | `data[idx] = (src_port - 0xf000) as u8;` |
 | 657 | 1 | slice-index | CLEAN | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
+| 663 | 1 | slice-index | UNATTRIBUTED | `` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], src_port);` |
 | 665 | 1 | bounds-check | CLEAN | `set_ports` | `data[idx] = (dst_port - 0xf000) as u8;` |
+| 671 | 1 | slice-index | UNATTRIBUTED | `` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], src_port);` |
 | 673 | 1 | slice-index | CLEAN | `set_ports` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], dst_port);` |
 | 682 | 1 | slice-index | CHURN | `set_checksum` | `NetworkEndian::write_u16(&mut data[idx..idx + 2], checksum);` |
 
@@ -211,15 +258,15 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| 176 | 1 | slice-index | CHURN | `set_hardware_type` | `NetworkEndian::write_u16(&mut data[field::HTYPE], value.into())` |
-| 183 | 1 | slice-index | CHURN | `set_protocol_type` | `NetworkEndian::write_u16(&mut data[field::PTYPE], value.into())` |
-| 190 | 1 | bounds-check | CHURN | `set_hardware_len` | `data[field::HLEN] = value` |
-| 197 | 1 | bounds-check | CHURN | `set_protocol_len` | `data[field::PLEN] = value` |
-| 204 | 1 | slice-index | CHURN | `set_operation` | `NetworkEndian::write_u16(&mut data[field::OPER], value.into())` |
-| 214 | 1 | slice-index | CHURN | `set_source_hardware_addr` | `data[field::SHA(hardware_len, protocol_len)].copy_from_slice(value)` |
-| 224 | 1 | slice-index | CHURN | `set_source_protocol_addr` | `data[field::SPA(hardware_len, protocol_len)].copy_from_slice(value)` |
-| 234 | 1 | slice-index | CHURN | `set_target_hardware_addr` | `data[field::THA(hardware_len, protocol_len)].copy_from_slice(value)` |
-| 244 | 1 | slice-index | CHURN | `set_target_protocol_addr` | `data[field::TPA(hardware_len, protocol_len)].copy_from_slice(value)` |
+| 176 | 1 | slice-index | CHURN | `set_hardware_type` | `pub fn set_hardware_type(&mut self, value: Hardware) {` |
+| 183 | 1 | slice-index | CHURN | `set_protocol_type` | `pub fn set_protocol_type(&mut self, value: Protocol) {` |
+| 190 | 1 | bounds-check | CHURN | `set_hardware_len` | `pub fn set_hardware_len(&mut self, value: u8) {` |
+| 197 | 1 | bounds-check | CHURN | `set_protocol_len` | `pub fn set_protocol_len(&mut self, value: u8) {` |
+| 204 | 1 | slice-index | CHURN | `set_operation` | `pub fn set_operation(&mut self, value: Operation) {` |
+| 214 | 1 | slice-index | CHURN | `set_source_hardware_addr` | `let (hardware_len, protocol_len) = (self.hardware_len(), self.protocol_len());` |
+| 224 | 1 | slice-index | CHURN | `set_source_protocol_addr` | `let (hardware_len, protocol_len) = (self.hardware_len(), self.protocol_len());` |
+| 234 | 1 | slice-index | CHURN | `set_target_hardware_addr` | `let (hardware_len, protocol_len) = (self.hardware_len(), self.protocol_len());` |
+| 244 | 1 | slice-index | CHURN | `set_target_protocol_addr` | `let (hardware_len, protocol_len) = (self.hardware_len(), self.protocol_len());` |
 
 <a id="srcwirendiscoptionrs"></a>
 ### `src/wire/ndiscoption.rs`
@@ -240,57 +287,36 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | 574 | 1 | copy_from_slice | CORE | `emit` | `ip_packet.payload_mut().copy_from_slice(data);` |
 | 588 | 1 | copy_from_slice | CORE | `emit` | `opt.data_mut().copy_from_slice(data);` |
 
-<a id="srcwiresixlowpaniphcrs"></a>
-### `src/wire/sixlowpan/iphc.rs`
-
-49 sites across 13 lines. churn 8, panic 4, core 0. Owner: --.
-
-| line | sites | kind | work | fn | source |
-| ---: | ---: | --- | --- | --- | --- |
-| ? | 35 | bounds-check, slice-index | UNATTRIBUTED | `` | `` |
-| 22 | 2 | slice-index | UNATTRIBUTED | `` | `let raw = NetworkEndian::read_u16(&data[field::IPHC_FIELD]);` |
-| 133 | 1 | slice-index | CHURN | `next_header` | `let nh = data[start..start + 1][0];` |
-| 147 | 1 | slice-index | PANIC | `hop_limit` | `data[start..start + 1][0]` |
-| 206 | 1 | slice-index | PANIC | `flow_label_field` | `&self.buffer.as_ref()[start..][2..4],` |
-| 212 | 1 | slice-index | PANIC | `flow_label_field` | `&self.buffer.as_ref()[start..][1..3],` |
-| 332 | 1 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast48bits(&data[start..][..6]),` |
-| 335 | 1 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast32bits(&data[start..][..4]),` |
-| 338 | 1 | slice-index | CHURN | `dst_addr` | `AddressMode::Multicast8bits(&data[start..][..1]),` |
-| 455 | 1 | slice-index | CHURN | `payload` | `&data[len..]` |
-| 462 | 1 | slice-index | CHURN | `set_dispatch_field` | `let data = &mut self.buffer.as_mut()[field::IPHC_FIELD];` |
-| 481 | 2 | slice-index | CHURN | `set_field` | `raw[idx..idx + value.len()].copy_from_slice(value);` |
-| 845 | 1 | panic!/unreachable! | PANIC | `buffer_len` | `_ => unreachable!(),` |
-
 <a id="srcwiretcprs"></a>
 ### `src/wire/tcp.rs`
 
-34 sites across 23 lines. churn 8, panic 20, core 6. Owner: --.
+38 sites across 23 lines. churn 8, panic 24, core 6. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| 44 | 7 | panic!(fmt) | PANIC | `add` | `panic!("attempt to add to sequence number with unsigned overflow")` |
+| 44 | 10 | panic!(fmt) | PANIC | `add` | `panic!("attempt to add to sequence number with unsigned overflow")` |
 | 55 | 1 | panic!(fmt) | PANIC | `sub` | `panic!("attempt to subtract to sequence number with unsigned overflow")` |
-| 73 | 6 | panic!(fmt) | PANIC | `sub` | `panic!("attempt to subtract sequence numbers with underflow")` |
-| 392 | 1 | slice-index | CHURN | `options` | `&data[field::OPTIONS(header_len)]` |
-| 400 | 1 | slice-index | CHURN | `payload` | `&data[header_len..]` |
-| 409 | 1 | slice-index | CHURN | `set_src_port` | `NetworkEndian::write_u16(&mut data[field::SRC_PORT], value)` |
-| 416 | 1 | slice-index | CHURN | `set_dst_port` | `NetworkEndian::write_u16(&mut data[field::DST_PORT], value)` |
-| 423 | 1 | slice-index | CORE | `set_seq_number` | `NetworkEndian::write_i32(&mut data[field::SEQ_NUM], value.0)` |
-| 430 | 1 | slice-index | CORE | `set_ack_number` | `NetworkEndian::write_i32(&mut data[field::ACK_NUM], value.0)` |
-| 572 | 1 | slice-index | CHURN | `set_window_len` | `NetworkEndian::write_u16(&mut data[field::WIN_SIZE], value)` |
-| 586 | 1 | slice-index | CHURN | `set_urgent_at` | `NetworkEndian::write_u16(&mut data[field::URGENT], value)` |
-| 611 | 1 | slice-index | CHURN | `options_mut` | `&mut data[field::OPTIONS(header_len)]` |
-| 619 | 1 | slice-index | CHURN | `payload_mut` | `&mut data[header_len..]` |
-| 694 | 1 | slice-index | CORE | `parse` | `let range_left = NetworkEndian::read_u32(&data[left..mid]);` |
-| 695 | 1 | slice-index | CORE | `parse` | `let range_right = NetworkEndian::read_u32(&data[mid..right]);` |
-| 712 | 1 | slice-index | CORE | `parse` | `Ok((&buffer[length..], option))` |
-| 740 | 1 | bounds-check | PANIC | `emit` | `buffer[0] = field::OPT_NOP;` |
-| 744 | 1 | bounds-check | PANIC | `emit` | `buffer[1] = length as u8;` |
-| 753 | 1 | bounds-check | PANIC | `emit` | `buffer[2] = value;` |
-| 767 | 1 | slice-index | PANIC | `emit` | `NetworkEndian::write_u32(&mut buffer[pos..], first);` |
-| 781 | 1 | copy_from_slice | PANIC | `emit` | `buffer[2..].copy_from_slice(provided)` |
-| 786 | 1 | slice-index | PANIC | `emit` | `&mut buffer[length..]` |
-| 1053 | 1 | slice-index | CORE | `emit` | `packet.payload_mut()[..self.payload.len()].copy_from_slice(self.payload);` |
+| 73 | 7 | panic!(fmt) | PANIC | `sub` | `panic!("attempt to subtract sequence numbers with underflow")` |
+| 392 | 1 | slice-index | CHURN | `options` | `let header_len = self.header_len();` |
+| 400 | 1 | slice-index | CHURN | `payload` | `let header_len = self.header_len() as usize;` |
+| 409 | 1 | slice-index | CHURN | `set_src_port` | `pub fn set_src_port(&mut self, value: u16) {` |
+| 416 | 1 | slice-index | CHURN | `set_dst_port` | `pub fn set_dst_port(&mut self, value: u16) {` |
+| 423 | 1 | slice-index | CORE | `set_seq_number` | `pub fn set_seq_number(&mut self, value: SeqNumber) {` |
+| 430 | 1 | slice-index | CORE | `set_ack_number` | `pub fn set_ack_number(&mut self, value: SeqNumber) {` |
+| 572 | 1 | slice-index | CHURN | `set_window_len` | `pub fn set_window_len(&mut self, value: u16) {` |
+| 586 | 1 | slice-index | CHURN | `set_urgent_at` | `pub fn set_urgent_at(&mut self, value: u16) {` |
+| 611 | 1 | slice-index | CHURN | `options_mut` | `let header_len = self.header_len();` |
+| 619 | 1 | slice-index | CHURN | `payload_mut` | `let header_len = self.header_len() as usize;` |
+| 694 | 1 | slice-index | CORE | `parse` | `sack_ranges.iter_mut().enumerate().for_each(\|(i, nmut)\| {` |
+| 695 | 1 | slice-index | CORE | `parse` | `let left = i * 8;` |
+| 712 | 1 | slice-index | CORE | `parse` | `}` |
+| 740 | 1 | bounds-check | PANIC | `emit` | `*p = field::OPT_END;` |
+| 744 | 1 | bounds-check | PANIC | `emit` | `length = 1;` |
+| 753 | 1 | bounds-check | PANIC | `emit` | `buffer[0] = field::OPT_MSS;` |
+| 767 | 1 | slice-index | PANIC | `emit` | `.filter(\|s\| s.is_some())` |
+| 781 | 1 | copy_from_slice | PANIC | `emit` | `&TcpOption::Unknown {` |
+| 786 | 1 | slice-index | PANIC | `emit` | `buffer[2..].copy_from_slice(provided)` |
+| 1053 | 1 | slice-index | CORE | `emit` | `if !options.is_empty() {` |
 
 <a id="srcwireethernetrs"></a>
 ### `src/wire/ethernet.rs`
@@ -300,8 +326,8 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
 | 76 | 1 | copy_from_slice | CHURN | `from_bytes` | `bytes.copy_from_slice(data);` |
-| 287 | 3 | slice-index | CHURN | `set_src_addr` | `data[field::SOURCE].copy_from_slice(value.as_bytes())` |
-| 294 | 3 | slice-index | CHURN | `set_ethertype` | `NetworkEndian::write_u16(&mut data[field::ETHERTYPE], value.into())` |
+| 287 | 3 | slice-index | CHURN | `set_src_addr` | `pub fn set_src_addr(&mut self, value: Address) {` |
+| 294 | 3 | slice-index | CHURN | `set_ethertype` | `pub fn set_ethertype(&mut self, value: EtherType) {` |
 
 <a id="srcwireipv6optionrs"></a>
 ### `src/wire/ipv6option.rs`
@@ -318,11 +344,10 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcwiremldrs"></a>
 ### `src/wire/mld.rs`
 
-18 sites across 11 lines. churn 6, panic 3, core 1. Owner: --.
+15 sites across 15 lines. churn 6, panic 3, core 1. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 8 | bounds-check, copy_from_slice, slice-index | UNATTRIBUTED | `` | `` |
 | 52 | 1 | slice-index | CORE | `mcast_addr` | `Ipv6Address::from_octets(data[field::QUERY_MCAST_ADDR].try_into().unwrap())` |
 | 59 | 1 | bounds-check | CHURN | `s_flag` | `(data[field::SQRV] & 0x08) != 0` |
 | 73 | 1 | bounds-check | CHURN | `qqic` | `data[field::QQIC]` |
@@ -330,57 +355,63 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | 134 | 1 | panic!/unreachable! | PANIC | `set_qrv` | `assert!(value < 8);` |
 | 143 | 1 | bounds-check | CHURN | `set_qqic` | `data[field::QQIC] = value;` |
 | 150 | 1 | slice-index | CHURN | `set_num_srcs` | `NetworkEndian::write_u16(&mut data[field::QUERY_NUM_SRCS], value);` |
+| 163 | 1 | slice-index | UNATTRIBUTED | `` | `NetworkEndian::write_u16(&mut data[field::NR_MCAST_RCRDS], value)` |
+| 259 | 1 | bounds-check | UNATTRIBUTED | `` | `data[field::RECORD_TYPE] = rty.into();` |
+| 266 | 1 | bounds-check | UNATTRIBUTED | `` | `data[field::AUX_DATA_LEN] = len;` |
 | 273 | 1 | slice-index | CHURN | `set_num_srcs` | `NetworkEndian::write_u16(&mut data[field::RECORD_NUM_SRCS], num_srcs);` |
 | 282 | 1 | panic!/unreachable! | PANIC | `set_mcast_addr` | `assert!(addr.is_multicast());` |
 | 284 | 1 | slice-index | PANIC | `set_mcast_addr` | `data[field::RECORD_MCAST_ADDR].copy_from_slice(&addr.octets());` |
+| 432 | 1 | copy_from_slice | UNATTRIBUTED | `` | `packet.payload_mut().copy_from_slice(&data[..]);` |
+| 442 | 1 | copy_from_slice | UNATTRIBUTED | `` | `packet.payload_mut().copy_from_slice(&data[..]);` |
 
 <a id="srcstorageringbufferrs"></a>
 ### `src/storage/ring_buffer.rs`
 
-20 sites across 9 lines. churn 4, panic 2, core 3. Owner: --.
+21 sites across 8 lines. churn 4, panic 2, core 4. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 1 | slice-index | UNATTRIBUTED | `` | `` |
 | 110 | 4 | rem-by-zero | CHURN | `get_idx_unchecked` | `(self.read_at + idx) % self.capacity()` |
 | 154 | 3 | bounds-check | FLUXBUG | `dequeue_one_with` | `let res = f(&mut self.storage[self.read_at]);` |
-| 193 | 2 | slice-index | FLUXBUG | `enqueue_many_with` | `let (size, result) = f(&mut self.storage[write_at..write_at + max_size]);` |
+| 193 | 3 | slice-index | FLUXBUG | `enqueue_many_with` | `let (size, result) = f(&mut self.storage[write_at..write_at + max_size]);` |
 | 245 | 5 | slice-index | FLUXBUG | `dequeue_many_with` | `let (size, result) = f(&mut self.storage[self.read_at..self.read_at + max_size]);` |
 | 314 | 1 | slice-index | CORE | `get_unallocated` | `&mut self.storage[start_at..start_at + size]` |
 | 345 | 1 | panic!/unreachable! | PANIC | `enqueue_unallocated` | `assert!(count <= self.window());` |
-| 369 | 2 | slice-index | CORE | `get_allocated` | `&self.storage[start_at..start_at + size]` |
+| 369 | 3 | slice-index | CORE | `get_allocated` | `&self.storage[start_at..start_at + size]` |
 | 398 | 1 | panic!/unreachable! | PANIC | `dequeue_allocated` | `assert!(count <= self.len());` |
 
 <a id="srcwireicmpv4rs"></a>
 ### `src/wire/icmpv4.rs`
 
-8 sites across 7 lines. churn 4, panic 0, core 2. Owner: --.
+8 sites across 8 lines. churn 4, panic 0, core 2. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 2 | slice-index | UNATTRIBUTED | `` | `` |
-| 308 | 1 | bounds-check | CHURN | `set_msg_code` | `data[field::CODE] = value` |
-| 325 | 1 | slice-index | CHURN | `set_echo_ident` | `NetworkEndian::write_u16(&mut data[field::ECHO_IDENT], value)` |
-| 335 | 1 | slice-index | CHURN | `set_echo_seq_no` | `NetworkEndian::write_u16(&mut data[field::ECHO_SEQNO], value)` |
-| 355 | 1 | slice-index | CHURN | `data_mut` | `&mut data[range]` |
-| 530 | 1 | copy_from_slice | CORE | `emit` | `payload.copy_from_slice(data)` |
-| 544 | 1 | copy_from_slice | CORE | `emit` | `payload.copy_from_slice(data)` |
+| 308 | 1 | bounds-check | CHURN | `set_msg_code` | `pub fn set_msg_code(&mut self, value: u8) {` |
+| 325 | 1 | slice-index | CHURN | `set_echo_ident` | `pub fn set_echo_ident(&mut self, value: u16) {` |
+| 335 | 1 | slice-index | CHURN | `set_echo_seq_no` | `pub fn set_echo_seq_no(&mut self, value: u16) {` |
+| 355 | 1 | slice-index | CHURN | `data_mut` | `let range = self.header_len()..;` |
+| 529 | 1 | slice-index | UNATTRIBUTED | `` | `packet.set_msg_type(Message::DstUnreachable);` |
+| 530 | 1 | copy_from_slice | CORE | `emit` | `packet.set_msg_code(reason.into());` |
+| 543 | 1 | slice-index | UNATTRIBUTED | `` | `packet.set_msg_type(Message::TimeExceeded);` |
+| 544 | 1 | copy_from_slice | CORE | `emit` | `packet.set_msg_code(reason.into());` |
 
 <a id="srcifaceinterfacesixlowpanrs"></a>
 ### `src/iface/interface/sixlowpan.rs`
 
-16 sites across 14 lines. churn 3, panic 7, core 4. Owner: --.
+16 sites across 15 lines. churn 3, panic 7, core 4. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 2 | slice-index | UNATTRIBUTED | `` | `` |
 | 81 | 1 | slice-index | CORE | `process_sixlowpan` | `Ok(len) => &f.decompress_buf[..len],` |
 | 303 | 1 | panic!/unreachable! | PANIC | `dispatch_sixlowpan` | `Packet::Ipv4(_) => unreachable!(),` |
 | 413 | 1 | slice-index | PANIC | `dispatch_sixlowpan` | `let mut ieee_packet = Ieee802154Frame::new_unchecked(&mut tx_buf[..ieee_len]);` |
 | 458 | 1 | slice-index | PANIC | `ipv6_to_sixlowpan` | `&mut buffer[..iphc_repr.buffer_len()],` |
 | 460 | 1 | slice-index | PANIC | `ipv6_to_sixlowpan` | `buffer = &mut buffer[iphc_repr.buffer_len()..];` |
+| 518 | 1 | slice-index | UNATTRIBUTED | `` | `&mut Icmpv6Packet::new_unchecked(&mut buffer[..icmp_repr.buffer_len()]),` |
 | 527 | 1 | slice-index | PANIC | `ipv6_to_sixlowpan` | `&mut buffer[..udp_repr.header_len() + payload.len()],` |
 | 532 | 1 | copy_from_slice | PANIC | `ipv6_to_sixlowpan` | `\|buf\| buf.copy_from_slice(payload),` |
+| 539 | 1 | slice-index | UNATTRIBUTED | `` | `&mut TcpPacket::new_unchecked(&mut buffer[..tcp_repr.buffer_len()]),` |
 | 549 | 1 | panic!/unreachable! | PANIC | `ipv6_to_sixlowpan` | `_ => unreachable!(),` |
 | 720 | 1 | slice-index | CHURN | `decompress_ext_hdr` | `&data[ext_repr.length as usize + ext_repr.buffer_len()..],` |
 | 732 | 1 | slice-index | CHURN | `decompress_ext_hdr` | `&mut buffer[..ipv6_ext_hdr.header_len()],` |
@@ -391,17 +422,37 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcwireieee802154rs"></a>
 ### `src/wire/ieee802154.rs`
 
-18 sites across 7 lines. churn 3, panic 0, core 5. Owner: --.
+34 sites across 27 lines. churn 3, panic 0, core 6. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 10 | bounds-check, slice-index | UNATTRIBUTED | `` | `` |
 | 371 | 2 | slice-index | CORE | `frame_type` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
 | 388 | 1 | slice-index | CORE | `dst_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
 | 406 | 1 | slice-index | CORE | `src_addressing_mode` | `let raw = LittleEndian::read_u16(&data[field::FRAMECONTROL]);` |
 | 450 | 2 | slice-index | CHURN | `addressing_fields` | `Some(&data[field::ADDRESSING][..offset])` |
-| 543 | 1 | slice-index | CORE | `src_pan_id` | `&addressing_fields[offset..][..2],` |
+| 501 | 1 | slice-index | UNATTRIBUTED | `` | `Some(Pan(LittleEndian::read_u16(&addressing_fields[..2])))` |
+| 518 | 1 | slice-index | UNATTRIBUTED | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 2]);` |
+| 524 | 1 | slice-index | UNATTRIBUTED | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 8]);` |
+| 543 | 2 | slice-index | CORE | `src_pan_id` | `&addressing_fields[offset..][..2],` |
+| 563 | 1 | slice-index | UNATTRIBUTED | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 2]);` |
+| 569 | 1 | slice-index | UNATTRIBUTED | `` | `raw.clone_from_slice(&addressing_fields[offset..offset + 8]);` |
+| 640 | 2 | bounds-check, slice-index | UNATTRIBUTED | `` | `let b = self.buffer.as_ref()[index..][0];` |
+| 647 | 2 | bounds-check, slice-index | UNATTRIBUTED | `` | `let b = self.buffer.as_ref()[index..][0];` |
 | 721 | 1 | slice-index | CHURN | `payload` | `Some(&data[index..])` |
+| 732 | 1 | slice-index | UNATTRIBUTED | `` | `let data = &mut self.buffer.as_mut()[field::FRAMECONTROL];` |
+| 758 | 1 | bounds-check | UNATTRIBUTED | `` | `data[field::SEQUENCE_NUMBER] = value;` |
+| 769 | 2 | slice-index | UNATTRIBUTED | `` | `data[field::ADDRESSING][..2].copy_from_slice(&value.as_bytes());` |
+| 781 | 2 | slice-index | UNATTRIBUTED | `` | `data[field::ADDRESSING][2..2 + 2].copy_from_slice(&value);` |
+| 787 | 1 | slice-index | UNATTRIBUTED | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| 788 | 1 | slice-index | UNATTRIBUTED | `` | `data[2..2 + 8].copy_from_slice(&value);` |
+| 811 | 1 | panic!/unreachable! | UNATTRIBUTED | `` | `_ => unreachable!(),` |
+| 814 | 1 | slice-index | UNATTRIBUTED | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| 815 | 1 | slice-index | UNATTRIBUTED | `` | `data[offset..offset + 2].copy_from_slice(&value.as_bytes());` |
+| 825 | 1 | panic!/unreachable! | UNATTRIBUTED | `` | `_ => unreachable!(),` |
+| 835 | 1 | slice-index | UNATTRIBUTED | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| 836 | 1 | slice-index | UNATTRIBUTED | `` | `data[offset..offset + 2].copy_from_slice(&value);` |
+| 842 | 1 | slice-index | UNATTRIBUTED | `` | `let data = &mut self.buffer.as_mut()[field::ADDRESSING];` |
+| 843 | 1 | slice-index | UNATTRIBUTED | `` | `data[offset..offset + 8].copy_from_slice(&value);` |
 
 <a id="srcwireipv6extheaderrs"></a>
 ### `src/wire/ipv6ext_header.rs`
@@ -465,7 +516,7 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcifacepacketrs"></a>
 ### `src/iface/packet.rs`
 
-12 sites across 9 lines. churn 0, panic 12, core 0. Owner: --.
+11 sites across 8 lines. churn 0, panic 11, core 0. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
@@ -474,7 +525,6 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 | 115 | 1 | slice-index | PANIC | `emit_payload` | `&mut payload[..ipv6_ext_hdr.header_len()],` |
 | 121 | 1 | slice-index | PANIC | `emit_payload` | `&mut payload[hbh_start..hbh_end],` |
 | 143 | 1 | copy_from_slice | PANIC | `emit_payload` | `\|buf\| buf.copy_from_slice(inner_payload),` |
-| 179 | 1 | unwrap | PANIC | `emit_payload` | `\|buf\| dhcp_repr.emit(&mut DhcpPacket::new_unchecked(buf)).unwrap(),` |
 | 234 | 2 | panic!/unreachable! | PANIC | `as_sixlowpan_next_header` | `Self::Icmpv4(_) => unreachable!(),` |
 | 236 | 2 | panic!/unreachable! | PANIC | `as_sixlowpan_next_header` | `Self::Dhcpv4(..) => unreachable!(),` |
 | 240 | 2 | panic!/unreachable! | PANIC | `as_sixlowpan_next_header` | `Self::HopByHopIcmpv6(_, _) => unreachable!(),` |
@@ -482,12 +532,11 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcifacerouters"></a>
 ### `src/iface/route.rs`
 
-2 sites across 2 lines. churn 0, panic 2, core 0. Owner: --.
+1 sites across 1 lines. churn 0, panic 1, core 0. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
 | 173 | 1 | panic!/unreachable! | PANIC | `lookup` | `assert!(addr.is_unicast());` |
-| 187 | 1 | panic!/unreachable! | PANIC | `lookup` | `.max_by_key(\|route\| route.cidr.prefix_len())` |
 
 <a id="srcifacesocketsetrs"></a>
 ### `src/iface/socket_set.rs`
@@ -529,11 +578,10 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcsockettcprs"></a>
 ### `src/socket/tcp.rs`
 
-8 sites across 5 lines. churn 0, panic 1, core 1. Owner: --.
+4 sites across 4 lines. churn 0, panic 1, core 1. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 4 | panic!(fmt) | UNATTRIBUTED | `` | `` |
 | 592 | 1 | panic!(fmt) | PANIC | `new` | `panic!("receiving buffer too large, cannot exceed 1 GiB")` |
 | 1641 | 1 | panic!/unreachable! | CLEAN | `process` | `(State::Listen, _, Some(_)) => unreachable!(),` |
 | 1799 | 1 | slice-index | CLEAN | `process` | `&repr.payload[overlap_start - segment_start..overlap_end - segment_start],` |
@@ -560,11 +608,10 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcstoragepacketbufferrs"></a>
 ### `src/storage/packet_buffer.rs`
 
-5 sites across 5 lines. churn 0, panic 1, core 1. Owner: --.
+4 sites across 4 lines. churn 0, panic 1, core 1. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 1 | slice-index | UNATTRIBUTED | `` | `` |
 | 195 | 1 | unwrap | FLUXBUG | `dequeue_with` | `metadata.header.as_mut().unwrap(),` |
 | 196 | 1 | slice-index | FLUXBUG | `dequeue_with` | `&mut payload_buf[..metadata.size],` |
 | 215 | 1 | unwrap | PANIC | `dequeue` | `Ok((meta.header.take().unwrap(), payload_buf))` |
@@ -603,16 +650,19 @@ One row per source line. `sites` exceeds lines because generics and inlining dup
 <a id="srcwiresixlowpanmodrs"></a>
 ### `src/wire/sixlowpan/mod.rs`
 
-10 sites across 6 lines. churn 0, panic 0, core 5. Owner: --.
+9 sites across 9 lines. churn 0, panic 0, core 4. Owner: --.
 
 | line | sites | kind | work | fn | source |
 | ---: | ---: | --- | --- | --- | --- |
-| ? | 5 | bounds-check, slice-index | UNATTRIBUTED | `` | `` |
-| 86 | 1 | unwrap | CORE | `resolve` | `Ok(ipv6::Address::from_octets(addr.try_into().unwrap()))` |
 | 90 | 1 | copy_from_slice | CORE | `resolve` | `bytes[8..].copy_from_slice(inline);` |
 | 96 | 1 | copy_from_slice | CORE | `resolve` | `bytes[14..].copy_from_slice(inline);` |
+| 117 | 1 | bounds-check | UNATTRIBUTED | `` | `bytes[1] = inline[0];` |
 | 118 | 1 | slice-index | CORE | `resolve` | `bytes[11..].copy_from_slice(&inline[1..][..5]);` |
+| 123 | 1 | bounds-check | UNATTRIBUTED | `` | `bytes[1] = inline[0];` |
 | 124 | 1 | slice-index | CORE | `resolve` | `bytes[13..].copy_from_slice(&inline[1..][..3]);` |
+| 130 | 1 | bounds-check | UNATTRIBUTED | `` | `bytes[15] = inline[0];` |
+| 139 | 1 | slice-index | UNATTRIBUTED | `` | `bytes[16 - inline.len()..].copy_from_slice(inline);` |
+| 144 | 1 | slice-index | UNATTRIBUTED | `` | `bytes[16 - inline.len()..].copy_from_slice(inline);` |
 
 ## Caveats
 
