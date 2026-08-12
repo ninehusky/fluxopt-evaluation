@@ -11,6 +11,7 @@ results/*
 !results/STATUS.md
 !results/ROADMAP.md
 !results/WORKLIST.md
+!results/HANDOFF.md
 !results/ablation.json
 !results/TRIAGE-sites.tsv
 !results/PANIC-INVENTORY.md
