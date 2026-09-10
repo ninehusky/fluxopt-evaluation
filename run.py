@@ -81,10 +81,114 @@ def checkout(name, url, rev):
         run(["git", "remote", "add", "origin", url], cwd=d)
     run(["git", "fetch", "-q", "--depth", "1", "origin", rev], cwd=d)
     run(["git", "checkout", "-q", "--detach", "FETCH_HEAD"], cwd=d)
+    # `checkout --detach` at the commit you are already on is a no-op that LEAVES
+    # local modifications in place, so a previous run's benchmark-config edits
+    # survive into this one.  The medium-ieee802154 regex is idempotent and never
+    # showed it; the DEFMT_MODE source rewrites are not.  Reset tracked files
+    # explicitly.  Not `clean -fd`: third_party/xarxa is populated separately.
+    run(["git", "reset", "--hard", "-q", "FETCH_HEAD"], cwd=d)
     # No-op for the upstream checkout (it has no submodules); for the fork this
     # is what pulls in third_party/xarxa and third_party/flux at their pins.
     run(["git", "submodule", "update", "--init", "-q"], cwd=d)
+    apply_benchmark_config(d)
     return d
+
+
+# --- LOCAL, UNCOMMITTED: benchmark definition -------------------------------
+# The nRF52840 usb_ethernet device is USB Ethernet (CDC-NCM). It never runs
+# 802.15.4, but the example enabled `medium-ieee802154` anyway, which compiled
+# xarxa's whole 6LoWPAN dispatch path into the image: ~143 panic sites and
+# 23,780 bytes of flash that no verification work could ever be credited with.
+#
+# `checkout()` does `git checkout --detach FETCH_HEAD`, so editing the file by
+# hand does not survive a run. Applying it here is what makes the benchmark
+# reproducible.
+#
+# Nothing else about the build is touched -- no opt-level, lto, or
+# codegen-units. The result is about panic verification, not Cargo tuning.
+def apply_benchmark_config(repo):
+    import re
+    f = os.path.join(repo, "examples", "nrf52840", "Cargo.toml")
+    if not os.path.isfile(f):
+        return
+    src = open(f).read()
+    out = re.sub(r'("medium-ethernet","udp", )"medium-ieee802154", ', r'\1', src)
+    if out != src:
+        open(f, "w").write(out)
+        print("   benchmark config: dropped medium-ieee802154")
+    apply_defmt_mode(repo)
+
+
+# DEFMT_MODE selects how much of defmt the benchmark carries.  The shipped
+# firmware would not carry RTT logging, so "on" over-states the panic surface;
+# but removing it also removes the `defmt::Format` impls, which is where the
+# inflation actually lives.  The two are separable, so they are separate modes.
+#
+#   on      (default)  as the example ships
+#   narrow  drop the `defmt` feature from dependencies; keep the app's logging,
+#           defmt-rtt and the print-defmt panic handler
+#   full    narrow, plus strip the app's logging and drop print-defmt so the
+#           handler no longer formats
+def apply_defmt_mode(repo):
+    import re, os
+    mode = os.environ.get("DEFMT_MODE", "on")
+    if mode == "on":
+        return
+    if mode not in ("narrow", "full"):
+        raise SystemExit(f"DEFMT_MODE must be on|narrow|full, got {mode!r}")
+
+    f = os.path.join(repo, "examples", "nrf52840", "Cargo.toml")
+    src = open(f).read()
+
+    # Edit each `features = [...]` list as a list, not by pattern.  A regex over
+    # the raw text misses the singleton `features = ["defmt"]` forms, which
+    # leaves those crates emitting defmt calls with no global logger linked --
+    # the build then dies at link time on undefined `_defmt_acquire`.
+    dropped = 0
+
+    def strip(m):
+        nonlocal dropped
+        items = [i.strip() for i in m.group(1).split(",") if i.strip()]
+        keep = [i for i in items
+                if i.strip('"') not in ("defmt", "defmt-timestamp-uptime")]
+        dropped += len(items) - len(keep)
+        if not keep:
+            return "features = []"
+        return "features = [" + ", ".join(keep) + "]"
+
+    out = re.sub(r'features\s*=\s*\[([^\]]*)\]', strip, src)
+    open(f, "w").write(out)
+    assert '"defmt"' not in out, "a defmt feature entry survived"
+    print(f"   benchmark config: DEFMT_MODE={mode}, dropped {dropped} defmt feature entries")
+
+    if mode == "full":
+        # The panic handler stops formatting; panic-probe with no print-* feature
+        # is still a handler, it just halts.
+        src = open(f).read()
+        out = src.replace('panic-probe = { version = "1.0.0", features = ["print-defmt"] }',
+                          'panic-probe = { version = "1.0.0" }')
+        assert out != src, "panic-probe line not found"
+        open(f, "w").write(out)
+
+        b = os.path.join(repo, "examples", "nrf52840", "src", "bin", "usb_ethernet.rs")
+        s = open(b).read()
+        assert "use defmt::*;\nuse defmt_rtt as _;\n" in s
+        s = s.replace("use defmt::*;\nuse defmt_rtt as _;\n", NOOP_LOG)
+        # defmt's unwrap! -> the ordinary one; both panic, so the site is preserved.
+        # Spelled out per call rather than by regex: the nested parens make a
+        # lazy match capture `usb_task(usb` and a greedy one eat the closer.
+        for task in ("usb_task(usb)", "usb_ncm_task(runner)", "net_task(runner)"):
+            old_call = f"spawner.spawn(unwrap!({task}));"
+            new_call = f"spawner.spawn({task}.unwrap());"
+            assert s.count(old_call) == 1, f"no unique match for {old_call}"
+            s = s.replace(old_call, new_call)
+        open(b, "w").write(s)
+        print("   benchmark config: stripped app logging and print-defmt")
+
+
+NOOP_LOG = """macro_rules! info { ($($t:tt)*) => {} }
+macro_rules! warn { ($($t:tt)*) => {} }
+"""
 
 
 def use_local_xarxa(repo, src):
